@@ -15,7 +15,6 @@
         <EntityTypeShape EntityType="JukeBoxModel.CustomerStatu" Width="1.5" PointX="3" PointY="12.125" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.CustomerTransaction" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.CustomerTransactionType" Width="1.5" PointX="5.25" PointY="15.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="JukeBoxModel.Library" Width="1.5" PointX="3" PointY="6.625" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.LibraryDetail" Width="1.5" PointX="8.25" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.LibraryStatu" Width="1.5" PointX="6" PointY="18.625" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.LibraryType" Width="1.5" PointX="0.75" PointY="11.375" IsExpanded="true" />
@@ -27,16 +26,11 @@
         <EntityTypeShape EntityType="JukeBoxModel.Title" Width="1.5" PointX="11.75" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JukeBoxModel.User" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <AssociationConnector Association="JukeBoxModel.FK_ClientContactDetails_Client" ManuallyRouted="false" />
-        <AssociationConnector Association="JukeBoxModel.FK_Library_Client" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_ClientContactDetails_ClientContactType" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_Customer_CustomerStatus" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_CustomerTransaction_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_CustomerTransaction_CustomerTransactionType" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_CustomerTransaction_Purchase" ManuallyRouted="false" />
-        <AssociationConnector Association="JukeBoxModel.FK_Library_LibraryType" ManuallyRouted="false" />
-        <AssociationConnector Association="JukeBoxModel.FK_Library_User" ManuallyRouted="false" />
-        <AssociationConnector Association="JukeBoxModel.FK_LibraryDetail_Library" ManuallyRouted="false" />
-        <AssociationConnector Association="JukeBoxModel.FK_Purchase_Library" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_LibraryDetail_LibraryStatus" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_LibraryDetail_User" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_PurchaseDetail_LibraryDetail" ManuallyRouted="false" />
@@ -44,6 +38,12 @@
         <AssociationConnector Association="JukeBoxModel.FK_PurchaseDetail_Purchase" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_RoleUserMap_RoleUserMap" ManuallyRouted="false" />
         <AssociationConnector Association="JukeBoxModel.FK_RoleUserMap_User" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="JukeBoxModel.Library" Width="1.5" PointX="3" PointY="6.125" />
+        <AssociationConnector Association="JukeBoxModel.FK_Library_Client" />
+        <AssociationConnector Association="JukeBoxModel.FK_Library_LibraryType" />
+        <AssociationConnector Association="JukeBoxModel.FK_Library_User" />
+        <AssociationConnector Association="JukeBoxModel.FK_LibraryDetail_Library" />
+        <AssociationConnector Association="JukeBoxModel.FK_Purchase_Library" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

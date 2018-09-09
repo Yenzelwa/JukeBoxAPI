@@ -62,4 +62,15 @@ namespace JukeBoxApi.Models
         /// </value>
         public string SessionToken { get; set; }
     }
+    public class ApiLibraryResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<ApiLibrary> ResponseObject { get; set; }
+        
+    }
 }

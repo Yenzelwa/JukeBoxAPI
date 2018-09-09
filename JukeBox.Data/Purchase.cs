@@ -30,9 +30,9 @@ namespace JukeBox.Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CustomerTransaction> CustomerTransactions { get; set; }
-        public virtual Library Library { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }
+        public virtual Library Library { get; set; }
     }
 }

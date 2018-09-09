@@ -35,7 +35,6 @@ namespace JukeBox.Data
         public virtual DbSet<CustomerStatu> CustomerStatus { get; set; }
         public virtual DbSet<CustomerTransaction> CustomerTransactions { get; set; }
         public virtual DbSet<CustomerTransactionType> CustomerTransactionTypes { get; set; }
-        public virtual DbSet<Library> Libraries { get; set; }
         public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
         public virtual DbSet<LibraryStatu> LibraryStatus { get; set; }
         public virtual DbSet<LibraryType> LibraryTypes { get; set; }
@@ -46,5 +45,6 @@ namespace JukeBox.Data
         public virtual DbSet<RoleUserMap> RoleUserMaps { get; set; }
         public virtual DbSet<Title> Titles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Library> Libraries { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace JukeBox.BLL
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Libraries.Include("LibraryDetail").ToList();
+                return db.Libraries.Include("LibraryDetails").Include("Client").ToList();
             }
         }
     }

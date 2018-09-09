@@ -1,0 +1,1384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="JukeBoxModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientID" />
+          </Key>
+          <Property Name="ClientID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_ClientStatusID" Type="smallint" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Initials" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ClientTitle" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+          <Property Name="FK_IdentityTypeID" Type="smallint" Nullable="false" />
+          <Property Name="IdentityTypeValue" Type="varchar" MaxLength="50" />
+          <Property Name="BalanceAvailable" Type="decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="FK_CompanyID" Type="smallint" Nullable="false" />
+          <Property Name="ClientPassword" Type="varchar" MaxLength="500" />
+          <Property Name="CellPhone" Type="nvarchar" MaxLength="20" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="FK_CountryID" Type="smallint" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="1" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientContactDetail">
+          <Key>
+            <PropertyRef Name="ClientContactDetailID" />
+          </Key>
+          <Property Name="ClientContactDetailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_ClientID" Type="int" Nullable="false" />
+          <Property Name="FK_ClientContactTypeID" Type="smallint" Nullable="false" />
+          <Property Name="ContactInformation" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="AddressLine" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddressSuburb" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddressCity" Type="nvarchar" MaxLength="50" />
+          <Property Name="FK_RegionID" Type="int" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientContactType">
+          <Key>
+            <PropertyRef Name="ClientContactTypeID" />
+          </Key>
+          <Property Name="ClientContactTypeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientContactTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientStatus">
+          <Key>
+            <PropertyRef Name="ClientStatusID" />
+          </Key>
+          <Property Name="ClientStatusID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientStatusName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CompanyShortCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Enable" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CountryCode" Type="varchar" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_CustomerStatusID" Type="smallint" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="BalanceAvailable" Type="decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="ClientPassword" Type="varchar" MaxLength="500" />
+          <Property Name="CellPhone" Type="nvarchar" MaxLength="20" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerStatus">
+          <Key>
+            <PropertyRef Name="CustomerStatusID" />
+          </Key>
+          <Property Name="CustomerStatusID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerStatusName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerTransaction">
+          <Key>
+            <PropertyRef Name="CustomerTransactionID" />
+          </Key>
+          <Property Name="CustomerTransactionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_PurchaseD" Type="bigint" Nullable="false" />
+          <Property Name="FK_CustomerID" Type="int" Nullable="false" />
+          <Property Name="FK_CustomerTransactionTypeID" Type="smallint" Nullable="false" />
+          <Property Name="TransactionAmount" Type="decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="BalanceAvailable" Type="decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="TransactionDate" Type="datetime" Nullable="false" />
+          <Property Name="ReferenceComment" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustomerTransactionType">
+          <Key>
+            <PropertyRef Name="CustomerTransactionTypeID" />
+          </Key>
+          <Property Name="CustomerTransactionTypeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerTransactionTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Library">
+          <Key>
+            <PropertyRef Name="LibraryID" />
+          </Key>
+          <Property Name="LibraryID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_ClientID" Type="int" Nullable="false" />
+          <Property Name="FK_LibraryTypeID" Type="smallint" Nullable="false" />
+          <Property Name="LibraryName" Type="varbinary" MaxLength="50" Nullable="false" />
+          <Property Name="LibraryCoverFilePath" Type="nvarchar" MaxLength="100" />
+          <Property Name="LibraryDescription" Type="varchar" MaxLength="200" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LibraryDetail">
+          <Key>
+            <PropertyRef Name="LibraryDetailID" />
+          </Key>
+          <Property Name="LibraryDetailID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_LibraryID" Type="bigint" Nullable="false" />
+          <Property Name="FK_LibraryStatusID" Type="smallint" Nullable="false" />
+          <Property Name="LibraryDetailName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="200" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LibraryStatus">
+          <Key>
+            <PropertyRef Name="LibraryStatusID" />
+          </Key>
+          <Property Name="LibraryStatusID" Type="smallint" Nullable="false" />
+          <Property Name="LibraryStatusName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LibraryType">
+          <Key>
+            <PropertyRef Name="LibraryTypeID" />
+          </Key>
+          <Property Name="LibraryTypeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LibraryTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Purchase">
+          <Key>
+            <PropertyRef Name="PurchaseID" />
+          </Key>
+          <Property Name="PurchaseID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_LibraryID" Type="bigint" Nullable="false" />
+          <Property Name="PurchaseAmount" Type="decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="PurchaseDateTime" Type="datetime" Nullable="false" />
+          <Property Name="PurchaseItemNumber" Type="smallint" Nullable="false" />
+          <Property Name="FK_UserID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PurchaseDetail">
+          <Key>
+            <PropertyRef Name="PurchaseDetailID" />
+          </Key>
+          <Property Name="PurchaseDetailID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_PurchaseID" Type="bigint" />
+          <Property Name="FK_LibraryDetailID" Type="bigint" />
+          <Property Name="PurchaseAmount" Type="decimal" Precision="18" Scale="7" />
+          <Property Name="PurchaseDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Region">
+          <Key>
+            <PropertyRef Name="RegionID" />
+          </Key>
+          <Property Name="RegionID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_CountryID" Type="smallint" Nullable="false" />
+          <Property Name="RegionName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enable" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoleUserMap">
+          <Key>
+            <PropertyRef Name="RoleUserMapID" />
+          </Key>
+          <Property Name="RoleUserMapID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_UserID" Type="int" Nullable="false" />
+          <Property Name="FK_RoleID" Type="smallint" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Title">
+          <Key>
+            <PropertyRef Name="TitleID" />
+          </Key>
+          <Property Name="TitleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TitleName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="100" />
+          <Property Name="CellPhone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FK_CompanyID" Type="int" />
+        </EntityType>
+        <Association Name="FK_ClientContactDetails_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="ClientContactDetail">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientContactDetails_ClientContactType">
+          <End Role="ClientContactType" Type="Self.ClientContactType" Multiplicity="1" />
+          <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientContactType">
+              <PropertyRef Name="ClientContactTypeID" />
+            </Principal>
+            <Dependent Role="ClientContactDetail">
+              <PropertyRef Name="FK_ClientContactTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_CustomerStatus">
+          <End Role="CustomerStatus" Type="Self.CustomerStatus" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerStatus">
+              <PropertyRef Name="CustomerStatusID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="FK_CustomerStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_CustomerTransactionType">
+          <End Role="CustomerTransactionType" Type="Self.CustomerTransactionType" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerTransactionType">
+              <PropertyRef Name="CustomerTransactionTypeID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_CustomerTransactionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_Purchase">
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Purchase">
+              <PropertyRef Name="PurchaseID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_PurchaseD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_LibraryType">
+          <End Role="LibraryType" Type="Self.LibraryType" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryType">
+              <PropertyRef Name="LibraryTypeID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_LibraryTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_Library">
+          <End Role="Library" Type="Self.Library" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Library">
+              <PropertyRef Name="LibraryID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_LibraryStatus">
+          <End Role="LibraryStatus" Type="Self.LibraryStatus" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStatus">
+              <PropertyRef Name="LibraryStatusID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Purchase_Library">
+          <End Role="Library" Type="Self.Library" Multiplicity="1" />
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Library">
+              <PropertyRef Name="LibraryID" />
+            </Principal>
+            <Dependent Role="Purchase">
+              <PropertyRef Name="FK_LibraryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Purchase_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Purchase">
+              <PropertyRef Name="FK_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseDetail_LibraryDetail">
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="0..1" />
+          <End Role="PurchaseDetail" Type="Self.PurchaseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryDetail">
+              <PropertyRef Name="LibraryDetailID" />
+            </Principal>
+            <Dependent Role="PurchaseDetail">
+              <PropertyRef Name="FK_LibraryDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseDetail_Purchase">
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="0..1" />
+          <End Role="PurchaseDetail" Type="Self.PurchaseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Purchase">
+              <PropertyRef Name="PurchaseID" />
+            </Principal>
+            <Dependent Role="PurchaseDetail">
+              <PropertyRef Name="FK_PurchaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleUserMap_RoleUserMap">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="RoleUserMap" Type="Self.RoleUserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="RoleUserMap">
+              <PropertyRef Name="FK_RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleUserMap_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="RoleUserMap" Type="Self.RoleUserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="RoleUserMap">
+              <PropertyRef Name="FK_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JukeBoxModelStoreContainer">
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientContactDetail" EntityType="Self.ClientContactDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientContactType" EntityType="Self.ClientContactType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientStatus" EntityType="Self.ClientStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerStatus" EntityType="Self.CustomerStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerTransaction" EntityType="Self.CustomerTransaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerTransactionType" EntityType="Self.CustomerTransactionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Library" EntityType="Self.Library" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryDetail" EntityType="Self.LibraryDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryStatus" EntityType="Self.LibraryStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryType" EntityType="Self.LibraryType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Purchase" EntityType="Self.Purchase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseDetail" EntityType="Self.PurchaseDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Region" EntityType="Self.Region" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleUserMap" EntityType="Self.RoleUserMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Title" EntityType="Self.Title" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ClientContactDetails_Client" Association="Self.FK_ClientContactDetails_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientContactDetail" EntitySet="ClientContactDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientContactDetails_ClientContactType" Association="Self.FK_ClientContactDetails_ClientContactType">
+            <End Role="ClientContactType" EntitySet="ClientContactType" />
+            <End Role="ClientContactDetail" EntitySet="ClientContactDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_CustomerStatus" Association="Self.FK_Customer_CustomerStatus">
+            <End Role="CustomerStatus" EntitySet="CustomerStatus" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_Customer" Association="Self.FK_CustomerTransaction_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_CustomerTransactionType" Association="Self.FK_CustomerTransaction_CustomerTransactionType">
+            <End Role="CustomerTransactionType" EntitySet="CustomerTransactionType" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_Purchase" Association="Self.FK_CustomerTransaction_Purchase">
+            <End Role="Purchase" EntitySet="Purchase" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_Client" Association="Self.FK_Library_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Library" EntitySet="Library" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_LibraryType" Association="Self.FK_Library_LibraryType">
+            <End Role="LibraryType" EntitySet="LibraryType" />
+            <End Role="Library" EntitySet="Library" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_User" Association="Self.FK_Library_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Library" EntitySet="Library" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_Library" Association="Self.FK_LibraryDetail_Library">
+            <End Role="Library" EntitySet="Library" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_LibraryStatus" Association="Self.FK_LibraryDetail_LibraryStatus">
+            <End Role="LibraryStatus" EntitySet="LibraryStatus" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_User" Association="Self.FK_LibraryDetail_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Purchase_Library" Association="Self.FK_Purchase_Library">
+            <End Role="Library" EntitySet="Library" />
+            <End Role="Purchase" EntitySet="Purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Purchase_User" Association="Self.FK_Purchase_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Purchase" EntitySet="Purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseDetail_LibraryDetail" Association="Self.FK_PurchaseDetail_LibraryDetail">
+            <End Role="LibraryDetail" EntitySet="LibraryDetail" />
+            <End Role="PurchaseDetail" EntitySet="PurchaseDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseDetail_Purchase" Association="Self.FK_PurchaseDetail_Purchase">
+            <End Role="Purchase" EntitySet="Purchase" />
+            <End Role="PurchaseDetail" EntitySet="PurchaseDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleUserMap_RoleUserMap" Association="Self.FK_RoleUserMap_RoleUserMap">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="RoleUserMap" EntitySet="RoleUserMap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleUserMap_User" Association="Self.FK_RoleUserMap_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="RoleUserMap" EntitySet="RoleUserMap" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JukeBoxModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientID" />
+          </Key>
+          <Property Name="ClientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ClientStatusID" Type="Int16" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Initials" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClientTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FK_IdentityTypeID" Type="Int16" Nullable="false" />
+          <Property Name="IdentityTypeValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BalanceAvailable" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="FK_CompanyID" Type="Int16" Nullable="false" />
+          <Property Name="ClientPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CellPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_CountryID" Type="Int16" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ClientContactDetails" Relationship="Self.FK_ClientContactDetails_Client" FromRole="Client" ToRole="ClientContactDetail" />
+          <NavigationProperty Name="Libraries" Relationship="Self.FK_Library_Client" FromRole="Client" ToRole="Library" />
+        </EntityType>
+        <EntityType Name="ClientContactDetail">
+          <Key>
+            <PropertyRef Name="ClientContactDetailID" />
+          </Key>
+          <Property Name="ClientContactDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ClientID" Type="Int32" Nullable="false" />
+          <Property Name="FK_ClientContactTypeID" Type="Int16" Nullable="false" />
+          <Property Name="ContactInformation" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AddressLine" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressSuburb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_RegionID" Type="Int32" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientContactDetails_Client" FromRole="ClientContactDetail" ToRole="Client" />
+          <NavigationProperty Name="ClientContactType" Relationship="Self.FK_ClientContactDetails_ClientContactType" FromRole="ClientContactDetail" ToRole="ClientContactType" />
+        </EntityType>
+        <EntityType Name="ClientContactType">
+          <Key>
+            <PropertyRef Name="ClientContactTypeID" />
+          </Key>
+          <Property Name="ClientContactTypeID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientContactTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ClientContactDetails" Relationship="Self.FK_ClientContactDetails_ClientContactType" FromRole="ClientContactType" ToRole="ClientContactDetail" />
+        </EntityType>
+        <EntityType Name="ClientStatu">
+          <Key>
+            <PropertyRef Name="ClientStatusID" />
+          </Key>
+          <Property Name="ClientStatusID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientStatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CompanyShortCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enable" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CountryCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_CustomerStatusID" Type="Int16" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BalanceAvailable" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="ClientPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CellPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CustomerStatu" Relationship="Self.FK_Customer_CustomerStatus" FromRole="Customer" ToRole="CustomerStatus" />
+          <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_Customer" FromRole="Customer" ToRole="CustomerTransaction" />
+        </EntityType>
+        <EntityType Name="CustomerStatu">
+          <Key>
+            <PropertyRef Name="CustomerStatusID" />
+          </Key>
+          <Property Name="CustomerStatusID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerStatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Customer_CustomerStatus" FromRole="CustomerStatus" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="CustomerTransaction">
+          <Key>
+            <PropertyRef Name="CustomerTransactionID" />
+          </Key>
+          <Property Name="CustomerTransactionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_PurchaseD" Type="Int64" Nullable="false" />
+          <Property Name="FK_CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="FK_CustomerTransactionTypeID" Type="Int16" Nullable="false" />
+          <Property Name="TransactionAmount" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="BalanceAvailable" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="TransactionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReferenceComment" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_CustomerTransaction_Customer" FromRole="CustomerTransaction" ToRole="Customer" />
+          <NavigationProperty Name="CustomerTransactionType" Relationship="Self.FK_CustomerTransaction_CustomerTransactionType" FromRole="CustomerTransaction" ToRole="CustomerTransactionType" />
+          <NavigationProperty Name="Purchase" Relationship="Self.FK_CustomerTransaction_Purchase" FromRole="CustomerTransaction" ToRole="Purchase" />
+        </EntityType>
+        <EntityType Name="CustomerTransactionType">
+          <Key>
+            <PropertyRef Name="CustomerTransactionTypeID" />
+          </Key>
+          <Property Name="CustomerTransactionTypeID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerTransactionTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_CustomerTransactionType" FromRole="CustomerTransactionType" ToRole="CustomerTransaction" />
+        </EntityType>
+        <EntityType Name="Library">
+          <Key>
+            <PropertyRef Name="LibraryID" />
+          </Key>
+          <Property Name="LibraryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ClientID" Type="Int32" Nullable="false" />
+          <Property Name="FK_LibraryTypeID" Type="Int16" Nullable="false" />
+          <Property Name="LibraryName" Type="Binary" MaxLength="50" FixedLength="false" Nullable="false" />
+          <Property Name="LibraryCoverFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LibraryDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Library_Client" FromRole="Library" ToRole="Client" />
+          <NavigationProperty Name="LibraryType" Relationship="Self.FK_Library_LibraryType" FromRole="Library" ToRole="LibraryType" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Library_User" FromRole="Library" ToRole="User" />
+          <NavigationProperty Name="LibraryDetails" Relationship="Self.FK_LibraryDetail_Library" FromRole="Library" ToRole="LibraryDetail" />
+          <NavigationProperty Name="Purchases" Relationship="Self.FK_Purchase_Library" FromRole="Library" ToRole="Purchase" />
+        </EntityType>
+        <EntityType Name="LibraryDetail">
+          <Key>
+            <PropertyRef Name="LibraryDetailID" />
+          </Key>
+          <Property Name="LibraryDetailID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_LibraryID" Type="Int64" Nullable="false" />
+          <Property Name="FK_LibraryStatusID" Type="Int16" Nullable="false" />
+          <Property Name="LibraryDetailName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Library" Relationship="Self.FK_LibraryDetail_Library" FromRole="LibraryDetail" ToRole="Library" />
+          <NavigationProperty Name="LibraryStatu" Relationship="Self.FK_LibraryDetail_LibraryStatus" FromRole="LibraryDetail" ToRole="LibraryStatus" />
+          <NavigationProperty Name="User" Relationship="Self.FK_LibraryDetail_User" FromRole="LibraryDetail" ToRole="User" />
+          <NavigationProperty Name="PurchaseDetails" Relationship="Self.FK_PurchaseDetail_LibraryDetail" FromRole="LibraryDetail" ToRole="PurchaseDetail" />
+        </EntityType>
+        <EntityType Name="LibraryStatu">
+          <Key>
+            <PropertyRef Name="LibraryStatusID" />
+          </Key>
+          <Property Name="LibraryStatusID" Type="Int16" Nullable="false" />
+          <Property Name="LibraryStatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="LibraryDetails" Relationship="Self.FK_LibraryDetail_LibraryStatus" FromRole="LibraryStatus" ToRole="LibraryDetail" />
+        </EntityType>
+        <EntityType Name="LibraryType">
+          <Key>
+            <PropertyRef Name="LibraryTypeID" />
+          </Key>
+          <Property Name="LibraryTypeID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LibraryTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Libraries" Relationship="Self.FK_Library_LibraryType" FromRole="LibraryType" ToRole="Library" />
+        </EntityType>
+        <EntityType Name="Purchase">
+          <Key>
+            <PropertyRef Name="PurchaseID" />
+          </Key>
+          <Property Name="PurchaseID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_LibraryID" Type="Int64" Nullable="false" />
+          <Property Name="PurchaseAmount" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
+          <Property Name="PurchaseDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PurchaseItemNumber" Type="Int16" Nullable="false" />
+          <Property Name="FK_UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_Purchase" FromRole="Purchase" ToRole="CustomerTransaction" />
+          <NavigationProperty Name="Library" Relationship="Self.FK_Purchase_Library" FromRole="Purchase" ToRole="Library" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Purchase_User" FromRole="Purchase" ToRole="User" />
+          <NavigationProperty Name="PurchaseDetails" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="Purchase" ToRole="PurchaseDetail" />
+        </EntityType>
+        <EntityType Name="PurchaseDetail">
+          <Key>
+            <PropertyRef Name="PurchaseDetailID" />
+          </Key>
+          <Property Name="PurchaseDetailID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_PurchaseID" Type="Int64" />
+          <Property Name="FK_LibraryDetailID" Type="Int64" />
+          <Property Name="PurchaseAmount" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="PurchaseDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LibraryDetail" Relationship="Self.FK_PurchaseDetail_LibraryDetail" FromRole="PurchaseDetail" ToRole="LibraryDetail" />
+          <NavigationProperty Name="Purchase" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="PurchaseDetail" ToRole="Purchase" />
+        </EntityType>
+        <EntityType Name="Region">
+          <Key>
+            <PropertyRef Name="RegionID" />
+          </Key>
+          <Property Name="RegionID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_CountryID" Type="Int16" Nullable="false" />
+          <Property Name="RegionName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Enable" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RoleUserMaps" Relationship="Self.FK_RoleUserMap_RoleUserMap" FromRole="Role" ToRole="RoleUserMap" />
+        </EntityType>
+        <EntityType Name="RoleUserMap">
+          <Key>
+            <PropertyRef Name="RoleUserMapID" />
+          </Key>
+          <Property Name="RoleUserMapID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_UserID" Type="Int32" Nullable="false" />
+          <Property Name="FK_RoleID" Type="Int16" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_RoleUserMap_RoleUserMap" FromRole="RoleUserMap" ToRole="Role" />
+          <NavigationProperty Name="User" Relationship="Self.FK_RoleUserMap_User" FromRole="RoleUserMap" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Title">
+          <Key>
+            <PropertyRef Name="TitleID" />
+          </Key>
+          <Property Name="TitleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TitleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CellPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FK_CompanyID" Type="Int32" />
+          <NavigationProperty Name="Libraries" Relationship="Self.FK_Library_User" FromRole="User" ToRole="Library" />
+          <NavigationProperty Name="LibraryDetails" Relationship="Self.FK_LibraryDetail_User" FromRole="User" ToRole="LibraryDetail" />
+          <NavigationProperty Name="Purchases" Relationship="Self.FK_Purchase_User" FromRole="User" ToRole="Purchase" />
+          <NavigationProperty Name="RoleUserMaps" Relationship="Self.FK_RoleUserMap_User" FromRole="User" ToRole="RoleUserMap" />
+        </EntityType>
+        <Association Name="FK_ClientContactDetails_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="ClientContactDetail">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientContactDetails_ClientContactType">
+          <End Role="ClientContactType" Type="Self.ClientContactType" Multiplicity="1" />
+          <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientContactType">
+              <PropertyRef Name="ClientContactTypeID" />
+            </Principal>
+            <Dependent Role="ClientContactDetail">
+              <PropertyRef Name="FK_ClientContactTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_CustomerStatus">
+          <End Role="CustomerStatus" Type="Self.CustomerStatu" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerStatus">
+              <PropertyRef Name="CustomerStatusID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="FK_CustomerStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_CustomerTransactionType">
+          <End Role="CustomerTransactionType" Type="Self.CustomerTransactionType" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerTransactionType">
+              <PropertyRef Name="CustomerTransactionTypeID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_CustomerTransactionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerTransaction_Purchase">
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="1" />
+          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Purchase">
+              <PropertyRef Name="PurchaseID" />
+            </Principal>
+            <Dependent Role="CustomerTransaction">
+              <PropertyRef Name="FK_PurchaseD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_LibraryType">
+          <End Role="LibraryType" Type="Self.LibraryType" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryType">
+              <PropertyRef Name="LibraryTypeID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_LibraryTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Library" Type="Self.Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_Library">
+          <End Role="Library" Type="Self.Library" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Library">
+              <PropertyRef Name="LibraryID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Purchase_Library">
+          <End Role="Library" Type="Self.Library" Multiplicity="1" />
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Library">
+              <PropertyRef Name="LibraryID" />
+            </Principal>
+            <Dependent Role="Purchase">
+              <PropertyRef Name="FK_LibraryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_LibraryStatus">
+          <End Role="LibraryStatus" Type="Self.LibraryStatu" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStatus">
+              <PropertyRef Name="LibraryStatusID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseDetail_LibraryDetail">
+          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="0..1" />
+          <End Role="PurchaseDetail" Type="Self.PurchaseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryDetail">
+              <PropertyRef Name="LibraryDetailID" />
+            </Principal>
+            <Dependent Role="PurchaseDetail">
+              <PropertyRef Name="FK_LibraryDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Purchase_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Purchase">
+              <PropertyRef Name="FK_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseDetail_Purchase">
+          <End Role="Purchase" Type="Self.Purchase" Multiplicity="0..1" />
+          <End Role="PurchaseDetail" Type="Self.PurchaseDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Purchase">
+              <PropertyRef Name="PurchaseID" />
+            </Principal>
+            <Dependent Role="PurchaseDetail">
+              <PropertyRef Name="FK_PurchaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleUserMap_RoleUserMap">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="RoleUserMap" Type="Self.RoleUserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="RoleUserMap">
+              <PropertyRef Name="FK_RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleUserMap_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="RoleUserMap" Type="Self.RoleUserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="RoleUserMap">
+              <PropertyRef Name="FK_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JukeBoxEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <EntitySet Name="ClientContactDetails" EntityType="Self.ClientContactDetail" />
+          <EntitySet Name="ClientContactTypes" EntityType="Self.ClientContactType" />
+          <EntitySet Name="ClientStatus" EntityType="Self.ClientStatu" />
+          <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="CustomerStatus" EntityType="Self.CustomerStatu" />
+          <EntitySet Name="CustomerTransactions" EntityType="Self.CustomerTransaction" />
+          <EntitySet Name="CustomerTransactionTypes" EntityType="Self.CustomerTransactionType" />
+          <EntitySet Name="Libraries" EntityType="Self.Library" />
+          <EntitySet Name="LibraryDetails" EntityType="Self.LibraryDetail" />
+          <EntitySet Name="LibraryStatus" EntityType="Self.LibraryStatu" />
+          <EntitySet Name="LibraryTypes" EntityType="Self.LibraryType" />
+          <EntitySet Name="Purchases" EntityType="Self.Purchase" />
+          <EntitySet Name="PurchaseDetails" EntityType="Self.PurchaseDetail" />
+          <EntitySet Name="Regions" EntityType="Self.Region" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="RoleUserMaps" EntityType="Self.RoleUserMap" />
+          <EntitySet Name="Titles" EntityType="Self.Title" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_ClientContactDetails_Client" Association="Self.FK_ClientContactDetails_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientContactDetail" EntitySet="ClientContactDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_Client" Association="Self.FK_Library_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientContactDetails_ClientContactType" Association="Self.FK_ClientContactDetails_ClientContactType">
+            <End Role="ClientContactType" EntitySet="ClientContactTypes" />
+            <End Role="ClientContactDetail" EntitySet="ClientContactDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_CustomerStatus" Association="Self.FK_Customer_CustomerStatus">
+            <End Role="CustomerStatus" EntitySet="CustomerStatus" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_Customer" Association="Self.FK_CustomerTransaction_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_CustomerTransactionType" Association="Self.FK_CustomerTransaction_CustomerTransactionType">
+            <End Role="CustomerTransactionType" EntitySet="CustomerTransactionTypes" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerTransaction_Purchase" Association="Self.FK_CustomerTransaction_Purchase">
+            <End Role="Purchase" EntitySet="Purchases" />
+            <End Role="CustomerTransaction" EntitySet="CustomerTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_LibraryType" Association="Self.FK_Library_LibraryType">
+            <End Role="LibraryType" EntitySet="LibraryTypes" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_User" Association="Self.FK_Library_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_Library" Association="Self.FK_LibraryDetail_Library">
+            <End Role="Library" EntitySet="Libraries" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Purchase_Library" Association="Self.FK_Purchase_Library">
+            <End Role="Library" EntitySet="Libraries" />
+            <End Role="Purchase" EntitySet="Purchases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_LibraryStatus" Association="Self.FK_LibraryDetail_LibraryStatus">
+            <End Role="LibraryStatus" EntitySet="LibraryStatus" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_User" Association="Self.FK_LibraryDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseDetail_LibraryDetail" Association="Self.FK_PurchaseDetail_LibraryDetail">
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+            <End Role="PurchaseDetail" EntitySet="PurchaseDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Purchase_User" Association="Self.FK_Purchase_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Purchase" EntitySet="Purchases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseDetail_Purchase" Association="Self.FK_PurchaseDetail_Purchase">
+            <End Role="Purchase" EntitySet="Purchases" />
+            <End Role="PurchaseDetail" EntitySet="PurchaseDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleUserMap_RoleUserMap" Association="Self.FK_RoleUserMap_RoleUserMap">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="RoleUserMap" EntitySet="RoleUserMaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleUserMap_User" Association="Self.FK_RoleUserMap_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="RoleUserMap" EntitySet="RoleUserMaps" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JukeBoxModelStoreContainer" CdmEntityContainer="JukeBoxEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="JukeBoxModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="FK_ClientStatusID" ColumnName="FK_ClientStatusID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="ClientTitle" ColumnName="ClientTitle" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="FK_IdentityTypeID" ColumnName="FK_IdentityTypeID" />
+                <ScalarProperty Name="IdentityTypeValue" ColumnName="IdentityTypeValue" />
+                <ScalarProperty Name="BalanceAvailable" ColumnName="BalanceAvailable" />
+                <ScalarProperty Name="FK_CompanyID" ColumnName="FK_CompanyID" />
+                <ScalarProperty Name="ClientPassword" ColumnName="ClientPassword" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FK_CountryID" ColumnName="FK_CountryID" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientContactDetails">
+            <EntityTypeMapping TypeName="JukeBoxModel.ClientContactDetail">
+              <MappingFragment StoreEntitySet="ClientContactDetail">
+                <ScalarProperty Name="ClientContactDetailID" ColumnName="ClientContactDetailID" />
+                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
+                <ScalarProperty Name="FK_ClientContactTypeID" ColumnName="FK_ClientContactTypeID" />
+                <ScalarProperty Name="ContactInformation" ColumnName="ContactInformation" />
+                <ScalarProperty Name="AddressLine" ColumnName="AddressLine" />
+                <ScalarProperty Name="AddressSuburb" ColumnName="AddressSuburb" />
+                <ScalarProperty Name="AddressCity" ColumnName="AddressCity" />
+                <ScalarProperty Name="FK_RegionID" ColumnName="FK_RegionID" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientContactTypes">
+            <EntityTypeMapping TypeName="JukeBoxModel.ClientContactType">
+              <MappingFragment StoreEntitySet="ClientContactType">
+                <ScalarProperty Name="ClientContactTypeID" ColumnName="ClientContactTypeID" />
+                <ScalarProperty Name="ClientContactTypeName" ColumnName="ClientContactTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientStatus">
+            <EntityTypeMapping TypeName="JukeBoxModel.ClientStatu">
+              <MappingFragment StoreEntitySet="ClientStatus">
+                <ScalarProperty Name="ClientStatusID" ColumnName="ClientStatusID" />
+                <ScalarProperty Name="ClientStatusName" ColumnName="ClientStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="JukeBoxModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CompanyShortCode" ColumnName="CompanyShortCode" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="JukeBoxModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="JukeBoxModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="FK_CustomerStatusID" ColumnName="FK_CustomerStatusID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="BalanceAvailable" ColumnName="BalanceAvailable" />
+                <ScalarProperty Name="ClientPassword" ColumnName="ClientPassword" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerStatus">
+            <EntityTypeMapping TypeName="JukeBoxModel.CustomerStatu">
+              <MappingFragment StoreEntitySet="CustomerStatus">
+                <ScalarProperty Name="CustomerStatusID" ColumnName="CustomerStatusID" />
+                <ScalarProperty Name="CustomerStatusName" ColumnName="CustomerStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTransactions">
+            <EntityTypeMapping TypeName="JukeBoxModel.CustomerTransaction">
+              <MappingFragment StoreEntitySet="CustomerTransaction">
+                <ScalarProperty Name="CustomerTransactionID" ColumnName="CustomerTransactionID" />
+                <ScalarProperty Name="FK_PurchaseD" ColumnName="FK_PurchaseD" />
+                <ScalarProperty Name="FK_CustomerID" ColumnName="FK_CustomerID" />
+                <ScalarProperty Name="FK_CustomerTransactionTypeID" ColumnName="FK_CustomerTransactionTypeID" />
+                <ScalarProperty Name="TransactionAmount" ColumnName="TransactionAmount" />
+                <ScalarProperty Name="BalanceAvailable" ColumnName="BalanceAvailable" />
+                <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+                <ScalarProperty Name="ReferenceComment" ColumnName="ReferenceComment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTransactionTypes">
+            <EntityTypeMapping TypeName="JukeBoxModel.CustomerTransactionType">
+              <MappingFragment StoreEntitySet="CustomerTransactionType">
+                <ScalarProperty Name="CustomerTransactionTypeID" ColumnName="CustomerTransactionTypeID" />
+                <ScalarProperty Name="CustomerTransactionTypeName" ColumnName="CustomerTransactionTypeName" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Libraries">
+            <EntityTypeMapping TypeName="JukeBoxModel.Library">
+              <MappingFragment StoreEntitySet="Library">
+                <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
+                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
+                <ScalarProperty Name="FK_LibraryTypeID" ColumnName="FK_LibraryTypeID" />
+                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
+                <ScalarProperty Name="LibraryDescription" ColumnName="LibraryDescription" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryDetails">
+            <EntityTypeMapping TypeName="JukeBoxModel.LibraryDetail">
+              <MappingFragment StoreEntitySet="LibraryDetail">
+                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+                <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
+                <ScalarProperty Name="FK_LibraryStatusID" ColumnName="FK_LibraryStatusID" />
+                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryStatus">
+            <EntityTypeMapping TypeName="JukeBoxModel.LibraryStatu">
+              <MappingFragment StoreEntitySet="LibraryStatus">
+                <ScalarProperty Name="LibraryStatusID" ColumnName="LibraryStatusID" />
+                <ScalarProperty Name="LibraryStatusName" ColumnName="LibraryStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryTypes">
+            <EntityTypeMapping TypeName="JukeBoxModel.LibraryType">
+              <MappingFragment StoreEntitySet="LibraryType">
+                <ScalarProperty Name="LibraryTypeID" ColumnName="LibraryTypeID" />
+                <ScalarProperty Name="LibraryTypeName" ColumnName="LibraryTypeName" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Purchases">
+            <EntityTypeMapping TypeName="JukeBoxModel.Purchase">
+              <MappingFragment StoreEntitySet="Purchase">
+                <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
+                <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
+                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
+                <ScalarProperty Name="PurchaseDateTime" ColumnName="PurchaseDateTime" />
+                <ScalarProperty Name="PurchaseItemNumber" ColumnName="PurchaseItemNumber" />
+                <ScalarProperty Name="FK_UserID" ColumnName="FK_UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseDetails">
+            <EntityTypeMapping TypeName="JukeBoxModel.PurchaseDetail">
+              <MappingFragment StoreEntitySet="PurchaseDetail">
+                <ScalarProperty Name="PurchaseDetailID" ColumnName="PurchaseDetailID" />
+                <ScalarProperty Name="FK_PurchaseID" ColumnName="FK_PurchaseID" />
+                <ScalarProperty Name="FK_LibraryDetailID" ColumnName="FK_LibraryDetailID" />
+                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
+                <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Regions">
+            <EntityTypeMapping TypeName="JukeBoxModel.Region">
+              <MappingFragment StoreEntitySet="Region">
+                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
+                <ScalarProperty Name="FK_CountryID" ColumnName="FK_CountryID" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="JukeBoxModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleUserMaps">
+            <EntityTypeMapping TypeName="JukeBoxModel.RoleUserMap">
+              <MappingFragment StoreEntitySet="RoleUserMap">
+                <ScalarProperty Name="RoleUserMapID" ColumnName="RoleUserMapID" />
+                <ScalarProperty Name="FK_UserID" ColumnName="FK_UserID" />
+                <ScalarProperty Name="FK_RoleID" ColumnName="FK_RoleID" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Titles">
+            <EntityTypeMapping TypeName="JukeBoxModel.Title">
+              <MappingFragment StoreEntitySet="Title">
+                <ScalarProperty Name="TitleID" ColumnName="TitleID" />
+                <ScalarProperty Name="TitleName" ColumnName="TitleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="JukeBoxModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="FK_CompanyID" ColumnName="FK_CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

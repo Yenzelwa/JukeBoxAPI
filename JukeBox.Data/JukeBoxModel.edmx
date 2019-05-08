@@ -442,6 +442,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="JukeBoxModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientContactDetail" EntityType="Self.ClientContactDetail" Schema="dbo" store:Type="Tables" />
@@ -1029,6 +1030,7 @@
             <End Role="Library" EntitySet="Libraries" />
             <End Role="Purchase" EntitySet="Purchases" />
           </AssociationSet>
+          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
         </EntityContainer>
         <EntityType Name="Library">
           <Key>
@@ -1109,6 +1111,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetLibrary_Result">
+          <Property Type="Int64" Name="LibraryID" Nullable="false" />
+          <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LibraryCoverFilePath" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
+          <Property Type="String" Name="ClientName" Nullable="false" MaxLength="201" />
+          <Property Type="String" Name="LibraryTypeName" Nullable="false" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1357,6 +1368,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetLibrary" FunctionName="JukeBoxModel.Store.GetLibrary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibrary_Result">
+                <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
+                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+                <ScalarProperty Name="LibraryTypeName" ColumnName="LibraryTypeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

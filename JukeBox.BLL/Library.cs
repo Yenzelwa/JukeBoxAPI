@@ -9,11 +9,11 @@ namespace JukeBox.BLL
 {
   public  class Library
     {
-        public List<JukeBox.Data.Library> GetLibrary()
+        public async Task<List<JukeBox.Data.GetLibrary_Result>> GetLibrary()
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Libraries.Include("LibraryDetails").Include("Client").ToList();
+                return  db.GetLibrary().ToList();
             }
         }
     }

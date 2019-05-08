@@ -12,6 +12,8 @@ namespace JukeBox.Data
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class JukeBoxEntities : DbContext
     {
@@ -46,5 +48,10 @@ namespace JukeBox.Data
         public virtual DbSet<Title> Titles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Library> Libraries { get; set; }
+    
+        public virtual ObjectResult<GetLibrary_Result> GetLibrary()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary");
+        }
     }
 }

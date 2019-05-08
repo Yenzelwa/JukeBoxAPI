@@ -89,6 +89,9 @@
     <Compile Include="CustomerTransactionType.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetLibrary_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="JukeBoxModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

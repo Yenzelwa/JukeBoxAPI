@@ -81,6 +81,18 @@ namespace JukeBoxApi.Controllers
             }
             return apiResp;
         }
+        [AllowAnonymous]
+        [Route("client/redeem")]
+        [HttpPost]
+        public bool RedeemVoucher(string pin , int clientId)
+        {
+            var apiResp = new ApiLoginClientResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = (new JukeBox.BLL.Account()).FlashRedeem(pin,clientId);
+
+       
+            return retVal;
+        }
 
 
 

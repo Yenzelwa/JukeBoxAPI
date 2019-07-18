@@ -73,4 +73,15 @@ namespace JukeBoxApi.Models
         public List<ApiLibrary> ResponseObject { get; set; }
         
     }
+    public class ApiLibraryDetailResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<ApiLibraryDetail> ResponseObject { get; set; }
+
+    }
 }

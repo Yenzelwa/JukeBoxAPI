@@ -40,5 +40,30 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
 
+        [AllowAnonymous]
+        [Route("detail/{id}")]
+        [HttpGet]
+        public async Task<ApiLibraryDetailResponse> GetLibraryDetail(long id)
+        {
+            var apiResp = new ApiLibraryDetailResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id);
+
+            if (retVal.Count > 0)
+            {
+                apiResp.ResponseObject = new List<ApiLibraryDetail>();
+                foreach (var _library in retVal)
+                {
+                    var libraryDetail = new ApiLibraryDetail();
+                    libraryDetail.Bind(_library);
+                    apiResp.ResponseObject.Add(libraryDetail);
+
+                }
+                apiResp.ResponseType = 1;
+                apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
+
     }
 }

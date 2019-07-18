@@ -9,6 +9,7 @@ namespace JukeBoxApi.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string CoverFilePath { get; set; }
         public decimal? Price { get; set; }
         public string Type { get; set; }
@@ -19,6 +20,7 @@ namespace JukeBoxApi.Models
         {
             Id = cr.LibraryID;
             Name = cr.LibraryName;
+            Description = cr.LibraryDescription;
             CoverFilePath = cr.LibraryCoverFilePath;
             Price = cr.Price;
             Type = cr.LibraryTypeName;

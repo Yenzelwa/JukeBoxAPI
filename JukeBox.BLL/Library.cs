@@ -13,7 +13,16 @@ namespace JukeBox.BLL
         {
             using (var db = new JukeBoxEntities())
             {
+
                 return  db.GetLibrary().ToList();
+            }
+        }
+        public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.GetLibraryDetail(libraryId).ToList();
             }
         }
     }

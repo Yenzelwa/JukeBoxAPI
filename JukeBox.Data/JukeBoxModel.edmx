@@ -286,18 +286,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CustomerTransaction_Purchase">
-          <End Role="Purchase" Type="Self.Purchase" Multiplicity="1" />
-          <End Role="CustomerTransaction" Type="Self.CustomerTransaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Purchase">
-              <PropertyRef Name="PurchaseID" />
-            </Principal>
-            <Dependent Role="CustomerTransaction">
-              <PropertyRef Name="FK_PurchaseD" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Library_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
           <End Role="Library" Type="Self.Library" Multiplicity="*" />
@@ -443,6 +431,20 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetLibraryDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LibraryId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="sp__VoucherRedeemProcedure" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="sp_ VoucherRedeemProcedure">
+          <Parameter Name="clientId" Type="bigint" Mode="In" />
+          <Parameter Name="voucherPin" Type="varchar" Mode="In" />
+          <Parameter Name="voucherTypeId" Type="bigint" Mode="In" />
+          <Parameter Name="voucherTransactionTypeId" Type="bigint" Mode="In" />
+          <Parameter Name="voucherStatusId" Type="smallint" Mode="In" />
+          <Parameter Name="redeemDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="voucherReferenceId" Type="bigint" Mode="In" />
+          <Parameter Name="amount" Type="decimal" Mode="In" />
+          <Parameter Name="isTxComplete" Type="bit" Mode="In" />
+        </Function>
         <EntityContainer Name="JukeBoxModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientContactDetail" EntityType="Self.ClientContactDetail" Schema="dbo" store:Type="Tables" />
@@ -483,10 +485,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_CustomerTransaction_CustomerTransactionType" Association="Self.FK_CustomerTransaction_CustomerTransactionType">
             <End Role="CustomerTransactionType" EntitySet="CustomerTransactionType" />
-            <End Role="CustomerTransaction" EntitySet="CustomerTransaction" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CustomerTransaction_Purchase" Association="Self.FK_CustomerTransaction_Purchase">
-            <End Role="Purchase" EntitySet="Purchase" />
             <End Role="CustomerTransaction" EntitySet="CustomerTransaction" />
           </AssociationSet>
           <AssociationSet Name="FK_Library_Client" Association="Self.FK_Library_Client">
@@ -1030,6 +1028,20 @@
             <End Role="Library" EntitySet="Libraries" />
             <End Role="Purchase" EntitySet="Purchases" />
           </AssociationSet>
+          <FunctionImport Name="sp__VoucherRedeemProcedure">
+            <Parameter Name="clientId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherPin" Mode="In" Type="String" />
+            <Parameter Name="voucherTypeId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherTransactionTypeId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherStatusId" Mode="In" Type="Int16" />
+            <Parameter Name="redeemDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="voucherReferenceId" Mode="In" Type="Int64" />
+            <Parameter Name="amount" Mode="In" Type="Decimal" />
+            <Parameter Name="isTxComplete" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="GetLibraryDetail" ReturnType="Collection(JukeBoxModel.GetLibraryDetail_Result)">
+          <Parameter Name="LibraryId" Mode="In" Type="Int64" />
+          </FunctionImport>
           <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
         </EntityContainer>
         <EntityType Name="Library">
@@ -1111,9 +1123,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetLibraryDetail_Result">
+          <Property Type="Int64" Name="LibraryDetailID" Nullable="false" />
+          <Property Type="String" Name="LibraryDetailName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
+        </ComplexType>
         <ComplexType Name="GetLibrary_Result">
           <Property Type="Int64" Name="LibraryID" Nullable="false" />
           <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LibraryDescription" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="LibraryCoverFilePath" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
@@ -1368,11 +1388,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp__VoucherRedeemProcedure" FunctionName="JukeBoxModel.Store.sp__VoucherRedeemProcedure" />
+          <FunctionImportMapping FunctionImportName="GetLibraryDetail" FunctionName="JukeBoxModel.Store.GetLibraryDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibraryDetail_Result">
+                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetLibrary" FunctionName="JukeBoxModel.Store.GetLibrary">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.GetLibrary_Result">
                 <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
                 <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="LibraryDescription" ColumnName="LibraryDescription" />
                 <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />

@@ -11,15 +11,12 @@ namespace JukeBox.Data
 {
     using System;
     
-    public partial class GetLibrary_Result
+    public partial class GetLibraryDetail_Result
     {
-        public long LibraryID { get; set; }
-        public string LibraryName { get; set; }
-        public string LibraryDescription { get; set; }
-        public string LibraryCoverFilePath { get; set; }
+        public long LibraryDetailID { get; set; }
+        public string LibraryDetailName { get; set; }
+        public string FilePath { get; set; }
         public Nullable<decimal> Price { get; set; }
         public System.DateTime DateCreated { get; set; }
-        public string ClientName { get; set; }
-        public string LibraryTypeName { get; set; }
     }
 }

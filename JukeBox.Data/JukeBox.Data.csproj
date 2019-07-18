@@ -96,6 +96,9 @@
     <Compile Include="CustomerTransactionType.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetLibraryDetail_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetLibrary_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>

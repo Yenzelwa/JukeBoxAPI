@@ -75,6 +75,7 @@
     <Compile Include="Request\ApiClientOneVoucherRedeemFilter.cs" />
     <Compile Include="Request\ApiClientUser.cs" />
     <Compile Include="Response\ApiClientOneVoucherRedeemResponse.cs" />
+    <Compile Include="Response\ApiResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JukeBox.Data\JukeBox.Data.csproj">

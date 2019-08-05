@@ -33,6 +33,50 @@ namespace JukeBox.BLL
                 return db.Clients.Where(x => x.Email == username  || x.CellPhone == username && x.ClientPassword == password).FirstOrDefault();
             }
         }
+        public Client GetClientById(int clientId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                return db.Clients.Where(x => x.ClientID ==clientId).FirstOrDefault();
+            }
+        }
+        public int  Saveclient(Client client)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                try
+                {
+                    var _client = new Client
+                    {
+                        FirstName = client.FirstName,
+                        LastName = client.LastName,
+                        ClientPassword = client.ClientPassword,
+                        CellPhone = client.CellPhone,
+                        FK_ClientStatusID = 1,
+                        ClientTitle = "Mr",
+                        CreatedBy = 1,
+                        DateCreated = DateTime.Now,
+                        FK_CompanyID = 1,
+                        FK_CountryID = 1,
+                        FK_IdentityTypeID = 1,
+                        Gender = "F",
+                        DateOfBirth = DateTime.Now,
+                        Email = client.Email,
+                        Initials = "N"
+
+                    };
+                    db.Clients.Add(_client);
+                    db.SaveChanges();
+                    return 1;
+                }
+                catch(Exception e)
+                {
+                    // TO DO'
+                    return 1;
+                }
+            }
+          
+        }
 
         public  string HashAndObfuscate(string unencryptedData)
         {

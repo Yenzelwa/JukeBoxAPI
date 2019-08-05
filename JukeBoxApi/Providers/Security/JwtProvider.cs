@@ -14,7 +14,7 @@ namespace JukeBoxApi.Providers.Security
 {
     public static class JwtProvider
     {
-        public static AccessTokenModel GetTokenResponse(string username, Client client)
+        public static TokenResponse GetTokenResponse(string username, Client client)
         {
             var claims = new List<Claim>
             {      CreateClaim(Constants.ClaimType.Username, username),
@@ -29,11 +29,15 @@ namespace JukeBoxApi.Providers.Security
             var expiresOnUtc = now.AddMinutes(Config.TokenExpiresMins).ToUniversalTime();
             var token = GenerateToken(username, claims, expiresOnUtc);
 
-            var tokenResponse = new AccessTokenModel
+            var tokenResponse = new TokenResponse
             {
-                Token = token,
-                Type = Constants.Auth.TokenType.Bearer,
-                ExpiryDateTimeUTC = expiresOnUtc
+                AccessToken = token,
+                TokenType = Constants.Auth.TokenType.Bearer,
+                Expires = expiresOnUtc,
+                 Issued = DateTime.Now,
+                  UserName = client.ClientID.ToString(),
+                 TokenResponseId = 1,
+                 ExpiresIn=2500
             };
 
             return tokenResponse;
@@ -107,7 +111,7 @@ namespace JukeBoxApi.Providers.Security
             return claims;
         }
 
-        public static BaseResponse<AccessTokenModel> RefreshToken(string token)
+        public static BaseResponse<TokenResponse> RefreshToken(string token)
         {
             try
             {
@@ -118,13 +122,13 @@ namespace JukeBoxApi.Providers.Security
                 var expiresOnUtc = now.AddMinutes(Config.TokenExpiresMins).ToUniversalTime();
                 var newToken = GenerateToken(username, claims, expiresOnUtc);
 
-                var tokenDetails = new BaseResponse<AccessTokenModel>
+                var tokenDetails = new BaseResponse<TokenResponse>
                 {
-                    ResponseObject = new AccessTokenModel
+                    ResponseObject = new TokenResponse
                     {
-                        Token = newToken,
-                        Type = Constants.Auth.TokenType.Bearer,
-                        ExpiryDateTimeUTC = expiresOnUtc
+                        AccessToken = newToken,
+                        TokenType = Constants.Auth.TokenType.Bearer,
+                        Expires = expiresOnUtc
                     },
                     ResponseMessage = "Success",
                     ResponseType = ResponseType.Success
@@ -135,7 +139,7 @@ namespace JukeBoxApi.Providers.Security
 
             catch(Exception ex)
             {
-                var error = new BaseResponse<AccessTokenModel>
+                var error = new BaseResponse<TokenResponse>
                 {
                     ResponseObject = null,
                     ResponseMessage = $"Failed - {ex.Message}",

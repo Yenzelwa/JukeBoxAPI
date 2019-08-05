@@ -17,10 +17,12 @@ using JukeBoxApi.Models;
 using JukeBoxApi.Providers;
 using JukeBoxApi.Results;
 using static JukeBoxApi.Models.ApiAccount;
+using JukeBoxApi.Providers.Security;
+using JukeBoxApi.Filters.JwtAuthFilters;
 
 namespace JukeBoxApi.Controllers
 {
-    [AllowAnonymous]
+    [JwtAuthorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
@@ -30,7 +32,7 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("user/login")]
         [HttpPost]
-        public ApiLoginUserResponse LoginUser(ApiLoginRequest uf)
+        public ApiLoginUserResponse LoginUser([FromBody]ApiLoginRequest uf)
         {
             var apiResp = new ApiLoginUserResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
@@ -63,23 +65,79 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
+        [Route("client")]
+        [HttpPost]
+        public Response saveClient([FromBody]User user)
+        {
+            var apiLoginClient = new Response {  IsSuccess = false , Message ="Failed"};
+         var retVal = (new JukeBox.BLL.Account()).Saveclient( 
+                new JukeBox.Data.Client {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    ClientPassword = user.Password,
+                    CellPhone = user.Telephone,
+                    FK_ClientStatusID = 1,
+                    ClientTitle = "Mr",
+                    CreatedBy = 1,
+                    DateCreated = DateTime.Now,
+                    FK_CompanyID = 1,
+                    FK_CountryID = 1,
+                    FK_IdentityTypeID = 1,
+                    Gender = "Female",
+                    DateOfBirth = DateTime.Now,
+                    Email = user.Email,
+                    Initials = "N", 
+                    BalanceAvailable=0,
+                     IdentityTypeValue="12555"
+
+                });
+
+            if (retVal > 0)
+            {
+                apiLoginClient.IsSuccess = true;
+                apiLoginClient.Message = "Sucess";
+                
+                return apiLoginClient;
+
+            }
+            return apiLoginClient;
+            
+        }
+        [AllowAnonymous]
         [Route("client/login")]
         [HttpPost]
-        public ApiLoginClientResponse LoginClient(ApiClientLoginRequest cf)
+        public TokenResponse LoginClient(string username , string password)
         {
-            var apiResp = new ApiLoginClientResponse { ResponseType = -1, ResponseMessage = "Failed" };
+            var apiResp = new TokenResponse ();
 
-            var retVal = (new JukeBox.BLL.Account()).LoginClient(cf.username, cf.password);
+            var retVal = (new JukeBox.BLL.Account()).LoginClient(username, password);
 
             if (retVal != null)
             {
-                var apiLoginClient = new ApiClient();
-                apiLoginClient.Bind(retVal);
-                apiResp.ResponseObject = apiLoginClient;
-                apiResp.ResponseType = 1;
-                apiResp.ResponseMessage = "Success";
+                apiResp = JwtProvider.GetTokenResponse(retVal.FirstName, retVal);
+                //var apiLoginClient = new ApiClient();
+                //apiLoginClient.Bind(retVal);
+                //apiResp.ResponseObject = apiLoginClient;
+                //apiResp.ResponseType = 1;
+                //apiResp.ResponseMessage = "Success";
             }
             return apiResp;
+        }
+    
+        [Route("client/getclient")]
+        [HttpPost]
+        public User GeClient(UserRequest userRequest)
+        {
+            var apiLoginClient = new User();
+            var clientId = Convert.ToInt32(userRequest.ClientId);
+            var retVal = (new JukeBox.BLL.Account()).GetClientById(clientId);
+
+            if (retVal != null)
+            {
+                apiLoginClient.Bind(retVal);
+
+            }
+            return apiLoginClient;
         }
         [AllowAnonymous]
         [Route("client/redeem")]

@@ -60,7 +60,7 @@ namespace JukeBoxApi.Models
         /// <value>
         /// The session token.
         /// </value>
-        public string SessionToken { get; set; }
+        public TokenResponse AccessToken { get; set; }
     }
     public class ApiLibraryResponse : ApiResponse
     {

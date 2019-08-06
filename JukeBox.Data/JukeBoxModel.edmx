@@ -1049,7 +1049,7 @@
           <Parameter Name="LibraryId" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
-          <FunctionImport Name="sp__Purchase" ReturnType="Collection(Decimal)">
+          <FunctionImport Name="sp__Purchase" ReturnType="Collection(JukeBoxModel.sp__Purchase_Result)">
             <Parameter Name="libraryId" Mode="In" Type="Int64" />
             <Parameter Name="libraryDetailId" Mode="In" Type="Int64" />
             <Parameter Name="clientId" Mode="In" Type="Int32" />
@@ -1151,6 +1151,10 @@
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
           <Property Type="String" Name="ClientName" Nullable="false" MaxLength="201" />
           <Property Type="String" Name="LibraryTypeName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp__Purchase_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1426,7 +1430,14 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase" />
+          <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.sp__Purchase_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

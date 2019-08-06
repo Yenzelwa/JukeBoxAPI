@@ -65,19 +65,19 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
-        [Route("detail/{id}")]
-        [HttpGet]
-        public async Task<ApiResponse> PurchaseLibrary(long id)
+        [Route("purchase")]
+        [HttpPost]
+        public async Task<ApiResponse> PurchaseLibrary([FromBody]PurchaseOrderRequest  request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id);
+            var retVal = await (new JukeBox.BLL.Library()).PurchaseOrder(request.LibraryId, request.LibraryDetailId , request.ClientId ,request.UserId);
 
-            if (retVal.Count > 0)
+            if (retVal!= null)
             {
                 
-                apiResp.ResponseType = 1;
-                apiResp.ResponseMessage = "Success";
+                apiResp.ResponseType = Convert.ToInt16(retVal.Success);
+                apiResp.ResponseMessage = retVal.Message;
             }
             return apiResp;
         }

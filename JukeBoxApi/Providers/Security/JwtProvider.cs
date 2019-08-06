@@ -14,11 +14,11 @@ namespace JukeBoxApi.Providers.Security
 {
     public static class JwtProvider
     {
-        public static TokenResponse GetTokenResponse(string username, Client client)
+        public static TokenResponse GetTokenResponse(string username, Customer client)
         {
             var claims = new List<Claim>
             {      CreateClaim(Constants.ClaimType.Username, username),
-                   CreateClaim(Constants.ClaimType.PunterId, client.ClientID.ToString()),
+                   CreateClaim(Constants.ClaimType.PunterId, client.CustomerID.ToString()),
                    CreateClaim(Constants.ClaimType.FirstName, client.FirstName),
                    CreateClaim(Constants.ClaimType.LastName, client.LastName),
                    CreateClaim(Constants.ClaimType.CellPhone, client.CellPhone),
@@ -35,7 +35,7 @@ namespace JukeBoxApi.Providers.Security
                 TokenType = Constants.Auth.TokenType.Bearer,
                 Expires = expiresOnUtc,
                  Issued = DateTime.Now,
-                  UserName = client.ClientID.ToString(),
+                  UserName = client.CustomerID.ToString(),
                  TokenResponseId = 1,
                  ExpiresIn=2500
             };

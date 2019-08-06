@@ -23,7 +23,7 @@ using JukeBoxApi.Filters.JwtAuthFilters;
 namespace JukeBoxApi.Controllers
 {
     [JwtAuthorize]
-    [RoutePrefix("api/Account")]
+    [RoutePrefix("api/account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -65,30 +65,22 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
-        [Route("client")]
+        [Route("customer")]
         [HttpPost]
         public Response saveClient([FromBody]User user)
         {
             var apiLoginClient = new Response {  IsSuccess = false , Message ="Failed"};
-         var retVal = (new JukeBox.BLL.Account()).Saveclient( 
-                new JukeBox.Data.Client {
+         var retVal = (new JukeBox.BLL.Account()).SaveCustomer( 
+                new JukeBox.Data.Customer {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     ClientPassword = user.Password,
                     CellPhone = user.Telephone,
-                    FK_ClientStatusID = 1,
-                    ClientTitle = "Mr",
-                    CreatedBy = 1,
+                    FK_CustomerStatusID = 1,
                     DateCreated = DateTime.Now,
-                    FK_CompanyID = 1,
-                    FK_CountryID = 1,
-                    FK_IdentityTypeID = 1,
-                    Gender = "Female",
-                    DateOfBirth = DateTime.Now,
                     Email = user.Email,
-                    Initials = "N", 
-                    BalanceAvailable=0,
-                     IdentityTypeValue="12555"
+                    BalanceAvailable=0
+                    
 
                 });
 
@@ -104,7 +96,7 @@ namespace JukeBoxApi.Controllers
             
         }
         [AllowAnonymous]
-        [Route("client/login")]
+        [Route("customer/login")]
         [HttpPost]
         public TokenResponse LoginClient([FromBody]ApiClientLoginRequest client)
         {
@@ -124,13 +116,13 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
     
-        [Route("client/getclient")]
+        [Route("customer/getcustomer")]
         [HttpPost]
-        public User GeClient(UserRequest userRequest)
+        public User GeCustomer(UserRequest userRequest)
         {
             var apiLoginClient = new User();
             var clientId = Convert.ToInt32(userRequest.ClientId);
-            var retVal = (new JukeBox.BLL.Account()).GetClientById(clientId);
+            var retVal = (new JukeBox.BLL.Account()).GetCustomerById(clientId);
 
             if (retVal != null)
             {
@@ -140,7 +132,7 @@ namespace JukeBoxApi.Controllers
             return apiLoginClient;
         }
         [AllowAnonymous]
-        [Route("client/redeem")]
+        [Route("customer/redeem")]
         [HttpPost]
         public JukeBox.BLL.Response.ApiResponse RedeemVoucher(string pin , int clientId)
         {

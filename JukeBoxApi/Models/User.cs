@@ -38,7 +38,7 @@ namespace JukeBoxApi.Models
             {
                 if (string.IsNullOrEmpty(ImagePath))
                 {
-                    return "noimage";
+                    return "no_image";
                 }
 
                 return string.Format(
@@ -54,10 +54,10 @@ namespace JukeBoxApi.Models
                 return string.Format("{0} {1}", this.FirstName, this.LastName);
             }
         }
-        public void Bind(JukeBox.Data.Client cr)
+        public void Bind(JukeBox.Data.Customer cr)
         {
 
-            UserId = cr.ClientID;
+            UserId = cr.CustomerID;
             FirstName = cr.FirstName;
             LastName = cr.LastName;
             BalanceAvailable = cr.BalanceAvailable;

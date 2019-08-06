@@ -26,46 +26,39 @@ namespace JukeBox.BLL
 
             }
         }
-        public Client LoginClient(string username, string password)
+        public Customer LoginClient(string username, string password)
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Clients.Where(x => x.Email == username  || x.CellPhone == username && x.ClientPassword == password).FirstOrDefault();
+                return db.Customers.Where(x => x.Email == username  || x.CellPhone == username && x.ClientPassword == password).FirstOrDefault();
             }
         }
-        public Client GetClientById(int clientId)
+        public Customer GetCustomerById(int customerId)
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Clients.Where(x => x.ClientID ==clientId).FirstOrDefault();
+                return db.Customers.Where(x => x.CustomerID ==customerId).FirstOrDefault();
             }
         }
-        public int  Saveclient(Client client)
+        public int  SaveCustomer(Customer client)
         {
             using (var db = new JukeBoxEntities())
             {
                 try
                 {
-                    var _client = new Client
+                    var _customer = new Customer
                     {
                         FirstName = client.FirstName,
                         LastName = client.LastName,
                         ClientPassword = client.ClientPassword,
                         CellPhone = client.CellPhone,
-                        FK_ClientStatusID = 1,
-                        ClientTitle = "Mr",
-                        CreatedBy = 1,
+                        FK_CustomerStatusID = 1,
                         DateCreated = DateTime.Now,
-                        FK_CompanyID = 1,
-                        FK_CountryID = 1,
-                        FK_IdentityTypeID = 1,
-                        Gender = "F",
-                        DateOfBirth = DateTime.Now,
                         Email = client.Email,
-                        Initials = "N"
+                        BalanceAvailable =0
 
                     };
-                    db.Clients.Add(_client);
+                    db.Customers.Add(_customer);
                     db.SaveChanges();
                     return 1;
                 }

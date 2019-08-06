@@ -25,5 +25,13 @@ namespace JukeBox.BLL
                 return db.GetLibraryDetail(libraryId).ToList();
             }
         }
+        public async Task<sp__Purchase_Result> PurchaseOrder(long libraryId , long libraryDetailId , int clientId, int userId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.sp__Purchase(libraryId,libraryDetailId,clientId,userId).FirstOrDefault();
+            }
+        }
     }
 }

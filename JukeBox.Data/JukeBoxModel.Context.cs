@@ -103,5 +103,26 @@ namespace JukeBox.Data
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary");
         }
+    
+        public virtual ObjectResult<Nullable<decimal>> sp__Purchase(Nullable<long> libraryId, Nullable<long> libraryDetailId, Nullable<int> clientId, Nullable<int> userId)
+        {
+            var libraryIdParameter = libraryId.HasValue ?
+                new ObjectParameter("libraryId", libraryId) :
+                new ObjectParameter("libraryId", typeof(long));
+    
+            var libraryDetailIdParameter = libraryDetailId.HasValue ?
+                new ObjectParameter("libraryDetailId", libraryDetailId) :
+                new ObjectParameter("libraryDetailId", typeof(long));
+    
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(int));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("sp__Purchase", libraryIdParameter, libraryDetailIdParameter, clientIdParameter, userIdParameter);
+        }
     }
 }

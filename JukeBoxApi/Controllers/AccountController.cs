@@ -106,11 +106,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("client/login")]
         [HttpPost]
-        public TokenResponse LoginClient(string username , string password)
+        public TokenResponse LoginClient([FromBody]ApiClientLoginRequest client)
         {
             var apiResp = new TokenResponse ();
 
-            var retVal = (new JukeBox.BLL.Account()).LoginClient(username, password);
+            var retVal = (new JukeBox.BLL.Account()).LoginClient(client.username, client.password);
 
             if (retVal != null)
             {

@@ -434,6 +434,12 @@
         <Function Name="GetLibraryDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LibraryId" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="sp__Purchase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="sp_ Purchase">
+          <Parameter Name="libraryId" Type="bigint" Mode="In" />
+          <Parameter Name="libraryDetailId" Type="bigint" Mode="In" />
+          <Parameter Name="clientId" Type="int" Mode="In" />
+          <Parameter Name="userId" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp__VoucherRedeemProcedure" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="sp_ VoucherRedeemProcedure">
           <Parameter Name="clientId" Type="bigint" Mode="In" />
           <Parameter Name="voucherPin" Type="varchar" Mode="In" />
@@ -1043,6 +1049,12 @@
           <Parameter Name="LibraryId" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
+          <FunctionImport Name="sp__Purchase" ReturnType="Collection(Decimal)">
+            <Parameter Name="libraryId" Mode="In" Type="Int64" />
+            <Parameter Name="libraryDetailId" Mode="In" Type="Int64" />
+            <Parameter Name="clientId" Mode="In" Type="Int32" />
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Library">
           <Key>
@@ -1414,6 +1426,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

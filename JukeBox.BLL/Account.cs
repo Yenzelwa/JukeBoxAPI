@@ -90,7 +90,7 @@ namespace JukeBox.BLL
             return BitConverter.ToString(encodedBytes);
         }
 
-        public ApiResponse FlashRedeem(string voucherpin , int clientId)
+        public ApiResponse FlashRedeem(string voucherpin , long clientId)
         {
             var response = new ApiResponse
             {

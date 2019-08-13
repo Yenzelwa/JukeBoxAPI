@@ -11,6 +11,7 @@ namespace JukeBoxApi.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string CoverFilePath { get; set; }
+        public string FilePath { get; set; }
         public decimal? Price { get; set; }
         public string Type { get; set; }
         public string Artist { get; set; }
@@ -22,6 +23,7 @@ namespace JukeBoxApi.Models
             Name = cr.LibraryName;
             Description = cr.LibraryDescription;
             CoverFilePath = cr.LibraryCoverFilePath;
+            FilePath = cr.LibraryFilePath;
             Price = cr.Price;
             Type = cr.LibraryTypeName;
             Artist = cr.ClientName;

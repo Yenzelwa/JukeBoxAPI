@@ -99,11 +99,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter);
         }
     
-        public virtual ObjectResult<GetLibrary_Result> GetLibrary()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary");
-        }
-    
         public virtual ObjectResult<sp__Purchase_Result> sp__Purchase(Nullable<long> libraryId, Nullable<long> libraryDetailId, Nullable<int> clientId, Nullable<int> userId)
         {
             var libraryIdParameter = libraryId.HasValue ?
@@ -123,6 +118,11 @@ namespace JukeBox.Data
                 new ObjectParameter("userId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__Purchase_Result>("sp__Purchase", libraryIdParameter, libraryDetailIdParameter, clientIdParameter, userIdParameter);
+        }
+    
+        public virtual ObjectResult<GetLibrary_Result> GetLibrary()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary");
         }
     }
 }

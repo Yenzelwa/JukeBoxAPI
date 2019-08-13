@@ -30,6 +30,7 @@ namespace JukeBox.Data
         public Nullable<decimal> Price { get; set; }
         public System.DateTime DateCreated { get; set; }
         public int CreatedBy { get; set; }
+        public string LibraryFilePath { get; set; }
     
         public virtual Client Client { get; set; }
         public virtual LibraryType LibraryType { get; set; }

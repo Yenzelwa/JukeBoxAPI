@@ -126,6 +126,7 @@
           <Property Name="LibraryName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LibraryCoverFilePath" Type="nvarchar" MaxLength="100" />
           <Property Name="LibraryDescription" Type="varchar" MaxLength="200" />
+          <Property Name="LibraryFilePath" Type="nvarchar" MaxLength="100" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
@@ -1048,13 +1049,13 @@
           <FunctionImport Name="GetLibraryDetail" ReturnType="Collection(JukeBoxModel.GetLibraryDetail_Result)">
           <Parameter Name="LibraryId" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
           <FunctionImport Name="sp__Purchase" ReturnType="Collection(JukeBoxModel.sp__Purchase_Result)">
             <Parameter Name="libraryId" Mode="In" Type="Int64" />
             <Parameter Name="libraryDetailId" Mode="In" Type="Int64" />
             <Parameter Name="clientId" Mode="In" Type="Int32" />
             <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
         </EntityContainer>
         <EntityType Name="Library">
           <Key>
@@ -1074,6 +1075,7 @@
           <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_Library_User" FromRole="Library" ToRole="User" />
           <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="Library" ToRole="LibraryDetail" />
           <NavigationProperty Name="Purchases" Relationship="JukeBoxModel.FK_Purchase_Library" FromRole="Library" ToRole="Purchase" />
+          <Property Name="LibraryFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Library_Client">
           <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
@@ -1142,19 +1144,20 @@
           <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
         </ComplexType>
+        <ComplexType Name="sp__Purchase_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
+        </ComplexType>
         <ComplexType Name="GetLibrary_Result">
           <Property Type="Int64" Name="LibraryID" Nullable="false" />
           <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="LibraryDescription" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="LibraryCoverFilePath" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LibraryFilePath" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
           <Property Type="String" Name="ClientName" Nullable="false" MaxLength="201" />
           <Property Type="String" Name="LibraryTypeName" Nullable="false" MaxLength="50" />
-        </ComplexType>
-        <ComplexType Name="sp__Purchase_Result">
-          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
-          <Property Type="Boolean" Name="Success" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1392,6 +1395,7 @@
           <EntitySetMapping Name="Libraries">
             <EntityTypeMapping TypeName="JukeBoxModel.Library">
               <MappingFragment StoreEntitySet="Library">
+                <ScalarProperty Name="LibraryFilePath" ColumnName="LibraryFilePath" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
@@ -1416,6 +1420,14 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.sp__Purchase_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetLibrary" FunctionName="JukeBoxModel.Store.GetLibrary">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.GetLibrary_Result">
@@ -1423,18 +1435,11 @@
                 <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
                 <ScalarProperty Name="LibraryDescription" ColumnName="LibraryDescription" />
                 <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
+                <ScalarProperty Name="LibraryFilePath" ColumnName="LibraryFilePath" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="LibraryTypeName" ColumnName="LibraryTypeName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JukeBoxModel.sp__Purchase_Result">
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="Success" ColumnName="Success" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

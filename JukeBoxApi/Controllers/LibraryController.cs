@@ -16,13 +16,37 @@ namespace JukeBoxApi.Controllers
     public class LibraryController : ApiController
     {
         [AllowAnonymous]
-        [Route("")]
+        [Route("library/type")]
         [HttpGet]
-        public async Task<ApiLibraryResponse> GetLibrary()
+        public async Task<ApiLibraryTypeResponse> GetLibraryType()
+        {
+            var apiResp = new ApiLibraryTypeResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).GetLibraryType();
+
+            if (retVal.Count > 0)
+            {
+                apiResp.ResponseObject = new List<ApiLibraryType>();
+                foreach (var _library in retVal)
+                {
+                    var libraryType = new ApiLibraryType();
+                    libraryType.Bind(_library);
+                    apiResp.ResponseObject.Add(libraryType);
+
+                }
+                apiResp.ResponseType = 1;
+                apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("{filter}")]
+        [HttpGet]
+        public async Task<ApiLibraryResponse> GetLibrary(int filter)
         {
             var apiResp = new ApiLibraryResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetLibrary();
+            var retVal = await (new JukeBox.BLL.Library()).GetLibrary(filter);
 
             if (retVal.Count > 0)
             {
@@ -76,6 +100,23 @@ namespace JukeBoxApi.Controllers
             if (retVal!= null)
             {
                 
+                apiResp.ResponseType = Convert.ToInt16(retVal.Success);
+                apiResp.ResponseMessage = retVal.Message;
+            }
+            return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("purchase/albumurls/{libraryId}")]
+        [HttpGet]
+        public async Task<ApiResponse> GetAlbumUrls(long libraryId)
+        {
+            var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).PurchaseOrder(request.LibraryId, request.LibraryDetailId, request.ClientId, request.UserId);
+
+            if (retVal != null)
+            {
+
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
                 apiResp.ResponseMessage = retVal.Message;
             }

@@ -431,7 +431,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="filterType" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetLibraryDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LibraryId" Type="bigint" Mode="In" />
         </Function>
@@ -1055,7 +1057,9 @@
             <Parameter Name="clientId" Mode="In" Type="Int32" />
             <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)" />
+          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)">
+            <Parameter Name="filterType" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Library">
           <Key>

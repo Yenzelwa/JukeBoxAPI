@@ -9,12 +9,20 @@ namespace JukeBox.BLL
 {
   public  class Library
     {
-        public async Task<List<JukeBox.Data.GetLibrary_Result>> GetLibrary()
+        public async Task<List<JukeBox.Data.LibraryType>> GetLibraryType()
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return  db.GetLibrary().ToList();
+                return db.LibraryTypes.ToList();
+            }
+        }
+        public async Task<List<JukeBox.Data.GetLibrary_Result>> GetLibrary(int filter)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return  db.GetLibrary(filter).ToList();
             }
         }
         public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId)
@@ -31,6 +39,14 @@ namespace JukeBox.BLL
             {
 
                 return db.sp__Purchase(libraryId,libraryDetailId,clientId,userId).FirstOrDefault();
+            }
+        }
+        public async Task<sp__Purchase_Result> GetAlbumUrs(long libraryId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.LibraryDetails.Where(x=>x.FK_LibraryID == libraryId).();
             }
         }
     }

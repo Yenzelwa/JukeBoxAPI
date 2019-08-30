@@ -120,9 +120,13 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__Purchase_Result>("sp__Purchase", libraryIdParameter, libraryDetailIdParameter, clientIdParameter, userIdParameter);
         }
     
-        public virtual ObjectResult<GetLibrary_Result> GetLibrary()
+        public virtual ObjectResult<GetLibrary_Result> GetLibrary(Nullable<int> filterType)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary");
+            var filterTypeParameter = filterType.HasValue ?
+                new ObjectParameter("filterType", filterType) :
+                new ObjectParameter("filterType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter);
         }
     }
 }

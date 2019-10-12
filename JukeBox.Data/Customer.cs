@@ -18,6 +18,7 @@ namespace JukeBox.Data
         public Customer()
         {
             this.CustomerTransactions = new HashSet<CustomerTransaction>();
+            this.Purchases = new HashSet<Purchase>();
         }
     
         public int CustomerID { get; set; }
@@ -33,5 +34,7 @@ namespace JukeBox.Data
         public virtual CustomerStatu CustomerStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CustomerTransaction> CustomerTransactions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }

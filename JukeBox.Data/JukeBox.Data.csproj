@@ -84,6 +84,12 @@
     <Compile Include="Country.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Create_Library_Detail_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Create_Library_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Customer.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>

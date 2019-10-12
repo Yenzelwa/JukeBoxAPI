@@ -25,12 +25,12 @@ namespace JukeBox.BLL
                 return  db.GetLibrary(filter).ToList();
             }
         }
-        public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId)
+        public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId, int? clientId)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.GetLibraryDetail(libraryId).ToList();
+                return db.GetLibraryDetail(libraryId, clientId).ToList();
             }
         }
         public async Task<sp__Purchase_Result> PurchaseOrder(long libraryId , long libraryDetailId , int clientId, int userId)
@@ -41,13 +41,24 @@ namespace JukeBox.BLL
                 return db.sp__Purchase(libraryId,libraryDetailId,clientId,userId).FirstOrDefault();
             }
         }
-        public async Task<sp__Purchase_Result> GetAlbumUrs(long libraryId)
+        public async Task<Create_Library_Result> CreateLibrary(long libraryId, int clientId, 
+            short libraryType, string libraryName, string libraryDes ,string librayFilePath, decimal price, int userId)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.LibraryDetails.Where(x=>x.FK_LibraryID == libraryId).();
+                return db.Create_Library(libraryId, clientId,libraryType,libraryName,librayFilePath,libraryDes,price,userId).FirstOrDefault();
             }
         }
+        public async Task<Create_Library_Detail_Result> CreateLibraryDetail(long libraryDetailId, int libraryId, 
+            short librarySatus, string libraryDetailName, string librayFilePath, decimal price, int userId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.Create_Library_Detail(libraryDetailId, libraryId, librarySatus, libraryDetailName, librayFilePath, price, userId).FirstOrDefault();
+            }
+        }
+
     }
 }

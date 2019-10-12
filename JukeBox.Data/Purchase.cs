@@ -27,6 +27,7 @@ namespace JukeBox.Data
         public System.DateTime PurchaseDateTime { get; set; }
         public short PurchaseItemNumber { get; set; }
         public int FK_UserID { get; set; }
+        public int FK_CustomerID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CustomerTransaction> CustomerTransactions { get; set; }
@@ -34,5 +35,6 @@ namespace JukeBox.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }
         public virtual Library Library { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace JukeBox.Data
         public string LibraryDetailName { get; set; }
         public string FilePath { get; set; }
         public Nullable<decimal> Price { get; set; }
+        public Nullable<bool> AlbumDownload { get; set; }
+        public Nullable<bool> SongDownload { get; set; }
         public System.DateTime DateCreated { get; set; }
     }
 }

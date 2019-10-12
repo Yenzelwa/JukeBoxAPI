@@ -1,13 +1,13 @@
-﻿using JukeBoxApi.Models;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System;
 using static JukeBoxApi.Models.ApiLibrary;
 using System.Threading.Tasks;
+using JukeBoxApi.Models;
 
 namespace JukeBoxApi.Controllers
 {
@@ -42,7 +42,7 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("{filter}")]
         [HttpGet]
-        public async Task<ApiLibraryResponse> GetLibrary(int filter)
+        public async Task<ApiLibraryResponse> GetLibrary(int filter )
         {
             var apiResp = new ApiLibraryResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
@@ -67,11 +67,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("detail/{id}")]
         [HttpGet]
-        public async Task<ApiLibraryDetailResponse> GetLibraryDetail(long id)
+        public async Task<ApiLibraryDetailResponse> GetLibraryDetail(long id , int? clientid=null)
         {
             var apiResp = new ApiLibraryDetailResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id);
+            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id , clientid);
 
             if (retVal.Count > 0)
             {
@@ -105,16 +105,39 @@ namespace JukeBoxApi.Controllers
             }
             return apiResp;
         }
+
+
         [AllowAnonymous]
-        [Route("purchase/albumurls/{libraryId}")]
-        [HttpGet]
-        public async Task<ApiResponse> GetAlbumUrls(long libraryId)
+        [Route("library")]
+        [HttpPost]
+        public async Task<ApiResponse> CreateLibrary([FromBody]LibraryRequest request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).PurchaseOrder(request.LibraryId, request.LibraryDetailId, request.ClientId, request.UserId);
+            var retVal = await (new JukeBox.BLL.Library()).CreateLibrary(request.LibraryID, request.FK_ClientID , request.FK_LibraryTypeID,
+                request.LibraryName , request.LibraryDescription ,request.LibraryCoverFilePath, request.Price,request.CreatedBy);
 
-            if (retVal != null)
+
+            if (retVal.Success.HasValue)
+            {
+                apiResp.ResponseType = Convert.ToInt16(retVal.Success);
+                apiResp.ResponseMessage = retVal.Message;
+            }
+            return apiResp;
+        }
+
+        [AllowAnonymous]
+        [Route("librarydetail")]
+        [HttpPost]
+        public async Task<ApiResponse> CreateLibraryDetail([FromBody]LibraryDetailRequest request)
+        {
+            var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).CreateLibraryDetail(request.LibraryDetailID, request.FK_LibraryID, request.FK_LibraryStatusID,
+                request.LibraryDetailName,  request.FilePath, request.Price, request.CreatedBy);
+
+
+            if (retVal.Success.HasValue)
             {
 
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
@@ -123,4 +146,5 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
     }
-}
+    }
+

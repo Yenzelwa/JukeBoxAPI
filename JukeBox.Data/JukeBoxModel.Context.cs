@@ -90,15 +90,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp__VoucherRedeemProcedure", clientIdParameter, voucherPinParameter, voucherTypeIdParameter, voucherTransactionTypeIdParameter, voucherStatusIdParameter, redeemDateTimeParameter, voucherReferenceIdParameter, amountParameter, isTxCompleteParameter);
         }
     
-        public virtual ObjectResult<GetLibraryDetail_Result> GetLibraryDetail(Nullable<long> libraryId)
-        {
-            var libraryIdParameter = libraryId.HasValue ?
-                new ObjectParameter("LibraryId", libraryId) :
-                new ObjectParameter("LibraryId", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter);
-        }
-    
         public virtual ObjectResult<sp__Purchase_Result> sp__Purchase(Nullable<long> libraryId, Nullable<long> libraryDetailId, Nullable<int> clientId, Nullable<int> userId)
         {
             var libraryIdParameter = libraryId.HasValue ?
@@ -127,6 +118,89 @@ namespace JukeBox.Data
                 new ObjectParameter("filterType", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter);
+        }
+    
+        public virtual ObjectResult<GetLibraryDetail_Result> GetLibraryDetail(Nullable<long> libraryId, Nullable<int> clientId)
+        {
+            var libraryIdParameter = libraryId.HasValue ?
+                new ObjectParameter("LibraryId", libraryId) :
+                new ObjectParameter("LibraryId", typeof(long));
+    
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter, clientIdParameter);
+        }
+    
+        public virtual ObjectResult<Create_Library_Result> Create_Library(Nullable<long> libraryId, Nullable<int> fK_ClientId, Nullable<short> libraryTypeId, string libraryName, string libraryCoverFilePath, string libraryDescription, Nullable<decimal> price, Nullable<int> createdBy)
+        {
+            var libraryIdParameter = libraryId.HasValue ?
+                new ObjectParameter("LibraryId", libraryId) :
+                new ObjectParameter("LibraryId", typeof(long));
+    
+            var fK_ClientIdParameter = fK_ClientId.HasValue ?
+                new ObjectParameter("FK_ClientId", fK_ClientId) :
+                new ObjectParameter("FK_ClientId", typeof(int));
+    
+            var libraryTypeIdParameter = libraryTypeId.HasValue ?
+                new ObjectParameter("LibraryTypeId", libraryTypeId) :
+                new ObjectParameter("LibraryTypeId", typeof(short));
+    
+            var libraryNameParameter = libraryName != null ?
+                new ObjectParameter("LibraryName", libraryName) :
+                new ObjectParameter("LibraryName", typeof(string));
+    
+            var libraryCoverFilePathParameter = libraryCoverFilePath != null ?
+                new ObjectParameter("LibraryCoverFilePath", libraryCoverFilePath) :
+                new ObjectParameter("LibraryCoverFilePath", typeof(string));
+    
+            var libraryDescriptionParameter = libraryDescription != null ?
+                new ObjectParameter("LibraryDescription", libraryDescription) :
+                new ObjectParameter("LibraryDescription", typeof(string));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("Price", price) :
+                new ObjectParameter("Price", typeof(decimal));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_Library_Result>("Create_Library", libraryIdParameter, fK_ClientIdParameter, libraryTypeIdParameter, libraryNameParameter, libraryCoverFilePathParameter, libraryDescriptionParameter, priceParameter, createdByParameter);
+        }
+    
+        public virtual ObjectResult<Create_Library_Detail_Result> Create_Library_Detail(Nullable<long> libraryDetailId, Nullable<int> fK_LibraryId, Nullable<short> fK_LibraryStatusId, string libraryDetailName, string filePath, Nullable<decimal> price, Nullable<int> createdBy)
+        {
+            var libraryDetailIdParameter = libraryDetailId.HasValue ?
+                new ObjectParameter("LibraryDetailId", libraryDetailId) :
+                new ObjectParameter("LibraryDetailId", typeof(long));
+    
+            var fK_LibraryIdParameter = fK_LibraryId.HasValue ?
+                new ObjectParameter("FK_LibraryId", fK_LibraryId) :
+                new ObjectParameter("FK_LibraryId", typeof(int));
+    
+            var fK_LibraryStatusIdParameter = fK_LibraryStatusId.HasValue ?
+                new ObjectParameter("FK_LibraryStatusId", fK_LibraryStatusId) :
+                new ObjectParameter("FK_LibraryStatusId", typeof(short));
+    
+            var libraryDetailNameParameter = libraryDetailName != null ?
+                new ObjectParameter("LibraryDetailName", libraryDetailName) :
+                new ObjectParameter("LibraryDetailName", typeof(string));
+    
+            var filePathParameter = filePath != null ?
+                new ObjectParameter("FilePath", filePath) :
+                new ObjectParameter("FilePath", typeof(string));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("Price", price) :
+                new ObjectParameter("Price", typeof(decimal));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_Library_Detail_Result>("Create_Library_Detail", libraryDetailIdParameter, fK_LibraryIdParameter, fK_LibraryStatusIdParameter, libraryDetailNameParameter, filePathParameter, priceParameter, createdByParameter);
         }
     }
 }

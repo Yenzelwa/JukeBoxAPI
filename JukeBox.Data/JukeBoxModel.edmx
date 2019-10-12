@@ -169,6 +169,7 @@
           <Property Name="PurchaseDateTime" Type="datetime" Nullable="false" />
           <Property Name="PurchaseItemNumber" Type="smallint" Nullable="false" />
           <Property Name="FK_UserID" Type="int" Nullable="false" />
+          <Property Name="FK_CustomerID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PurchaseDetail">
           <Key>
@@ -179,6 +180,7 @@
           <Property Name="FK_LibraryDetailID" Type="bigint" />
           <Property Name="PurchaseAmount" Type="decimal" Precision="18" Scale="7" />
           <Property Name="PurchaseDate" Type="datetime" />
+          <Property Name="FK_CustomerID" Type="int" />
         </EntityType>
         <EntityType Name="Region">
           <Key>
@@ -360,14 +362,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Purchase_Library">
-          <End Role="Library" Type="Self.Library" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
           <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Library">
-              <PropertyRef Name="LibraryID" />
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
             </Principal>
             <Dependent Role="Purchase">
-              <PropertyRef Name="FK_LibraryID" />
+              <PropertyRef Name="FK_CustomerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -431,11 +433,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Create_Library" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LibraryId" Type="bigint" Mode="In" />
+          <Parameter Name="FK_ClientId" Type="int" Mode="In" />
+          <Parameter Name="LibraryTypeId" Type="smallint" Mode="In" />
+          <Parameter Name="LibraryName" Type="varchar" Mode="In" />
+          <Parameter Name="LibraryCoverFilePath" Type="nvarchar" Mode="In" />
+          <Parameter Name="LibraryDescription" Type="varchar" Mode="In" />
+          <Parameter Name="Price" Type="decimal" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Create_Library_Detail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LibraryDetailId" Type="bigint" Mode="In" />
+          <Parameter Name="FK_LibraryId" Type="int" Mode="In" />
+          <Parameter Name="FK_LibraryStatusId" Type="smallint" Mode="In" />
+          <Parameter Name="LibraryDetailName" Type="varchar" Mode="In" />
+          <Parameter Name="FilePath" Type="nvarchar" Mode="In" />
+          <Parameter Name="Price" Type="decimal" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="filterType" Type="int" Mode="In" />
         </Function>
         <Function Name="GetLibraryDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LibraryId" Type="bigint" Mode="In" />
+          <Parameter Name="clientId" Type="int" Mode="In" />
         </Function>
         <Function Name="sp__Purchase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="sp_ Purchase">
           <Parameter Name="libraryId" Type="bigint" Mode="In" />
@@ -521,7 +543,7 @@
             <End Role="LibraryDetail" EntitySet="LibraryDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_Purchase_Library" Association="Self.FK_Purchase_Library">
-            <End Role="Library" EntitySet="Library" />
+            <End Role="Customer" EntitySet="Customer" />
             <End Role="Purchase" EntitySet="Purchase" />
           </AssociationSet>
           <AssociationSet Name="FK_Purchase_User" Association="Self.FK_Purchase_User">
@@ -638,6 +660,7 @@
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="CustomerStatu" Relationship="Self.FK_Customer_CustomerStatus" FromRole="Customer" ToRole="CustomerStatus" />
           <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_Customer" FromRole="Customer" ToRole="CustomerTransaction" />
+          <NavigationProperty Name="Purchases" Relationship="JukeBoxModel.FK_Purchase_Library1" FromRole="Customer" ToRole="Purchase" />
         </EntityType>
         <EntityType Name="CustomerStatu">
           <Key>
@@ -720,6 +743,8 @@
           <NavigationProperty Name="User" Relationship="Self.FK_Purchase_User" FromRole="Purchase" ToRole="User" />
           <NavigationProperty Name="PurchaseDetails" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="Purchase" ToRole="PurchaseDetail" />
           <NavigationProperty Name="Library" Relationship="JukeBoxModel.FK_Purchase_Library" FromRole="Purchase" ToRole="Library" />
+          <Property Name="FK_CustomerID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="JukeBoxModel.FK_Purchase_Library1" FromRole="Purchase" ToRole="Customer" />
         </EntityType>
         <EntityType Name="PurchaseDetail">
           <Key>
@@ -732,6 +757,7 @@
           <Property Name="PurchaseDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="LibraryDetail" Relationship="Self.FK_PurchaseDetail_LibraryDetail" FromRole="PurchaseDetail" ToRole="LibraryDetail" />
           <NavigationProperty Name="Purchase" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="PurchaseDetail" ToRole="Purchase" />
+          <Property Name="FK_CustomerID" Type="Int32" />
         </EntityType>
         <EntityType Name="Region">
           <Key>
@@ -1048,9 +1074,6 @@
             <Parameter Name="amount" Mode="In" Type="Decimal" />
             <Parameter Name="isTxComplete" Mode="In" Type="Boolean" />
           </FunctionImport>
-          <FunctionImport Name="GetLibraryDetail" ReturnType="Collection(JukeBoxModel.GetLibraryDetail_Result)">
-          <Parameter Name="LibraryId" Mode="In" Type="Int64" />
-          </FunctionImport>
           <FunctionImport Name="sp__Purchase" ReturnType="Collection(JukeBoxModel.sp__Purchase_Result)">
             <Parameter Name="libraryId" Mode="In" Type="Int64" />
             <Parameter Name="libraryDetailId" Mode="In" Type="Int64" />
@@ -1058,7 +1081,34 @@
             <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)">
-            <Parameter Name="filterType" Mode="In" Type="Int32" />
+          <Parameter Name="filterType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <AssociationSet Name="FK_Purchase_Library1" Association="JukeBoxModel.FK_Purchase_Library1">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Purchase" EntitySet="Purchases" />
+          </AssociationSet>
+          <FunctionImport Name="GetLibraryDetail" ReturnType="Collection(JukeBoxModel.GetLibraryDetail_Result)">
+            <Parameter Name="LibraryId" Mode="In" Type="Int64" />
+            <Parameter Name="clientId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Create_Library" ReturnType="Collection(JukeBoxModel.Create_Library_Result)">
+            <Parameter Name="LibraryId" Mode="In" Type="Int64" />
+            <Parameter Name="FK_ClientId" Mode="In" Type="Int32" />
+            <Parameter Name="LibraryTypeId" Mode="In" Type="Int16" />
+            <Parameter Name="LibraryName" Mode="In" Type="String" />
+            <Parameter Name="LibraryCoverFilePath" Mode="In" Type="String" />
+            <Parameter Name="LibraryDescription" Mode="In" Type="String" />
+            <Parameter Name="Price" Mode="In" Type="Decimal" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Create_Library_Detail" ReturnType="Collection(JukeBoxModel.Create_Library_Detail_Result)">
+            <Parameter Name="LibraryDetailId" Mode="In" Type="Int64" />
+            <Parameter Name="FK_LibraryId" Mode="In" Type="Int32" />
+            <Parameter Name="FK_LibraryStatusId" Mode="In" Type="Int16" />
+            <Parameter Name="LibraryDetailName" Mode="In" Type="String" />
+            <Parameter Name="FilePath" Mode="In" Type="String" />
+            <Parameter Name="Price" Mode="In" Type="Decimal" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Library">
@@ -1141,13 +1191,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetLibraryDetail_Result">
-          <Property Type="Int64" Name="LibraryDetailID" Nullable="false" />
-          <Property Type="String" Name="LibraryDetailName" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="200" />
-          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
-        </ComplexType>
         <ComplexType Name="sp__Purchase_Result">
           <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
           <Property Type="Boolean" Name="Success" Nullable="true" />
@@ -1162,6 +1205,35 @@
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
           <Property Type="String" Name="ClientName" Nullable="false" MaxLength="201" />
           <Property Type="String" Name="LibraryTypeName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <Association Name="FK_Purchase_Library1">
+          <End Type="JukeBoxModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="JukeBoxModel.Purchase" Role="Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Purchase">
+              <PropertyRef Name="FK_CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetLibraryDetail_Result">
+          <Property Type="Int64" Name="LibraryDetailID" Nullable="false" />
+          <Property Type="String" Name="LibraryDetailName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
+          <Property Type="Boolean" Name="AlbumDownload" Nullable="true" />
+          <Property Type="Boolean" Name="SongDownload" Nullable="true" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="Create_Library_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Create_Library_Detail_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1324,6 +1396,7 @@
           <EntitySetMapping Name="Purchases">
             <EntityTypeMapping TypeName="JukeBoxModel.Purchase">
               <MappingFragment StoreEntitySet="Purchase">
+                <ScalarProperty Name="FK_CustomerID" ColumnName="FK_CustomerID" />
                 <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
                 <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
                 <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
@@ -1336,6 +1409,7 @@
           <EntitySetMapping Name="PurchaseDetails">
             <EntityTypeMapping TypeName="JukeBoxModel.PurchaseDetail">
               <MappingFragment StoreEntitySet="PurchaseDetail">
+                <ScalarProperty Name="FK_CustomerID" ColumnName="FK_CustomerID" />
                 <ScalarProperty Name="PurchaseDetailID" ColumnName="PurchaseDetailID" />
                 <ScalarProperty Name="FK_PurchaseID" ColumnName="FK_PurchaseID" />
                 <ScalarProperty Name="FK_LibraryDetailID" ColumnName="FK_LibraryDetailID" />
@@ -1413,17 +1487,6 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp__VoucherRedeemProcedure" FunctionName="JukeBoxModel.Store.sp__VoucherRedeemProcedure" />
-          <FunctionImportMapping FunctionImportName="GetLibraryDetail" FunctionName="JukeBoxModel.Store.GetLibraryDetail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibraryDetail_Result">
-                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
-                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.sp__Purchase_Result">
@@ -1444,6 +1507,35 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="LibraryTypeName" ColumnName="LibraryTypeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetLibraryDetail" FunctionName="JukeBoxModel.Store.GetLibraryDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibraryDetail_Result">
+                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="AlbumDownload" ColumnName="AlbumDownload" />
+                <ScalarProperty Name="SongDownload" ColumnName="SongDownload" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Create_Library" FunctionName="JukeBoxModel.Store.Create_Library">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.Create_Library_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Create_Library_Detail" FunctionName="JukeBoxModel.Store.Create_Library_Detail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.Create_Library_Detail_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

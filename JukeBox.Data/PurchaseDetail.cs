@@ -19,6 +19,7 @@ namespace JukeBox.Data
         public Nullable<long> FK_LibraryDetailID { get; set; }
         public Nullable<decimal> PurchaseAmount { get; set; }
         public Nullable<System.DateTime> PurchaseDate { get; set; }
+        public Nullable<int> FK_CustomerID { get; set; }
     
         public virtual LibraryDetail LibraryDetail { get; set; }
         public virtual Purchase Purchase { get; set; }

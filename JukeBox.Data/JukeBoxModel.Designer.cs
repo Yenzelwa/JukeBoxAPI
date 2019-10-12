@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\NokukhanyaD\Tfs\Api\JukeBoxAPI\JukeBox.Data\JukeBoxModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\nokukhanyaD.REBINC\Documents\source\JukeBoxAPI\JukeBox.Data\JukeBoxModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

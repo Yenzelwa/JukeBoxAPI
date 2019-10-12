@@ -11,6 +11,9 @@ namespace JukeBoxApi.Models
         public string Name { get; set; }
         public string FilePath { get; set; }
         public decimal? Price { get; set; }
+
+       public bool? AlbumDownload { get; set; }
+        public bool? SongDownload { get; set; }
         public DateTime DateCreated { get; set; }
         public void Bind(JukeBox.Data.GetLibraryDetail_Result cr)
         {
@@ -18,6 +21,8 @@ namespace JukeBoxApi.Models
             Name = cr.LibraryDetailName;
             FilePath = cr.FilePath;
             Price = cr.Price;
+            AlbumDownload = cr.AlbumDownload;
+            SongDownload = cr.SongDownload;
             DateCreated = cr.DateCreated;
 
         }

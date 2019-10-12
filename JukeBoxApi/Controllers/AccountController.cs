@@ -19,6 +19,8 @@ using JukeBoxApi.Results;
 using static JukeBoxApi.Models.ApiAccount;
 using JukeBoxApi.Providers.Security;
 using JukeBoxApi.Filters.JwtAuthFilters;
+using JukeBox.Data;
+using User = JukeBoxApi.Models.User;
 
 namespace JukeBoxApi.Controllers
 {
@@ -67,7 +69,7 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("customer")]
         [HttpPost]
-        public Response saveClient([FromBody]User user)
+        public Response saveCustomer([FromBody]User user)
         {
             var apiLoginClient = new Response {  IsSuccess = false , Message ="Failed"};
          var retVal = (new JukeBox.BLL.Account()).SaveCustomer( 
@@ -98,7 +100,7 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("customer/login")]
         [HttpPost]
-        public TokenResponse LoginClient([FromBody]ApiClientLoginRequest client)
+        public TokenResponse LoginCustomer([FromBody]ApiClientLoginRequest client)
         {
             var apiResp = new TokenResponse ();
 
@@ -115,7 +117,68 @@ namespace JukeBoxApi.Controllers
             }
             return apiResp;
         }
-    
+
+        [AllowAnonymous]
+        [Route("client")]
+        [HttpPost]
+        public Response saveClient([FromBody]JukeBoxApi.Models.Client user)
+        {
+            var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
+            var retVal = (new JukeBox.BLL.Account()).SaveClient(
+                   new JukeBox.Data.Client
+                   {
+                       FirstName = user.FirstName,
+                       LastName = user.LastName,
+                       ClientPassword = user.ClientPassword,
+                       CellPhone = user.CellPhone,
+                       FK_ClientStatusID = 1,
+                       DateCreated = DateTime.Now,
+                       Email = user.Email,
+                       BalanceAvailable = 0,
+                       ClientTitle = user.ClientTitle,
+                       FK_CompanyID = user.FK_CompanyID,
+                       FK_CountryID = user.FK_CountryID,
+                       DateOfBirth = user.DateOfBirth,
+                       FK_IdentityTypeID = user.FK_IdentityTypeID,
+                       Initials = user.Initials,
+                       Gender = user.Gender,
+                       IdentityTypeValue = user.IdentityTypeValue,
+                       CreatedBy = user.CreatedBy
+
+                   });
+
+            if (retVal > 0)
+            {
+                apiLoginClient.IsSuccess = true;
+                apiLoginClient.Message = "Sucess";
+
+                return apiLoginClient;
+
+            }
+            return apiLoginClient;
+
+        }
+        [AllowAnonymous]
+        [Route("customer/login")]
+        [HttpPost]
+        public TokenResponse LoginClient([FromBody]ApiClientLoginRequest client)
+        {
+            var apiResp = new TokenResponse();
+
+            var retVal = (new JukeBox.BLL.Account()).LoginClient(client.username, client.password);
+
+            if (retVal != null)
+            {
+                apiResp = JwtProvider.GetTokenResponse(retVal.FirstName, retVal);
+                //var apiLoginClient = new ApiClient();
+                //apiLoginClient.Bind(retVal);
+                //apiResp.ResponseObject = apiLoginClient;
+                //apiResp.ResponseType = 1;
+                //apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
+
         [Route("customer/getcustomer")]
         [HttpPost]
         public User GeCustomer(UserRequest userRequest)

@@ -44,6 +44,7 @@
         <AssociationConnector Association="JukeBoxModel.FK_Library_User" />
         <AssociationConnector Association="JukeBoxModel.FK_LibraryDetail_Library" />
         <AssociationConnector Association="JukeBoxModel.FK_Purchase_Library" />
+        <AssociationConnector Association="JukeBoxModel.FK_Purchase_Library1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

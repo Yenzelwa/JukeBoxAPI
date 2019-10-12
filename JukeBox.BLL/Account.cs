@@ -46,31 +46,87 @@ namespace JukeBox.BLL
             {
                 try
                 {
-                    var _customer = new Customer
-                    {
-                        FirstName = client.FirstName,
-                        LastName = client.LastName,
-                        ClientPassword = client.ClientPassword,
-                        CellPhone = client.CellPhone,
-                        FK_CustomerStatusID = 1,
-                        DateCreated = DateTime.Now,
-                        Email = client.Email,
-                        BalanceAvailable =0
+                    if (client.CustomerID > 0) {
 
-                    };
-                    db.Customers.Add(_customer);
-                    db.SaveChanges();
-                    return 1;
+                        return 1;
+
+                    }
+                    else
+                    {
+
+                        var _customer = new Customer
+                        {
+                            FirstName = client.FirstName,
+                            LastName = client.LastName,
+                            ClientPassword = client.ClientPassword,
+                            CellPhone = client.CellPhone,
+                            FK_CustomerStatusID = 1,
+                            DateCreated = DateTime.Now,
+                            Email = client.Email,
+                            BalanceAvailable = 0
+
+                        };
+                        db.Customers.Add(_customer);
+                        db.SaveChanges();
+                        return 1;
+                    }
                 }
                 catch(Exception e)
                 {
                     // TO DO'
-                    return 1;
+                    return -1;
                 }
             }
           
         }
+        public int SaveClient(Client client)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                try
+                {
+                    if (client.ClientID > 0)
+                    {
 
+                        return 1;
+
+                    }
+                    else
+                    {
+
+                        var _client = new Client
+                        {   ClientTitle = client.ClientTitle,
+                            FK_ClientStatusID = client.FK_ClientStatusID,
+                            FK_CompanyID = client.FK_CompanyID,
+                            FK_CountryID = client.FK_CountryID,
+                             DateOfBirth = client.DateOfBirth,
+                             FK_IdentityTypeID = client.FK_IdentityTypeID,
+                             Initials= client.Initials,
+                             Gender = client.Gender,
+                             IdentityTypeValue = client.IdentityTypeValue,
+                              CreatedBy = client.CreatedBy,
+                            FirstName = client.FirstName,
+                            LastName = client.LastName,
+                            ClientPassword = client.ClientPassword,
+                            CellPhone = client.CellPhone,
+                            DateCreated = DateTime.Now,
+                            Email = client.Email,
+                            BalanceAvailable = 0
+
+                        };
+                        db.Clients.Add(_client);
+                        db.SaveChanges();
+                        return 1;
+                    }
+                }
+                catch (Exception e)
+                {
+                    // TO DO'
+                    return -1;
+                }
+            }
+
+        }
         public  string HashAndObfuscate(string unencryptedData)
         {
             if (unencryptedData == null) return null;

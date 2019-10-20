@@ -111,28 +111,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__Purchase_Result>("sp__Purchase", libraryIdParameter, libraryDetailIdParameter, clientIdParameter, userIdParameter);
         }
     
-        public virtual ObjectResult<GetLibrary_Result> GetLibrary(Nullable<int> filterType)
-        {
-            var filterTypeParameter = filterType.HasValue ?
-                new ObjectParameter("filterType", filterType) :
-                new ObjectParameter("filterType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter);
-        }
-    
-        public virtual ObjectResult<GetLibraryDetail_Result> GetLibraryDetail(Nullable<long> libraryId, Nullable<int> clientId)
-        {
-            var libraryIdParameter = libraryId.HasValue ?
-                new ObjectParameter("LibraryId", libraryId) :
-                new ObjectParameter("LibraryId", typeof(long));
-    
-            var clientIdParameter = clientId.HasValue ?
-                new ObjectParameter("clientId", clientId) :
-                new ObjectParameter("clientId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter, clientIdParameter);
-        }
-    
         public virtual ObjectResult<Create_Library_Result> Create_Library(Nullable<long> libraryId, Nullable<int> fK_ClientId, Nullable<short> libraryTypeId, string libraryName, string libraryCoverFilePath, string libraryDescription, Nullable<decimal> price, Nullable<int> createdBy)
         {
             var libraryIdParameter = libraryId.HasValue ?
@@ -201,6 +179,32 @@ namespace JukeBox.Data
                 new ObjectParameter("CreatedBy", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_Library_Detail_Result>("Create_Library_Detail", libraryDetailIdParameter, fK_LibraryIdParameter, fK_LibraryStatusIdParameter, libraryDetailNameParameter, filePathParameter, priceParameter, createdByParameter);
+        }
+    
+        public virtual ObjectResult<GetLibraryDetail_Result> GetLibraryDetail(Nullable<long> libraryId, Nullable<int> clientId)
+        {
+            var libraryIdParameter = libraryId.HasValue ?
+                new ObjectParameter("LibraryId", libraryId) :
+                new ObjectParameter("LibraryId", typeof(long));
+    
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter, clientIdParameter);
+        }
+    
+        public virtual ObjectResult<GetLibrary_Result> GetLibrary(Nullable<int> filterType, Nullable<int> clientId)
+        {
+            var filterTypeParameter = filterType.HasValue ?
+                new ObjectParameter("filterType", filterType) :
+                new ObjectParameter("filterType", typeof(int));
+    
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter, clientIdParameter);
         }
     }
 }

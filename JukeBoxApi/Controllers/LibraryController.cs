@@ -8,11 +8,13 @@ using System.Web.Http;
 using static JukeBoxApi.Models.ApiLibrary;
 using System.Threading.Tasks;
 using JukeBoxApi.Models;
+using System.Web.Http.Cors;
 
 namespace JukeBoxApi.Controllers
 {
     [AllowAnonymous]
     [RoutePrefix("api/library")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class LibraryController : ApiController
     {
         [AllowAnonymous]
@@ -42,11 +44,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("{filter}")]
         [HttpGet]
-        public async Task<ApiLibraryResponse> GetLibrary(int filter )
+        public async Task<ApiLibraryResponse> GetLibrary(int filter, int? clientid = null)
         {
             var apiResp = new ApiLibraryResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetLibrary(filter);
+            var retVal = await (new JukeBox.BLL.Library()).GetLibrary(filter, clientid);
 
             if (retVal.Count > 0)
             {
@@ -113,9 +115,9 @@ namespace JukeBoxApi.Controllers
         public async Task<ApiResponse> CreateLibrary([FromBody]LibraryRequest request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
-
+            request.CreatedBy = 1;
             var retVal = await (new JukeBox.BLL.Library()).CreateLibrary(request.LibraryID, request.FK_ClientID , request.FK_LibraryTypeID,
-                request.LibraryName , request.LibraryDescription ,request.LibraryCoverFilePath, request.Price,request.CreatedBy);
+                request.LibraryName , request.LibraryDescription ,request.LibraryCoverFilePath, request.Price,request.CreatedBy);;
 
 
             if (retVal.Success.HasValue)

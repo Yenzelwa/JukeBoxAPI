@@ -40,6 +40,13 @@ namespace JukeBox.BLL
                 return db.Customers.Where(x => x.CustomerID ==customerId).FirstOrDefault();
             }
         }
+        public List<Client> GetAllClient()
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                return db.Clients.ToList();
+            }
+        }
         public int  SaveCustomer(Customer client)
         {
             using (var db = new JukeBoxEntities())
@@ -87,7 +94,19 @@ namespace JukeBox.BLL
                 {
                     if (client.ClientID > 0)
                     {
-
+                        var clientToUpdate = db.Clients.Find(client.ClientID);
+                        clientToUpdate.Initials = client.Initials;
+                        clientToUpdate.FirstName = client.FirstName;
+                        clientToUpdate.LastName = client.LastName;
+                        clientToUpdate.Email = client.Email;
+                        clientToUpdate.DateOfBirth = client.DateOfBirth;
+                        clientToUpdate.Gender = client.Gender;
+                        clientToUpdate.IdentityTypeValue = client.IdentityTypeValue;
+                        clientToUpdate.CellPhone = client.CellPhone;
+                        clientToUpdate.BalanceAvailable = client.BalanceAvailable;
+                        clientToUpdate.ClientPassword = client.ClientPassword;
+                        clientToUpdate.ClientTitle = client.ClientTitle;
+                        db.SaveChanges();
                         return 1;
 
                     }

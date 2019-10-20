@@ -21,11 +21,13 @@ using JukeBoxApi.Providers.Security;
 using JukeBoxApi.Filters.JwtAuthFilters;
 using JukeBox.Data;
 using User = JukeBoxApi.Models.User;
+using System.Web.Http.Cors;
 
 namespace JukeBoxApi.Controllers
 {
-    [JwtAuthorize]
+    
     [RoutePrefix("api/account")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -127,24 +129,24 @@ namespace JukeBoxApi.Controllers
             var retVal = (new JukeBox.BLL.Account()).SaveClient(
                    new JukeBox.Data.Client
                    {
+                       ClientID =  user.ClientID,
                        FirstName = user.FirstName,
                        LastName = user.LastName,
                        ClientPassword = user.ClientPassword,
                        CellPhone = user.CellPhone,
-                       FK_ClientStatusID = 1,
+                       FK_ClientStatusID = user.FK_ClientStatusID,
                        DateCreated = DateTime.Now,
                        Email = user.Email,
-                       BalanceAvailable = 0,
+                       BalanceAvailable =user.BalanceAvailable,
                        ClientTitle = user.ClientTitle,
-                       FK_CompanyID = user.FK_CompanyID,
-                       FK_CountryID = user.FK_CountryID,
+                       FK_CompanyID = 1,
+                       FK_CountryID = 1,
                        DateOfBirth = user.DateOfBirth,
-                       FK_IdentityTypeID = user.FK_IdentityTypeID,
+                       FK_IdentityTypeID =1,
                        Initials = user.Initials,
                        Gender = user.Gender,
                        IdentityTypeValue = user.IdentityTypeValue,
-                       CreatedBy = user.CreatedBy
-
+                       CreatedBy = 1
                    });
 
             if (retVal > 0)
@@ -159,7 +161,7 @@ namespace JukeBoxApi.Controllers
 
         }
         [AllowAnonymous]
-        [Route("customer/login")]
+        [Route("client/login")]
         [HttpPost]
         public TokenResponse LoginClient([FromBody]ApiClientLoginRequest client)
         {
@@ -177,6 +179,33 @@ namespace JukeBoxApi.Controllers
                 //apiResp.ResponseMessage = "Success";
             }
             return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("clients")]
+        [HttpGet]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public ApiClientResponse GeAllClients()
+        {
+            var apiClents = new ApiClientResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = (new JukeBox.BLL.Account()).GetAllClient();
+
+            if (retVal != null)
+            {
+                apiClents.ResponseObject = new List<apiClient>();
+                foreach (var item in retVal)
+                {
+                    var client = new apiClient();
+                    client.Bind(item);
+                    apiClents.ResponseObject.Add(client);
+                }
+
+                apiClents.ResponseType = 1;
+                apiClents.ResponseMessage = "Success";
+               
+
+            }
+            return apiClents;
         }
 
         [Route("customer/getcustomer")]

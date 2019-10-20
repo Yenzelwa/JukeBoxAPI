@@ -14,6 +14,8 @@ namespace JukeBox.Data
     public partial class GetLibrary_Result
     {
         public long LibraryID { get; set; }
+        public short FK_LibraryTypeID { get; set; }
+        public int FK_ClientID { get; set; }
         public string LibraryName { get; set; }
         public string LibraryDescription { get; set; }
         public string LibraryCoverFilePath { get; set; }
@@ -22,5 +24,6 @@ namespace JukeBox.Data
         public System.DateTime DateCreated { get; set; }
         public string ClientName { get; set; }
         public string LibraryTypeName { get; set; }
+        public Nullable<bool> AlbumDownload { get; set; }
     }
 }

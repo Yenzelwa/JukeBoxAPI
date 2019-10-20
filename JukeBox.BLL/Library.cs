@@ -17,12 +17,12 @@ namespace JukeBox.BLL
                 return db.LibraryTypes.ToList();
             }
         }
-        public async Task<List<JukeBox.Data.GetLibrary_Result>> GetLibrary(int filter)
+        public async Task<List<JukeBox.Data.GetLibrary_Result>> GetLibrary(int filter , int? clientId)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return  db.GetLibrary(filter).ToList();
+                return  db.GetLibrary(filter , clientId).ToList();
             }
         }
         public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId, int? clientId)

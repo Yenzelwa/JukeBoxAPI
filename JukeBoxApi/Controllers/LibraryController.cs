@@ -134,6 +134,8 @@ namespace JukeBoxApi.Controllers
         public async Task<ApiResponse> CreateLibraryDetail([FromBody]LibraryDetailRequest request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+            request.CreatedBy = 1;
+            request.FK_LibraryStatusID = 1;
 
             var retVal = await (new JukeBox.BLL.Library()).CreateLibraryDetail(request.LibraryDetailID, request.FK_LibraryID, request.FK_LibraryStatusID,
                 request.LibraryDetailName,  request.FilePath, request.Price, request.CreatedBy);

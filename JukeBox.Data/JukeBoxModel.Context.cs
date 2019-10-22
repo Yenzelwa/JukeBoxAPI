@@ -148,6 +148,19 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_Library_Result>("Create_Library", libraryIdParameter, fK_ClientIdParameter, libraryTypeIdParameter, libraryNameParameter, libraryCoverFilePathParameter, libraryDescriptionParameter, priceParameter, createdByParameter);
         }
     
+        public virtual ObjectResult<GetLibrary_Result> GetLibrary(Nullable<int> filterType, Nullable<int> clientId)
+        {
+            var filterTypeParameter = filterType.HasValue ?
+                new ObjectParameter("filterType", filterType) :
+                new ObjectParameter("filterType", typeof(int));
+    
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter, clientIdParameter);
+        }
+    
         public virtual ObjectResult<Create_Library_Detail_Result> Create_Library_Detail(Nullable<long> libraryDetailId, Nullable<int> fK_LibraryId, Nullable<short> fK_LibraryStatusId, string libraryDetailName, string filePath, Nullable<decimal> price, Nullable<int> createdBy)
         {
             var libraryDetailIdParameter = libraryDetailId.HasValue ?
@@ -192,19 +205,6 @@ namespace JukeBox.Data
                 new ObjectParameter("clientId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter, clientIdParameter);
-        }
-    
-        public virtual ObjectResult<GetLibrary_Result> GetLibrary(Nullable<int> filterType, Nullable<int> clientId)
-        {
-            var filterTypeParameter = filterType.HasValue ?
-                new ObjectParameter("filterType", filterType) :
-                new ObjectParameter("filterType", typeof(int));
-    
-            var clientIdParameter = clientId.HasValue ?
-                new ObjectParameter("clientId", clientId) :
-                new ObjectParameter("clientId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibrary_Result>("GetLibrary", filterTypeParameter, clientIdParameter);
         }
     }
 }

@@ -14,6 +14,8 @@ namespace JukeBox.Data
     public partial class GetLibraryDetail_Result
     {
         public long LibraryDetailID { get; set; }
+        public short FK_LibraryStatusID { get; set; }
+        public long FK_LibraryID { get; set; }
         public string LibraryDetailName { get; set; }
         public string FilePath { get; set; }
         public Nullable<decimal> Price { get; set; }

@@ -1095,6 +1095,10 @@
             <Parameter Name="Price" Mode="In" Type="Decimal" />
             <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)">
+            <Parameter Name="filterType" Mode="In" Type="Int32" />
+            <Parameter Name="clientId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="Create_Library_Detail" ReturnType="Collection(JukeBoxModel.Create_Library_Detail_Result)">
             <Parameter Name="LibraryDetailId" Mode="In" Type="Int64" />
             <Parameter Name="FK_LibraryId" Mode="In" Type="Int32" />
@@ -1106,10 +1110,6 @@
           </FunctionImport>
           <FunctionImport Name="GetLibraryDetail" ReturnType="Collection(JukeBoxModel.GetLibraryDetail_Result)">
             <Parameter Name="LibraryId" Mode="In" Type="Int64" />
-            <Parameter Name="clientId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetLibrary" ReturnType="Collection(JukeBoxModel.GetLibrary_Result)">
-            <Parameter Name="filterType" Mode="In" Type="Int32" />
             <Parameter Name="clientId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -1213,18 +1213,6 @@
           <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
           <Property Type="Boolean" Name="Success" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="Create_Library_Detail_Result">
-          <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
-          <Property Type="Boolean" Name="Success" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="GetLibraryDetail_Result">
-          <Property Type="Int64" Name="LibraryDetailID" Nullable="false" />
-          <Property Type="String" Name="LibraryDetailName" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="200" />
-          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
-          <Property Type="Boolean" Name="SongDownload" Nullable="true" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
-        </ComplexType>
         <ComplexType Name="GetLibrary_Result">
           <Property Type="Int64" Name="LibraryID" Nullable="false" />
           <Property Type="Int16" Name="FK_LibraryTypeID" Nullable="false" />
@@ -1238,6 +1226,20 @@
           <Property Type="String" Name="ClientName" Nullable="false" MaxLength="201" />
           <Property Type="String" Name="LibraryTypeName" Nullable="false" MaxLength="50" />
           <Property Type="Boolean" Name="AlbumDownload" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Create_Library_Detail_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="18" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetLibraryDetail_Result">
+          <Property Type="Int64" Name="LibraryDetailID" Nullable="false" />
+          <Property Type="Int16" Name="FK_LibraryStatusID" Nullable="false" />
+          <Property Type="Int64" Name="FK_LibraryID" Nullable="false" />
+          <Property Type="String" Name="LibraryDetailName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="7" />
+          <Property Type="Boolean" Name="SongDownload" Nullable="true" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1507,26 +1509,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Create_Library_Detail" FunctionName="JukeBoxModel.Store.Create_Library_Detail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JukeBoxModel.Create_Library_Detail_Result">
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="Success" ColumnName="Success" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetLibraryDetail" FunctionName="JukeBoxModel.Store.GetLibraryDetail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibraryDetail_Result">
-                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
-                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="SongDownload" ColumnName="SongDownload" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetLibrary" FunctionName="JukeBoxModel.Store.GetLibrary">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.GetLibrary_Result">
@@ -1542,6 +1524,28 @@
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="LibraryTypeName" ColumnName="LibraryTypeName" />
                 <ScalarProperty Name="AlbumDownload" ColumnName="AlbumDownload" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Create_Library_Detail" FunctionName="JukeBoxModel.Store.Create_Library_Detail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.Create_Library_Detail_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetLibraryDetail" FunctionName="JukeBoxModel.Store.GetLibraryDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetLibraryDetail_Result">
+                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+                <ScalarProperty Name="FK_LibraryStatusID" ColumnName="FK_LibraryStatusID" />
+                <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
+                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="SongDownload" ColumnName="SongDownload" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

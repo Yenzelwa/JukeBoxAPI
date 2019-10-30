@@ -55,7 +55,14 @@ namespace JukeBox.BLL
                 {
                     if (client.CustomerID > 0) {
 
+                        var customerToUpdate = db.Customers.Find(client.CustomerID);
+                        customerToUpdate.FirstName = client.FirstName;
+                        customerToUpdate.LastName = client.LastName;
+                        customerToUpdate.CellPhone = client.CellPhone;
+                        customerToUpdate.Email = client.Email;
+                        db.SaveChanges();
                         return 1;
+
 
                     }
                     else

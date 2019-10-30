@@ -9,6 +9,9 @@ using static JukeBoxApi.Models.ApiLibrary;
 using System.Threading.Tasks;
 using JukeBoxApi.Models;
 using System.Web.Http.Cors;
+using System.IO;
+using System.Web;
+using System.Diagnostics;
 
 namespace JukeBoxApi.Controllers
 {
@@ -56,7 +59,7 @@ namespace JukeBoxApi.Controllers
                 foreach (var _library in retVal)
                 {
                     var library = new ApiLibrary();
-                        library.Bind(_library);
+                    library.Bind(_library);
                     apiResp.ResponseObject.Add(library);
 
                 }
@@ -69,11 +72,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("detail/{id}")]
         [HttpGet]
-        public async Task<ApiLibraryDetailResponse> GetLibraryDetail(long id , int? clientid=null)
+        public async Task<ApiLibraryDetailResponse> GetLibraryDetail(long id, int? clientid = null)
         {
             var apiResp = new ApiLibraryDetailResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id , clientid);
+            var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id, clientid);
 
             if (retVal.Count > 0)
             {
@@ -93,15 +96,15 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("purchase")]
         [HttpPost]
-        public async Task<ApiResponse> PurchaseLibrary([FromBody]PurchaseOrderRequest  request)
+        public async Task<ApiResponse> PurchaseLibrary([FromBody]PurchaseOrderRequest request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).PurchaseOrder(request.LibraryId, request.LibraryDetailId , request.ClientId ,request.UserId);
+            var retVal = await (new JukeBox.BLL.Library()).PurchaseOrder(request.LibraryId, request.LibraryDetailId, request.ClientId, request.UserId);
 
-            if (retVal!= null)
+            if (retVal != null)
             {
-                
+
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
                 apiResp.ResponseMessage = retVal.Message;
             }
@@ -116,8 +119,8 @@ namespace JukeBoxApi.Controllers
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
             request.CreatedBy = 1;
-            var retVal = await (new JukeBox.BLL.Library()).CreateLibrary(request.LibraryID, request.FK_ClientID , request.FK_LibraryTypeID,
-                request.LibraryName , request.LibraryDescription ,request.LibraryCoverFilePath, request.Price,request.CreatedBy);;
+            var retVal = await (new JukeBox.BLL.Library()).CreateLibrary(request.LibraryID, request.FK_ClientID, request.FK_LibraryTypeID,
+                request.LibraryName, request.LibraryDescription, request.LibraryCoverFilePath, request.Price, request.CreatedBy); ;
 
 
             if (retVal.Success.HasValue)
@@ -126,6 +129,56 @@ namespace JukeBoxApi.Controllers
                 apiResp.ResponseMessage = retVal.Message;
             }
             return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("postfile")]
+        [HttpPost]
+        public async Task SaveAsync()
+        {
+            try
+            {
+                if (System.Web.HttpContext.Current.Request.Files.AllKeys.Length > 0)
+                {
+                    var httpPostedFile = System.Web.HttpContext.Current.Request.Files["filepond"];
+
+                    if (httpPostedFile != null)
+                    {
+                        var fileSave = System.Web.HttpContext.Current.Server.MapPath("filepond");
+                        var fileSavePath = Path.Combine(fileSave, httpPostedFile.FileName);
+                        if (!System.IO.File.Exists(fileSavePath))
+                        {
+                            // Enter your sftp password here
+                    string source = @"ss";
+                            string destination = @"C:\inetpub\wwwroot\JukeBoxApi\JukeBoxStore\Album";
+                            string host = "196.40.108.175";
+                            string username = "Administrator";
+                            string password = "@MyLogin65";
+                            int port = 3389;  //Port 22 is defaulted for SFTP upload
+                            JukeBox.BLL.Library.UploadSFTPFile(host, username, password, source, destination, port);
+
+                        }
+                        else
+                        {
+                            HttpResponse Response = System.Web.HttpContext.Current.Response;
+                            Response.Clear();
+                            Response.Status = "204 File already exists";
+                            Response.StatusCode = 204;
+                            Response.StatusDescription = "File already exists";
+                            Response.End();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                HttpResponse Response = System.Web.HttpContext.Current.Response;
+                Response.Clear();
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.StatusCode = 204;
+                Response.Status = "204 No Content";
+                Response.StatusDescription = e.Message;
+                Response.End();
+            }
         }
 
         [AllowAnonymous]
@@ -138,7 +191,7 @@ namespace JukeBoxApi.Controllers
             request.FK_LibraryStatusID = 1;
 
             var retVal = await (new JukeBox.BLL.Library()).CreateLibraryDetail(request.LibraryDetailID, request.FK_LibraryID, request.FK_LibraryStatusID,
-                request.LibraryDetailName,  request.FilePath, request.Price, request.CreatedBy);
+                request.LibraryDetailName, request.FilePath, request.Price, request.CreatedBy);
 
 
             if (retVal.Success.HasValue)
@@ -150,5 +203,5 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
     }
-    }
+}
 

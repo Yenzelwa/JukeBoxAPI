@@ -78,12 +78,12 @@ namespace JukeBoxApi.Controllers
                 new JukeBox.Data.Customer {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    ClientPassword = user.Password,
                     CellPhone = user.Telephone,
-                    FK_CustomerStatusID = 1,
                     DateCreated = DateTime.Now,
                     Email = user.Email,
-                    BalanceAvailable=0
+                    BalanceAvailable=user.BalanceAvailable,
+                    CustomerID=user.UserId
+
                     
 
                 });

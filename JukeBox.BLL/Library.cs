@@ -1,6 +1,8 @@
 ﻿using JukeBox.Data;
+using Renci.SshNet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,21 @@ namespace JukeBox.BLL
 {
   public  class Library
     {
+
+        public static void UploadSFTPFile(string host, string username,
+  string password, string sourcefile, string destinationpath, int port)
+        {
+            using (SftpClient client = new SftpClient(host, port, username, password))
+            {
+                client.Connect();
+                client.ChangeDirectory(destinationpath);
+                using (FileStream fs = new FileStream(sourcefile, FileMode.Open))
+                {
+                    client.BufferSize = 4 * 1024;
+                    client.UploadFile(fs, Path.GetFileName(sourcefile));
+                }
+            }
+        }
         public async Task<List<JukeBox.Data.LibraryType>> GetLibraryType()
         {
             using (var db = new JukeBoxEntities())
@@ -33,6 +50,7 @@ namespace JukeBox.BLL
                 return db.GetLibraryDetail(libraryId, clientId).ToList();
             }
         }
+
         public async Task<sp__Purchase_Result> PurchaseOrder(long libraryId , long libraryDetailId , int clientId, int userId)
         {
             using (var db = new JukeBoxEntities())

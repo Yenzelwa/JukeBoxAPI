@@ -236,6 +236,47 @@ namespace JukeBoxApi.Controllers
             return retVal;
         }
 
+        [AllowAnonymous]
+        [Route("forgotpassword")]
+        [HttpPost]
+        public  Response ForgotPassword( string email)
+        {
+            var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
+
+            var retVal =  (new JukeBox.BLL.Account()).SearchCustomer(email);
+
+            if (retVal != null)
+            {
+                (new JukeBox.BLL.Account()).SendCode(retVal.CustomerID ,email);
+                apiLoginClient.IsSuccess = true;
+                apiLoginClient.Message = "Sucess";
+
+                return apiLoginClient;
+
+            }
+            return apiLoginClient;
+        }
+
+        [AllowAnonymous]
+        [Route("resetpassword/{password}")]
+        [HttpGet]
+        public Response ResetPassword(string password , string code)
+        {
+            var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
+
+            var retVal = (new JukeBox.BLL.Account()).ResetPasword(password, code);
+
+            if (retVal > 0)
+            {
+                apiLoginClient.IsSuccess = true;
+                apiLoginClient.Message = "Sucess";
+
+                return apiLoginClient;
+
+            }
+            return apiLoginClient;
+        }
+
 
 
 

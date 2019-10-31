@@ -8,6 +8,8 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +48,85 @@ namespace JukeBox.BLL
             {
                 return db.Clients.ToList();
             }
+        }
+
+        public Customer SearchCustomer(string email)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                return db.Customers.Where(x=>x.Email == email).FirstOrDefault();
+            }
+        }
+        public int ResetPasword(string password , string code)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                var clientToUpdate = db.Customers.Where(x => x.ClientPassword == code).FirstOrDefault();
+                clientToUpdate.ClientPassword = password;
+                db.SaveChanges();
+                return 1;
+            }
+        }
+        public int RandomNumber(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
+        public string RandomString(int size, bool lowerCase)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
+        }
+        public string RandomPassword()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(RandomString(4, true));
+            builder.Append(RandomNumber(1000, 9999));
+            builder.Append(RandomString(2, false));
+            return builder.ToString();
+        }
+        public bool SendCode(int customerId , string email)
+        {
+            string code;
+            code = RandomPassword();
+            var clientCode = "";
+            using (var db = new JukeBoxEntities())
+            {
+                var clientToUpdate = db.Customers.Find(customerId);
+                clientToUpdate.ClientPassword = code;  
+                db.SaveChanges();
+                clientCode = db.Customers.Where(x => x.CustomerID == customerId).FirstOrDefault().ClientPassword;
+            }
+
+            StringBuilder sbody = new StringBuilder();
+            // here i am sendind a image as logo with the path http://usingaspdotnet.blogspot.com
+            sbody.Append("<a href=http://usingaspdotnet.blogspot.com><img src=http://a1.twimg.com/profile_images/1427057726/asp_image.jpg/></a></br>");
+            // here i am sending a link to the user's mail address with the three values email,code,uname
+            // these three values i am sending  this link with the values using querystring method.
+            sbody.Append("<a href=http://usingasp.net/reset_pwd.aspx?email=" + email);
+            sbody.Append("&code=" + clientCode);
+            System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage("khanyods3@gmail.com", email, "Reset Your Password", sbody.ToString());
+
+            SmtpClient mailclient = new SmtpClient();
+            mailclient.Credentials = new NetworkCredential("khanyods3@gmail.com", "NoksD79925", "smtp.gmail.com");
+            mailclient.Host = "smtp.gmail.com";
+            mailclient.Port = 587;
+            mailclient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            mailclient.EnableSsl = true;
+            mailclient.UseDefaultCredentials = true;
+            // here am setting the property IsBodyHtml true because i am using html tags inside the mail's code
+            mail.IsBodyHtml = true;
+          //  mailclient.Send(mail);
+            return true;
         }
         public int  SaveCustomer(Customer client)
         {

@@ -239,21 +239,22 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("forgotpassword")]
         [HttpPost]
-        public  Response ForgotPassword( string email)
+        public  Response ForgotPassword(ForgotPasswordRequest passwordRequest)
         {
             var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
 
-            var retVal =  (new JukeBox.BLL.Account()).SearchCustomer(email);
+            var retVal =  (new JukeBox.BLL.Account()).SearchCustomer(passwordRequest.Email);
 
             if (retVal != null)
             {
-                (new JukeBox.BLL.Account()).SendCode(retVal.CustomerID ,email);
+                (new JukeBox.BLL.Account()).SendCode(retVal.CustomerID , passwordRequest.Email);
                 apiLoginClient.IsSuccess = true;
                 apiLoginClient.Message = "Sucess";
 
                 return apiLoginClient;
 
             }
+            apiLoginClient.Message = "Email doesn't exists";
             return apiLoginClient;
         }
 

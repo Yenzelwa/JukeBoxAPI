@@ -109,23 +109,23 @@ namespace JukeBox.BLL
 
             StringBuilder sbody = new StringBuilder();
             // here i am sendind a image as logo with the path http://usingaspdotnet.blogspot.com
-            sbody.Append("<a href=http://usingaspdotnet.blogspot.com><img src=http://a1.twimg.com/profile_images/1427057726/asp_image.jpg/></a></br>");
-            // here i am sending a link to the user's mail address with the three values email,code,uname
-            // these three values i am sending  this link with the values using querystring method.
-            sbody.Append("<a href=http://usingasp.net/reset_pwd.aspx?email=" + email);
-            sbody.Append("&code=" + clientCode);
-            System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage("khanyods3@gmail.com", email, "Reset Your Password", sbody.ToString());
+            sbody.Append("Dear  User, <br/><br/> We received a request to reset your password. Your  verification code is: <br/><br/>  ");
+            sbody.Append( clientCode + " <br/><br/>");
+            sbody.Append("If you did not request this code, it is possible that someone else is trying to access the  Account . Do not forward or give this code to anyone. <br/><br/>");
+            sbody.Append("Sincerely yours, <br/> JukeBox World Team");
+            System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage("igagasimediaapp@gmail.com", email, "Reset Your Password", sbody.ToString());
 
             SmtpClient mailclient = new SmtpClient();
-            mailclient.Credentials = new NetworkCredential("khanyods3@gmail.com", "NoksD79925", "smtp.gmail.com");
             mailclient.Host = "smtp.gmail.com";
-            mailclient.Port = 587;
-            mailclient.DeliveryMethod = SmtpDeliveryMethod.Network;
             mailclient.EnableSsl = true;
             mailclient.UseDefaultCredentials = true;
+            mailclient.UseDefaultCredentials = true;
+            mailclient.Credentials = new NetworkCredential("igagasimediaapp@gmail.com", "NoksD1990");
+            mailclient.Port = 587;
+   
             // here am setting the property IsBodyHtml true because i am using html tags inside the mail's code
             mail.IsBodyHtml = true;
-          //  mailclient.Send(mail);
+           mailclient.Send(mail);
             return true;
         }
         public int  SaveCustomer(Customer client)

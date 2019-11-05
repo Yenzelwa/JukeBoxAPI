@@ -304,6 +304,7 @@
     <Compile Include="Models\ApiLibraryType.cs" />
     <Compile Include="Models\apiClient.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ForgotPasswordRequest.cs" />
     <Compile Include="Models\LibraryDetailRequest.cs" />
     <Compile Include="Models\LibraryRequest.cs" />
     <Compile Include="Models\PurchaseOrderRequest.cs" />

@@ -141,6 +141,7 @@ namespace JukeBox.BLL
                         customerToUpdate.LastName = client.LastName;
                         customerToUpdate.CellPhone = client.CellPhone;
                         customerToUpdate.Email = client.Email;
+                        customerToUpdate.ImageFilePath = client.ImageFilePath;
                         db.SaveChanges();
                         return 1;
 
@@ -158,7 +159,8 @@ namespace JukeBox.BLL
                             FK_CustomerStatusID = 1,
                             DateCreated = DateTime.Now,
                             Email = client.Email,
-                            BalanceAvailable = 0
+                            BalanceAvailable = 0,
+                            ImageFilePath=client.ImageFilePath
 
                         };
                         db.Customers.Add(_customer);

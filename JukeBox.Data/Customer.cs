@@ -30,6 +30,7 @@ namespace JukeBox.Data
         public string CellPhone { get; set; }
         public string Email { get; set; }
         public System.DateTime DateCreated { get; set; }
+        public string ImageFilePath { get; set; }
     
         public virtual CustomerStatu CustomerStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

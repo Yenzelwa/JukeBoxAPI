@@ -23,8 +23,8 @@ namespace JukeBox.Data
         public System.DateTime TransactionDate { get; set; }
         public string ReferenceComment { get; set; }
     
-        public virtual Customer Customer { get; set; }
         public virtual CustomerTransactionType CustomerTransactionType { get; set; }
         public virtual Purchase Purchase { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

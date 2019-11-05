@@ -33,7 +33,6 @@ namespace JukeBox.Data
         public virtual DbSet<ClientStatu> ClientStatus { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<CustomerStatu> CustomerStatus { get; set; }
         public virtual DbSet<CustomerTransaction> CustomerTransactions { get; set; }
         public virtual DbSet<CustomerTransactionType> CustomerTransactionTypes { get; set; }
@@ -48,6 +47,7 @@ namespace JukeBox.Data
         public virtual DbSet<Title> Titles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Library> Libraries { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
     
         public virtual int sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete)
         {

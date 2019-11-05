@@ -41,9 +41,7 @@ namespace JukeBoxApi.Models
                     return "no_image";
                 }
 
-                return string.Format(
-                    "http://XamMusicapi1.azurewebsites.net/{0}",
-                    ImagePath.Substring(1));
+                return ImagePath;
             }
         }
 
@@ -63,6 +61,7 @@ namespace JukeBoxApi.Models
             BalanceAvailable = cr.BalanceAvailable;
             Telephone = cr.CellPhone;
             Email = cr.Email;
+            ImagePath = cr.ImageFilePath;
        
             
 

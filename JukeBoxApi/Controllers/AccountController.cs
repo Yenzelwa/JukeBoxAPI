@@ -82,7 +82,9 @@ namespace JukeBoxApi.Controllers
                     DateCreated = DateTime.Now,
                     Email = user.Email,
                     BalanceAvailable=user.BalanceAvailable,
-                    CustomerID=user.UserId
+                    CustomerID=user.UserId,
+                    ClientPassword= user.Password,
+                    ImageFilePath=user.ImagePath
 
                     
 

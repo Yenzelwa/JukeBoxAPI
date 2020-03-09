@@ -466,6 +466,12 @@
           <Parameter Name="amount" Type="decimal" Mode="In" />
           <Parameter Name="isTxComplete" Type="bit" Mode="In" />
         </Function>
+        <Function Name="sp_NumberOfMembers_Report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MemberTypeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_Sales_Report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SaleTypeId" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="JukeBoxModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientContactDetail" EntityType="Self.ClientContactDetail" Schema="dbo" store:Type="Tables" />
@@ -1056,6 +1062,12 @@
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Purchase" EntitySet="Purchases" />
           </AssociationSet>
+          <FunctionImport Name="sp_Sales_Report" ReturnType="Collection(Decimal)">
+          <Parameter Name="SaleTypeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_NumberOfMembers_Report" ReturnType="Collection(Int16)">
+            <Parameter Name="MemberTypeId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Library">
           <Key>
@@ -1536,6 +1548,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_Sales_Report" FunctionName="JukeBoxModel.Store.sp_Sales_Report" />
+          <FunctionImportMapping FunctionImportName="sp_NumberOfMembers_Report" FunctionName="JukeBoxModel.Store.sp_NumberOfMembers_Report" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

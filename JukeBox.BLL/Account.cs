@@ -49,7 +49,13 @@ namespace JukeBox.BLL
                 return db.Clients.ToList();
             }
         }
-
+        public Client  GetClientById(long id)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                return db.Libraries.Where(x => x.LibraryID == id || x.FK_ClientID == id).Select(u => u.Client).FirstOrDefault() ;
+            }
+        }
         public Customer SearchCustomer(string email)
         {
             using (var db = new JukeBoxEntities())

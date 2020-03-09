@@ -12,6 +12,9 @@ using System.Web.Http.Cors;
 using System.IO;
 using System.Web;
 using System.Diagnostics;
+using System.Windows.Media;
+
+
 
 namespace JukeBoxApi.Controllers
 {
@@ -31,7 +34,13 @@ namespace JukeBoxApi.Controllers
 
             if (retVal.Count > 0)
             {
+                var model = new ApiLibraryType
+                {
+                    TypeId = 0,
+                    TypeName = "ALL"
+                };
                 apiResp.ResponseObject = new List<ApiLibraryType>();
+                apiResp.ResponseObject.Add(model);
                 foreach (var _library in retVal)
                 {
                     var libraryType = new ApiLibraryType();
@@ -133,51 +142,55 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("postfile")]
         [HttpPost]
-        public async Task SaveAsync()
+        public async Task<ApiResponse> SaveAsync()
         {
             try
             {
+                var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
                 if (System.Web.HttpContext.Current.Request.Files.AllKeys.Length > 0)
                 {
-                    var httpPostedFile = System.Web.HttpContext.Current.Request.Files["filepond"];
+                    var httpPostedFile = System.Web.HttpContext.Current.Request.Files["file"];
 
-                    if (httpPostedFile != null)
+
+                    if (System.Web.HttpContext.Current.Request.Headers.AllKeys.Length > 0)
                     {
-                        var fileSave = System.Web.HttpContext.Current.Server.MapPath("filepond");
-                        var fileSavePath = Path.Combine(fileSave, httpPostedFile.FileName);
-                        if (!System.IO.File.Exists(fileSavePath))
-                        {
-                            // Enter your sftp password here
-                    string source = @"ss";
-                            string destination = @"C:\inetpub\wwwroot\JukeBoxApi\JukeBoxStore\Album";
-                            string host = "196.40.108.175";
-                            string username = "Administrator";
-                            string password = "@MyLogin65";
-                            int port = 3389;  //Port 22 is defaulted for SFTP upload
-                            JukeBox.BLL.Library.UploadSFTPFile(host, username, password, source, destination, port);
+                        var refId = System.Web.HttpContext.Current.Request.Headers["reference-id"];
+                        var fileFolderName = System.Web.HttpContext.Current.Request.Headers["file-type"];
+                        var artist = (new JukeBox.BLL.Account()).GetClientById(Convert.ToInt64(refId));
 
-                        }
-                        else
+                        if (httpPostedFile != null && artist !=null)
                         {
-                            HttpResponse Response = System.Web.HttpContext.Current.Response;
-                            Response.Clear();
-                            Response.Status = "204 File already exists";
-                            Response.StatusCode = 204;
-                            Response.StatusDescription = "File already exists";
-                            Response.End();
+                            var filePath = fileFolderName == "song" ? Path.Combine(@"C:/JukeBox/Songs/"+ artist.FirstName + " "+artist.LastName):
+                                                              Path.Combine(@"C:/JukeBox/Album");
+                            string savePath = "";
+                            if (!System.IO.File.Exists(filePath))
+                            {
+                                Directory.CreateDirectory(filePath);
+
+                                 savePath = filePath + "/" + httpPostedFile.FileName;
+                                
+                                httpPostedFile.SaveAs(savePath);
+                            }
+                            else
+                            {
+                                 savePath = filePath + "/" + httpPostedFile.FileName;
+                                httpPostedFile.SaveAs(savePath);
+                            }
+                          
+                                apiResp.ResponseType = 1;
+                                apiResp.ResponseMessage = savePath.Replace("C:", "http://www.apigagasimedia.co.za");
+                           
                         }
                     }
+                  
+                   
                 }
+                return apiResp;
             }
             catch (Exception e)
             {
-                HttpResponse Response = System.Web.HttpContext.Current.Response;
-                Response.Clear();
-                Response.ContentType = "application/json; charset=utf-8";
-                Response.StatusCode = 204;
-                Response.Status = "204 No Content";
-                Response.StatusDescription = e.Message;
-                Response.End();
+                var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+                return apiResp;
             }
         }
 

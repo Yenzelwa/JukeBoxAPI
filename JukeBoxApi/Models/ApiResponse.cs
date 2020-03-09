@@ -107,4 +107,15 @@ namespace JukeBoxApi.Models
         public List<apiClient> ResponseObject { get; set; }
 
     }
+    public class ApiDashBoardReportResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public DashBoardReport ResponseObject { get; set; }
+
+    }
 }

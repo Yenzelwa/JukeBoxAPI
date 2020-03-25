@@ -152,6 +152,9 @@
     <Compile Include="RoleUserMap.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_SalesPerAlbum_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="sp__Purchase_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>

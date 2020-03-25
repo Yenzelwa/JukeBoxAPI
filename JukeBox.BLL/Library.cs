@@ -42,6 +42,22 @@ namespace JukeBox.BLL
                 return  db.GetLibrary(filter , clientId).ToList();
             }
         }
+        public async Task<List<JukeBox.Data.Library>> GetLibraryByClientId( long? clientId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.Libraries.Where(x=>x.FK_ClientID == clientId).ToList();
+            }
+        }
+        public async Task<List<JukeBox.Data.sp_SalesPerAlbum_Result>> GetAlbumSales(long albumId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.sp_SalesPerAlbum(albumId).ToList();
+            }
+        }
         public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId, int? clientId)
         {
             using (var db = new JukeBoxEntities())

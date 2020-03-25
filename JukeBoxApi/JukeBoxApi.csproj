@@ -313,8 +313,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ApiClientLibrary.cs" />
     <Compile Include="Models\ApiLibraryType.cs" />
     <Compile Include="Models\apiClient.cs" />
+    <Compile Include="Models\ApiSalesPerAlbum.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\DashBoardReport.cs" />
     <Compile Include="Models\ForgotPasswordRequest.cs" />

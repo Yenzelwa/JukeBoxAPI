@@ -27,6 +27,7 @@
           <Property Name="Gender" Type="nvarchar" MaxLength="1" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreditAmount" Type="decimal" Precision="18" Scale="7" />
         </EntityType>
         <EntityType Name="ClientContactDetail">
           <Key>
@@ -472,6 +473,9 @@
         <Function Name="sp_Sales_Report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SaleTypeId" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_SalesPerAlbum" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AlbumId" Type="bigint" Mode="In" />
+        </Function>
         <EntityContainer Name="JukeBoxModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientContactDetail" EntityType="Self.ClientContactDetail" Schema="dbo" store:Type="Tables" />
@@ -587,6 +591,7 @@
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ClientContactDetails" Relationship="Self.FK_ClientContactDetails_Client" FromRole="Client" ToRole="ClientContactDetail" />
           <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Client" ToRole="Library" />
+          <Property Name="CreditAmount" Type="Decimal" Precision="18" Scale="7" />
         </EntityType>
         <EntityType Name="ClientContactDetail">
           <Key>
@@ -1066,7 +1071,10 @@
           <Parameter Name="SaleTypeId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_NumberOfMembers_Report" ReturnType="Collection(Int16)">
-            <Parameter Name="MemberTypeId" Mode="In" Type="Int32" />
+          <Parameter Name="MemberTypeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SalesPerAlbum" ReturnType="Collection(JukeBoxModel.sp_SalesPerAlbum_Result)">
+            <Parameter Name="AlbumId" Mode="In" Type="Int64" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Library">
@@ -1239,6 +1247,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="sp_SalesPerAlbum_Result">
+          <Property Type="Int64" Name="LibraryID" Nullable="false" />
+          <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
+          <Property Type="Decimal" Name="CreditAmount" Nullable="true" Precision="18" Scale="7" />
+          <Property Type="Int32" Name="NoOfAlbumSold" Nullable="true" />
+          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="5" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1248,6 +1264,7 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="JukeBoxModel.Client">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="FK_ClientStatusID" ColumnName="FK_ClientStatusID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -1550,6 +1567,18 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_Sales_Report" FunctionName="JukeBoxModel.Store.sp_Sales_Report" />
           <FunctionImportMapping FunctionImportName="sp_NumberOfMembers_Report" FunctionName="JukeBoxModel.Store.sp_NumberOfMembers_Report" />
+          <FunctionImportMapping FunctionImportName="sp_SalesPerAlbum" FunctionName="JukeBoxModel.Store.sp_SalesPerAlbum">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.sp_SalesPerAlbum_Result">
+                <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
+                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
+                <ScalarProperty Name="NoOfAlbumSold" ColumnName="NoOfAlbumSold" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

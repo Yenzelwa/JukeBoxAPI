@@ -224,5 +224,14 @@ namespace JukeBox.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<short>>("sp_NumberOfMembers_Report", memberTypeIdParameter);
         }
+    
+        public virtual ObjectResult<sp_SalesPerAlbum_Result> sp_SalesPerAlbum(Nullable<long> albumId)
+        {
+            var albumIdParameter = albumId.HasValue ?
+                new ObjectParameter("AlbumId", albumId) :
+                new ObjectParameter("AlbumId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SalesPerAlbum_Result>("sp_SalesPerAlbum", albumIdParameter);
+        }
     }
 }

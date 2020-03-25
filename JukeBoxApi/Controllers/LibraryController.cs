@@ -215,6 +215,55 @@ namespace JukeBoxApi.Controllers
             }
             return apiResp;
         }
+
+        [AllowAnonymous]
+        [Route("album/sales/{id}")]
+        [HttpGet]
+        public async Task<ApiSalesPerAlbumResponse> GetLibrarySales( long Id )
+        {
+            var apiResp = new ApiSalesPerAlbumResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).GetAlbumSales(Id);
+
+            if (retVal.Count > 0)
+            {
+                apiResp.ResponseObject = new List<ApiSalesPerAlbum>();
+                foreach (var _album in retVal)
+                {
+                    var albumSales = new ApiSalesPerAlbum();
+                    albumSales.Bind(_album);
+                    apiResp.ResponseObject.Add(albumSales);
+
+                }
+                apiResp.ResponseType = 1;
+                apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("albums/{clientid}")]
+        [HttpGet]
+        public async Task<ApiClientLibraryResponse> GetClientAlbums(long clientid)
+        {
+            var apiResp = new ApiClientLibraryResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await (new JukeBox.BLL.Library()).GetLibraryByClientId(clientid);
+
+            if (retVal.Count > 0)
+            {
+                apiResp.ResponseObject = new List<ApiClientLibrary>();
+                foreach (var _album in retVal)
+                {
+                    var albumlist = new ApiClientLibrary();
+                    albumlist.Bind(_album);
+                    apiResp.ResponseObject.Add(albumlist);
+
+                }
+                apiResp.ResponseType = 1;
+                apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
     }
 }
 

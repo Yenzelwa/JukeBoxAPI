@@ -39,6 +39,7 @@ namespace JukeBox.Data
         public string Gender { get; set; }
         public System.DateTime DateCreated { get; set; }
         public int CreatedBy { get; set; }
+        public Nullable<decimal> CreditAmount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientContactDetail> ClientContactDetails { get; set; }

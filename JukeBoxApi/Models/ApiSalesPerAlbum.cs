@@ -10,6 +10,9 @@ namespace JukeBoxApi.Models
         public long LibraryId { get; set; }
         public short StatusId { get; set; }
         public string AlbumName { get; set; }
+
+        public string Artist { get; set; }
+
         public decimal? CreditAmount { get; set; }
         public decimal? Price { get; set; }
         public DateTime DateCreated { get; set; }
@@ -18,6 +21,7 @@ namespace JukeBoxApi.Models
         {
             LibraryId = cr.LibraryID;
             AlbumName = cr.LibraryName;
+            Artist = cr.Artist;
             CreditAmount = cr.CreditAmount;
             Price = cr.Amount;
             NoOfAlbumSold = cr.NoOfAlbumSold;

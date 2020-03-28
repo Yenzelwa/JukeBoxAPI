@@ -1250,6 +1250,7 @@
         <ComplexType Name="sp_SalesPerAlbum_Result">
           <Property Type="Int64" Name="LibraryID" Nullable="false" />
           <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Artist" Nullable="false" MaxLength="201" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
           <Property Type="Decimal" Name="CreditAmount" Nullable="true" Precision="18" Scale="7" />
           <Property Type="Int32" Name="NoOfAlbumSold" Nullable="true" />
@@ -1572,6 +1573,7 @@
               <ComplexTypeMapping TypeName="JukeBoxModel.sp_SalesPerAlbum_Result">
                 <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
                 <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="Artist" ColumnName="Artist" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
                 <ScalarProperty Name="NoOfAlbumSold" ColumnName="NoOfAlbumSold" />

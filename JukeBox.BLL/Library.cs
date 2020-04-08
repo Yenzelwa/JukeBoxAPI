@@ -50,12 +50,12 @@ namespace JukeBox.BLL
                 return db.Libraries.Where(x=>x.FK_ClientID == clientId).ToList();
             }
         }
-        public async Task<List<JukeBox.Data.sp_SalesPerAlbum_Result>> GetAlbumSales(long albumId)
+        public async Task<List<JukeBox.Data.sp_SalesPerAlbum_Result>> GetAlbumSales(int type , long clientid)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.sp_SalesPerAlbum(albumId).ToList();
+                return db.sp_SalesPerAlbum(type, clientid).ToList();
             }
         }
         public async Task<List<JukeBox.Data.GetLibraryDetail_Result>> GetLibraryDetail(long libraryId, int? clientId)
@@ -93,6 +93,45 @@ namespace JukeBox.BLL
                 return db.Create_Library_Detail(libraryDetailId, libraryId, librarySatus, libraryDetailName, librayFilePath, price, userId).FirstOrDefault();
             }
         }
+        public async Task<bool> DeleteLibrary(long libraryId, int userId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                try
+                {
+                    var library = db.Libraries.Where(x => x.LibraryID == libraryId).FirstOrDefault();
+                    library.Enabled = false;
+                    library.CreatedBy = userId;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
 
+                    return false;
+                }
+
+            }
+        }
+        public async Task<bool> DeleteLibraryDetail(long libraryDetailId, int userId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                try
+                {
+                    var libraryDetail = db.LibraryDetails.Where(x => x.LibraryDetailID == libraryDetailId).FirstOrDefault();
+                    libraryDetail.Enabled = false;
+                    libraryDetail.CreatedBy = userId;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+               
+            }
+        }
     }
 }

@@ -17,10 +17,10 @@ namespace JukeBox.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.LibraryDetails = new HashSet<LibraryDetail>();
             this.Purchases = new HashSet<Purchase>();
             this.RoleUserMaps = new HashSet<RoleUserMap>();
             this.Libraries = new HashSet<Library>();
+            this.LibraryDetails = new HashSet<LibraryDetail>();
         }
     
         public int UserID { get; set; }
@@ -34,12 +34,12 @@ namespace JukeBox.Data
         public Nullable<int> FK_CompanyID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LibraryDetail> LibraryDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Purchase> Purchases { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RoleUserMap> RoleUserMaps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Library> Libraries { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LibraryDetail> LibraryDetails { get; set; }
     }
 }

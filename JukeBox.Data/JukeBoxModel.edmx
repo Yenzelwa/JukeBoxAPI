@@ -132,6 +132,7 @@
           <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="Enabled" Type="bit" />
         </EntityType>
         <EntityType Name="LibraryDetail">
           <Key>
@@ -145,6 +146,7 @@
           <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="Enabled" Type="bit" />
         </EntityType>
         <EntityType Name="LibraryStatus">
           <Key>
@@ -474,7 +476,8 @@
           <Parameter Name="SaleTypeId" Type="int" Mode="In" />
         </Function>
         <Function Name="sp_SalesPerAlbum" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="AlbumId" Type="bigint" Mode="In" />
+          <Parameter Name="LibraryType" Type="int" Mode="In" />
+          <Parameter Name="ClientId" Type="bigint" Mode="In" />
         </Function>
         <EntityContainer Name="JukeBoxModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
@@ -590,8 +593,8 @@
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ClientContactDetails" Relationship="Self.FK_ClientContactDetails_Client" FromRole="Client" ToRole="ClientContactDetail" />
-          <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Client" ToRole="Library" />
           <Property Name="CreditAmount" Type="Decimal" Precision="18" Scale="7" />
+          <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Client" ToRole="Library" />
         </EntityType>
         <EntityType Name="ClientContactDetail">
           <Key>
@@ -675,30 +678,13 @@
           <Property Name="Enabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_CustomerTransactionType" FromRole="CustomerTransactionType" ToRole="CustomerTransaction" />
         </EntityType>
-        <EntityType Name="LibraryDetail">
-          <Key>
-            <PropertyRef Name="LibraryDetailID" />
-          </Key>
-          <Property Name="LibraryDetailID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FK_LibraryID" Type="Int64" Nullable="false" />
-          <Property Name="FK_LibraryStatusID" Type="Int16" Nullable="false" />
-          <Property Name="LibraryDetailName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="LibraryStatu" Relationship="Self.FK_LibraryDetail_LibraryStatus" FromRole="LibraryDetail" ToRole="LibraryStatus" />
-          <NavigationProperty Name="User" Relationship="Self.FK_LibraryDetail_User" FromRole="LibraryDetail" ToRole="User" />
-          <NavigationProperty Name="PurchaseDetails" Relationship="Self.FK_PurchaseDetail_LibraryDetail" FromRole="LibraryDetail" ToRole="PurchaseDetail" />
-          <NavigationProperty Name="Library" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="LibraryDetail" ToRole="Library" />
-        </EntityType>
         <EntityType Name="LibraryStatu">
           <Key>
             <PropertyRef Name="LibraryStatusID" />
           </Key>
           <Property Name="LibraryStatusID" Type="Int16" Nullable="false" />
           <Property Name="LibraryStatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="LibraryDetails" Relationship="Self.FK_LibraryDetail_LibraryStatus" FromRole="LibraryStatus" ToRole="LibraryDetail" />
+          <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_LibraryStatus" FromRole="LibraryStatu" ToRole="LibraryDetail" />
         </EntityType>
         <EntityType Name="LibraryType">
           <Key>
@@ -722,7 +708,6 @@
           <NavigationProperty Name="CustomerTransactions" Relationship="Self.FK_CustomerTransaction_Purchase" FromRole="Purchase" ToRole="CustomerTransaction" />
           <NavigationProperty Name="User" Relationship="Self.FK_Purchase_User" FromRole="Purchase" ToRole="User" />
           <NavigationProperty Name="PurchaseDetails" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="Purchase" ToRole="PurchaseDetail" />
-          <NavigationProperty Name="Library" Relationship="JukeBoxModel.FK_Purchase_Library" FromRole="Purchase" ToRole="Library" />
           <Property Name="FK_CustomerID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Customer" Relationship="JukeBoxModel.FK_Purchase_Library1" FromRole="Purchase" ToRole="Customer" />
         </EntityType>
@@ -735,7 +720,6 @@
           <Property Name="FK_LibraryDetailID" Type="Int64" />
           <Property Name="PurchaseAmount" Type="Decimal" Precision="18" Scale="7" />
           <Property Name="PurchaseDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="LibraryDetail" Relationship="Self.FK_PurchaseDetail_LibraryDetail" FromRole="PurchaseDetail" ToRole="LibraryDetail" />
           <NavigationProperty Name="Purchase" Relationship="Self.FK_PurchaseDetail_Purchase" FromRole="PurchaseDetail" ToRole="Purchase" />
           <Property Name="FK_CustomerID" Type="Int32" />
         </EntityType>
@@ -788,10 +772,10 @@
           <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CellPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FK_CompanyID" Type="Int32" />
-          <NavigationProperty Name="LibraryDetails" Relationship="Self.FK_LibraryDetail_User" FromRole="User" ToRole="LibraryDetail" />
           <NavigationProperty Name="Purchases" Relationship="Self.FK_Purchase_User" FromRole="User" ToRole="Purchase" />
           <NavigationProperty Name="RoleUserMaps" Relationship="Self.FK_RoleUserMap_User" FromRole="User" ToRole="RoleUserMap" />
           <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_User" FromRole="User" ToRole="Library" />
+          <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_User" FromRole="User" ToRole="LibraryDetail" />
         </EntityType>
         <Association Name="FK_ClientContactDetails_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
@@ -838,42 +822,6 @@
             </Principal>
             <Dependent Role="CustomerTransaction">
               <PropertyRef Name="FK_PurchaseD" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LibraryDetail_LibraryStatus">
-          <End Role="LibraryStatus" Type="Self.LibraryStatu" Multiplicity="1" />
-          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LibraryStatus">
-              <PropertyRef Name="LibraryStatusID" />
-            </Principal>
-            <Dependent Role="LibraryDetail">
-              <PropertyRef Name="FK_LibraryStatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LibraryDetail_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="LibraryDetail">
-              <PropertyRef Name="CreatedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PurchaseDetail_LibraryDetail">
-          <End Role="LibraryDetail" Type="Self.LibraryDetail" Multiplicity="0..1" />
-          <End Role="PurchaseDetail" Type="Self.PurchaseDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LibraryDetail">
-              <PropertyRef Name="LibraryDetailID" />
-            </Principal>
-            <Dependent Role="PurchaseDetail">
-              <PropertyRef Name="FK_LibraryDetailID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -935,7 +883,6 @@
           <EntitySet Name="CustomerStatus" EntityType="Self.CustomerStatu" />
           <EntitySet Name="CustomerTransactions" EntityType="Self.CustomerTransaction" />
           <EntitySet Name="CustomerTransactionTypes" EntityType="Self.CustomerTransactionType" />
-          <EntitySet Name="LibraryDetails" EntityType="Self.LibraryDetail" />
           <EntitySet Name="LibraryStatus" EntityType="Self.LibraryStatu" />
           <EntitySet Name="LibraryTypes" EntityType="Self.LibraryType" />
           <EntitySet Name="Purchases" EntityType="Self.Purchase" />
@@ -961,18 +908,6 @@
             <End Role="Purchase" EntitySet="Purchases" />
             <End Role="CustomerTransaction" EntitySet="CustomerTransactions" />
           </AssociationSet>
-          <AssociationSet Name="FK_LibraryDetail_LibraryStatus" Association="Self.FK_LibraryDetail_LibraryStatus">
-            <End Role="LibraryStatus" EntitySet="LibraryStatus" />
-            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LibraryDetail_User" Association="Self.FK_LibraryDetail_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseDetail_LibraryDetail" Association="Self.FK_PurchaseDetail_LibraryDetail">
-            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
-            <End Role="PurchaseDetail" EntitySet="PurchaseDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_Purchase_User" Association="Self.FK_Purchase_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Purchase" EntitySet="Purchases" />
@@ -988,27 +923,6 @@
           <AssociationSet Name="FK_RoleUserMap_User" Association="Self.FK_RoleUserMap_User">
             <End Role="User" EntitySet="Users" />
             <End Role="RoleUserMap" EntitySet="RoleUserMaps" />
-          </AssociationSet>
-          <EntitySet Name="Libraries" EntityType="JukeBoxModel.Library" />
-          <AssociationSet Name="FK_Library_Client" Association="JukeBoxModel.FK_Library_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Library" EntitySet="Libraries" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Library_LibraryType" Association="JukeBoxModel.FK_Library_LibraryType">
-            <End Role="LibraryType" EntitySet="LibraryTypes" />
-            <End Role="Library" EntitySet="Libraries" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Library_User" Association="JukeBoxModel.FK_Library_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Library" EntitySet="Libraries" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LibraryDetail_Library" Association="JukeBoxModel.FK_LibraryDetail_Library">
-            <End Role="Library" EntitySet="Libraries" />
-            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Purchase_Library" Association="JukeBoxModel.FK_Purchase_Library">
-            <End Role="Library" EntitySet="Libraries" />
-            <End Role="Purchase" EntitySet="Purchases" />
           </AssociationSet>
           <FunctionImport Name="sp__VoucherRedeemProcedure">
             <Parameter Name="clientId" Mode="In" Type="Int64" />
@@ -1067,96 +981,43 @@
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Purchase" EntitySet="Purchases" />
           </AssociationSet>
-          <FunctionImport Name="sp_Sales_Report" ReturnType="Collection(Decimal)">
-          <Parameter Name="SaleTypeId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="sp_NumberOfMembers_Report" ReturnType="Collection(Int16)">
           <Parameter Name="MemberTypeId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_SalesPerAlbum" ReturnType="Collection(JukeBoxModel.sp_SalesPerAlbum_Result)">
-            <Parameter Name="AlbumId" Mode="In" Type="Int64" />
+            <Parameter Name="LibraryType" Mode="In" Type="Int32" />
+            <Parameter Name="ClientId" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="sp_Sales_Report" ReturnType="Collection(Decimal)">
+          <Parameter Name="SaleTypeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Libraries" EntityType="JukeBoxModel.Library" />
+          <EntitySet Name="LibraryDetails" EntityType="JukeBoxModel.LibraryDetail" />
+          <AssociationSet Name="FK_Library_Client" Association="JukeBoxModel.FK_Library_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_LibraryType" Association="JukeBoxModel.FK_Library_LibraryType">
+            <End Role="LibraryType" EntitySet="LibraryTypes" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_User" Association="JukeBoxModel.FK_Library_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Library" EntitySet="Libraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_Library" Association="JukeBoxModel.FK_LibraryDetail_Library">
+            <End Role="Library" EntitySet="Libraries" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_LibraryStatus" Association="JukeBoxModel.FK_LibraryDetail_LibraryStatus">
+            <End Role="LibraryStatu" EntitySet="LibraryStatus" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LibraryDetail_User" Association="JukeBoxModel.FK_LibraryDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Library">
-          <Key>
-            <PropertyRef Name="LibraryID" />
-          </Key>
-          <Property Name="LibraryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FK_ClientID" Type="Int32" Nullable="false" />
-          <Property Name="FK_LibraryTypeID" Type="Int16" Nullable="false" />
-          <Property Name="LibraryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LibraryCoverFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="LibraryDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Client" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Library" ToRole="Client" />
-          <NavigationProperty Name="LibraryType" Relationship="JukeBoxModel.FK_Library_LibraryType" FromRole="Library" ToRole="LibraryType" />
-          <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_Library_User" FromRole="Library" ToRole="User" />
-          <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="Library" ToRole="LibraryDetail" />
-          <NavigationProperty Name="Purchases" Relationship="JukeBoxModel.FK_Purchase_Library" FromRole="Library" ToRole="Purchase" />
-          <Property Name="LibraryFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <Association Name="FK_Library_Client">
-          <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="Library">
-              <PropertyRef Name="FK_ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Library_LibraryType">
-          <End Type="JukeBoxModel.LibraryType" Role="LibraryType" Multiplicity="1" />
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LibraryType">
-              <PropertyRef Name="LibraryTypeID" />
-            </Principal>
-            <Dependent Role="Library">
-              <PropertyRef Name="FK_LibraryTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Library_User">
-          <End Type="JukeBoxModel.User" Role="User" Multiplicity="1" />
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Library">
-              <PropertyRef Name="CreatedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LibraryDetail_Library">
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="1" />
-          <End Type="JukeBoxModel.LibraryDetail" Role="LibraryDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Library">
-              <PropertyRef Name="LibraryID" />
-            </Principal>
-            <Dependent Role="LibraryDetail">
-              <PropertyRef Name="FK_LibraryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Purchase_Library">
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="1" />
-          <End Type="JukeBoxModel.Purchase" Role="Purchase" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Library">
-              <PropertyRef Name="LibraryID" />
-            </Principal>
-            <Dependent Role="Purchase">
-              <PropertyRef Name="FK_LibraryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="sp__Purchase_Result">
           <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
           <Property Type="Boolean" Name="Success" Nullable="true" />
@@ -1249,13 +1110,122 @@
         </Association>
         <ComplexType Name="sp_SalesPerAlbum_Result">
           <Property Type="Int64" Name="LibraryID" Nullable="false" />
-          <Property Type="String" Name="LibraryName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ItemName" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="Artist" Nullable="false" MaxLength="201" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="23" />
           <Property Type="Decimal" Name="CreditAmount" Nullable="true" Precision="18" Scale="7" />
-          <Property Type="Int32" Name="NoOfAlbumSold" Nullable="true" />
+          <Property Type="Int32" Name="NoOfItemSold" Nullable="true" />
           <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="5" />
         </ComplexType>
+        <EntityType Name="Library">
+          <Key>
+            <PropertyRef Name="LibraryID" />
+          </Key>
+          <Property Name="LibraryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ClientID" Type="Int32" Nullable="false" />
+          <Property Name="FK_LibraryTypeID" Type="Int16" Nullable="false" />
+          <Property Name="LibraryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LibraryCoverFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LibraryDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LibraryFilePath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" />
+          <NavigationProperty Name="Client" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Library" ToRole="Client" />
+          <NavigationProperty Name="LibraryType" Relationship="JukeBoxModel.FK_Library_LibraryType" FromRole="Library" ToRole="LibraryType" />
+          <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_Library_User" FromRole="Library" ToRole="User" />
+          <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="Library" ToRole="LibraryDetail" />
+        </EntityType>
+        <EntityType Name="LibraryDetail">
+          <Key>
+            <PropertyRef Name="LibraryDetailID" />
+          </Key>
+          <Property Name="LibraryDetailID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_LibraryID" Type="Int64" Nullable="false" />
+          <Property Name="FK_LibraryStatusID" Type="Int16" Nullable="false" />
+          <Property Name="LibraryDetailName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" />
+          <NavigationProperty Name="Library" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="LibraryDetail" ToRole="Library" />
+          <NavigationProperty Name="LibraryStatu" Relationship="JukeBoxModel.FK_LibraryDetail_LibraryStatus" FromRole="LibraryDetail" ToRole="LibraryStatu" />
+          <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_LibraryDetail_User" FromRole="LibraryDetail" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Library_Client">
+          <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_LibraryType">
+          <End Type="JukeBoxModel.LibraryType" Role="LibraryType" Multiplicity="1" />
+          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryType">
+              <PropertyRef Name="LibraryTypeID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_LibraryTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_User">
+          <End Type="JukeBoxModel.User" Role="User" Multiplicity="1" />
+          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_Library">
+          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="1" />
+          <End Type="JukeBoxModel.LibraryDetail" Role="LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Library">
+              <PropertyRef Name="LibraryID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_LibraryStatus">
+          <End Type="JukeBoxModel.LibraryStatu" Role="LibraryStatu" Multiplicity="1" />
+          <End Type="JukeBoxModel.LibraryDetail" Role="LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStatu">
+              <PropertyRef Name="LibraryStatusID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="FK_LibraryStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LibraryDetail_User">
+          <End Type="JukeBoxModel.User" Role="User" Multiplicity="1" />
+          <End Type="JukeBoxModel.LibraryDetail" Role="LibraryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="LibraryDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1369,20 +1339,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LibraryDetails">
-            <EntityTypeMapping TypeName="JukeBoxModel.LibraryDetail">
-              <MappingFragment StoreEntitySet="LibraryDetail">
-                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
-                <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
-                <ScalarProperty Name="FK_LibraryStatusID" ColumnName="FK_LibraryStatusID" />
-                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="LibraryStatus">
             <EntityTypeMapping TypeName="JukeBoxModel.LibraryStatu">
               <MappingFragment StoreEntitySet="LibraryStatus">
@@ -1477,22 +1433,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Libraries">
-            <EntityTypeMapping TypeName="JukeBoxModel.Library">
-              <MappingFragment StoreEntitySet="Library">
-                <ScalarProperty Name="LibraryFilePath" ColumnName="LibraryFilePath" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="LibraryDescription" ColumnName="LibraryDescription" />
-                <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
-                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
-                <ScalarProperty Name="FK_LibraryTypeID" ColumnName="FK_LibraryTypeID" />
-                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
-                <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp__VoucherRedeemProcedure" FunctionName="JukeBoxModel.Store.sp__VoucherRedeemProcedure" />
           <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
             <ResultMapping>
@@ -1566,21 +1506,53 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_Sales_Report" FunctionName="JukeBoxModel.Store.sp_Sales_Report" />
           <FunctionImportMapping FunctionImportName="sp_NumberOfMembers_Report" FunctionName="JukeBoxModel.Store.sp_NumberOfMembers_Report" />
           <FunctionImportMapping FunctionImportName="sp_SalesPerAlbum" FunctionName="JukeBoxModel.Store.sp_SalesPerAlbum">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.sp_SalesPerAlbum_Result">
                 <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
-                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="Artist" ColumnName="Artist" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
-                <ScalarProperty Name="NoOfAlbumSold" ColumnName="NoOfAlbumSold" />
+                <ScalarProperty Name="NoOfItemSold" ColumnName="NoOfItemSold" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_Sales_Report" FunctionName="JukeBoxModel.Store.sp_Sales_Report" />
+          <EntitySetMapping Name="Libraries">
+            <EntityTypeMapping TypeName="JukeBoxModel.Library">
+              <MappingFragment StoreEntitySet="Library">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="LibraryFilePath" ColumnName="LibraryFilePath" />
+                <ScalarProperty Name="LibraryDescription" ColumnName="LibraryDescription" />
+                <ScalarProperty Name="LibraryCoverFilePath" ColumnName="LibraryCoverFilePath" />
+                <ScalarProperty Name="LibraryName" ColumnName="LibraryName" />
+                <ScalarProperty Name="FK_LibraryTypeID" ColumnName="FK_LibraryTypeID" />
+                <ScalarProperty Name="FK_ClientID" ColumnName="FK_ClientID" />
+                <ScalarProperty Name="LibraryID" ColumnName="LibraryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryDetails">
+            <EntityTypeMapping TypeName="JukeBoxModel.LibraryDetail">
+              <MappingFragment StoreEntitySet="LibraryDetail">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="LibraryDetailName" ColumnName="LibraryDetailName" />
+                <ScalarProperty Name="FK_LibraryStatusID" ColumnName="FK_LibraryStatusID" />
+                <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
+                <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -18,7 +18,6 @@ namespace JukeBox.Data
         public Library()
         {
             this.LibraryDetails = new HashSet<LibraryDetail>();
-            this.Purchases = new HashSet<Purchase>();
         }
     
         public long LibraryID { get; set; }
@@ -27,17 +26,16 @@ namespace JukeBox.Data
         public string LibraryName { get; set; }
         public string LibraryCoverFilePath { get; set; }
         public string LibraryDescription { get; set; }
+        public string LibraryFilePath { get; set; }
         public Nullable<decimal> Price { get; set; }
         public System.DateTime DateCreated { get; set; }
         public int CreatedBy { get; set; }
-        public string LibraryFilePath { get; set; }
+        public Nullable<bool> Enabled { get; set; }
     
         public virtual Client Client { get; set; }
         public virtual LibraryType LibraryType { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LibraryDetail> LibraryDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }

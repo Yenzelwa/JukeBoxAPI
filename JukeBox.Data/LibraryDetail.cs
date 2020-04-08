@@ -14,12 +14,6 @@ namespace JukeBox.Data
     
     public partial class LibraryDetail
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LibraryDetail()
-        {
-            this.PurchaseDetails = new HashSet<PurchaseDetail>();
-        }
-    
         public long LibraryDetailID { get; set; }
         public long FK_LibraryID { get; set; }
         public short FK_LibraryStatusID { get; set; }
@@ -28,11 +22,10 @@ namespace JukeBox.Data
         public Nullable<decimal> Price { get; set; }
         public System.DateTime DateCreated { get; set; }
         public int CreatedBy { get; set; }
+        public Nullable<bool> Enabled { get; set; }
     
+        public virtual Library Library { get; set; }
         public virtual LibraryStatu LibraryStatu { get; set; }
         public virtual User User { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }
-        public virtual Library Library { get; set; }
     }
 }

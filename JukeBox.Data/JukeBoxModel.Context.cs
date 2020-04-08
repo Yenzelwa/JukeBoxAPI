@@ -36,7 +36,6 @@ namespace JukeBox.Data
         public virtual DbSet<CustomerStatu> CustomerStatus { get; set; }
         public virtual DbSet<CustomerTransaction> CustomerTransactions { get; set; }
         public virtual DbSet<CustomerTransactionType> CustomerTransactionTypes { get; set; }
-        public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
         public virtual DbSet<LibraryStatu> LibraryStatus { get; set; }
         public virtual DbSet<LibraryType> LibraryTypes { get; set; }
         public virtual DbSet<Purchase> Purchases { get; set; }
@@ -46,8 +45,9 @@ namespace JukeBox.Data
         public virtual DbSet<RoleUserMap> RoleUserMaps { get; set; }
         public virtual DbSet<Title> Titles { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Library> Libraries { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Library> Libraries { get; set; }
+        public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
     
         public virtual int sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete)
         {
@@ -207,15 +207,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLibraryDetail_Result>("GetLibraryDetail", libraryIdParameter, clientIdParameter);
         }
     
-        public virtual ObjectResult<Nullable<decimal>> sp_Sales_Report(Nullable<int> saleTypeId)
-        {
-            var saleTypeIdParameter = saleTypeId.HasValue ?
-                new ObjectParameter("SaleTypeId", saleTypeId) :
-                new ObjectParameter("SaleTypeId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("sp_Sales_Report", saleTypeIdParameter);
-        }
-    
         public virtual ObjectResult<Nullable<short>> sp_NumberOfMembers_Report(Nullable<int> memberTypeId)
         {
             var memberTypeIdParameter = memberTypeId.HasValue ?
@@ -225,13 +216,26 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<short>>("sp_NumberOfMembers_Report", memberTypeIdParameter);
         }
     
-        public virtual ObjectResult<sp_SalesPerAlbum_Result> sp_SalesPerAlbum(Nullable<long> albumId)
+        public virtual ObjectResult<sp_SalesPerAlbum_Result> sp_SalesPerAlbum(Nullable<int> libraryType, Nullable<long> clientId)
         {
-            var albumIdParameter = albumId.HasValue ?
-                new ObjectParameter("AlbumId", albumId) :
-                new ObjectParameter("AlbumId", typeof(long));
+            var libraryTypeParameter = libraryType.HasValue ?
+                new ObjectParameter("LibraryType", libraryType) :
+                new ObjectParameter("LibraryType", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SalesPerAlbum_Result>("sp_SalesPerAlbum", albumIdParameter);
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("ClientId", clientId) :
+                new ObjectParameter("ClientId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SalesPerAlbum_Result>("sp_SalesPerAlbum", libraryTypeParameter, clientIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> sp_Sales_Report(Nullable<int> saleTypeId)
+        {
+            var saleTypeIdParameter = saleTypeId.HasValue ?
+                new ObjectParameter("SaleTypeId", saleTypeId) :
+                new ObjectParameter("SaleTypeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("sp_Sales_Report", saleTypeIdParameter);
         }
     }
 }

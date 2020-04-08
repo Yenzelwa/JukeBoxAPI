@@ -142,11 +142,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("postfile")]
         [HttpPost]
-        public async Task<ApiResponse> SaveAsync()
+        public async void SaveAsync()
         {
             try
             {
-                var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+                //var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
                 if (System.Web.HttpContext.Current.Request.Files.AllKeys.Length > 0)
                 {
                     var httpPostedFile = System.Web.HttpContext.Current.Request.Files["file"];
@@ -154,13 +154,11 @@ namespace JukeBoxApi.Controllers
 
                     if (System.Web.HttpContext.Current.Request.Headers.AllKeys.Length > 0)
                     {
-                        var refId = System.Web.HttpContext.Current.Request.Headers["reference-id"];
                         var fileFolderName = System.Web.HttpContext.Current.Request.Headers["file-type"];
-                        var artist = (new JukeBox.BLL.Account()).GetClientById(Convert.ToInt64(refId));
-
-                        if (httpPostedFile != null && artist !=null)
+                        
+                        if (httpPostedFile != null)
                         {
-                            var filePath = fileFolderName == "song" ? Path.Combine(@"C:/JukeBox/Songs/"+ artist.FirstName + " "+artist.LastName):
+                            var filePath = fileFolderName == null ? Path.Combine(@"C:/JukeBox/Songs"):
                                                               Path.Combine(@"C:/JukeBox/Album");
                             string savePath = "";
                             if (!System.IO.File.Exists(filePath))
@@ -177,20 +175,20 @@ namespace JukeBoxApi.Controllers
                                 httpPostedFile.SaveAs(savePath);
                             }
                           
-                                apiResp.ResponseType = 1;
-                                apiResp.ResponseMessage = savePath.Replace("C:", "http://www.apigagasimedia.co.za");
+                               // apiResp.ResponseType = 1;
+                            //    apiResp.ResponseMessage = savePath.Replace("C:", "http://www.apigagasimedia.co.za");
                            
                         }
                     }
                   
                    
                 }
-                return apiResp;
+              //  return apiResp;
             }
             catch (Exception e)
             {
                 var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
-                return apiResp;
+              //  return apiResp;
             }
         }
 
@@ -217,13 +215,13 @@ namespace JukeBoxApi.Controllers
         }
 
         [AllowAnonymous]
-        [Route("album/sales/{id}")]
+        [Route("album/sales/{type}/{clientid}")]
         [HttpGet]
-        public async Task<ApiSalesPerAlbumResponse> GetLibrarySales( long Id )
+        public async Task<ApiSalesPerAlbumResponse> GetLibrarySales( int type , long clientid)
         {
             var apiResp = new ApiSalesPerAlbumResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await (new JukeBox.BLL.Library()).GetAlbumSales(Id);
+            var retVal = await (new JukeBox.BLL.Library()).GetAlbumSales(type , clientid);
 
             if (retVal.Count > 0)
             {
@@ -262,6 +260,63 @@ namespace JukeBoxApi.Controllers
                 apiResp.ResponseType = 1;
                 apiResp.ResponseMessage = "Success";
             }
+            return apiResp;
+        }
+
+        [AllowAnonymous]
+        [Route("delete/{id}")]
+        [HttpGet]
+        public async Task<ApiLibraryResponse> DeleteLibrary(long id )
+        {
+            var apiResp = new ApiLibraryResponse { ResponseType = -1, ResponseMessage = "Failed" };
+            var createdBy = 1;
+            var deleted = await (new JukeBox.BLL.Library()).DeleteLibrary(id, createdBy);
+            if (deleted)
+            {
+                var retVal = await (new JukeBox.BLL.Library()).GetLibrary(0, 0);
+
+                if (retVal.Count > 0)
+                {
+                    apiResp.ResponseObject = new List<ApiLibrary>();
+                    foreach (var _library in retVal)
+                    {
+                        var library = new ApiLibrary();
+                        library.Bind(_library);
+                        apiResp.ResponseObject.Add(library);
+
+                    }
+                    apiResp.ResponseType = 1;
+                    apiResp.ResponseMessage = "Success";
+                }
+            }
+            return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("detail/delete/{id}")]
+        [HttpGet]
+        public async Task<ApiLibraryDetailResponse> DeleteLibraryDetail(long id)
+        {
+            var apiResp = new ApiLibraryDetailResponse { ResponseType = -1, ResponseMessage = "Failed" };
+            var createdBy = 1;
+            var deleted = await (new JukeBox.BLL.Library()).DeleteLibraryDetail(id, createdBy);
+            if(deleted) {
+                var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id,0);
+
+                if (retVal.Count > 0)
+                {
+                    apiResp.ResponseObject = new List<ApiLibraryDetail>();
+                    foreach (var _library in retVal)
+                    {
+                        var libraryDetail = new ApiLibraryDetail();
+                        libraryDetail.Bind(_library);
+                        apiResp.ResponseObject.Add(libraryDetail);
+
+                    }
+                    apiResp.ResponseType = 1;
+                    apiResp.ResponseMessage = "Success";
+                }
+            }
+           
             return apiResp;
         }
     }

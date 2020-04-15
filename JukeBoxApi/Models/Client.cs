@@ -24,21 +24,21 @@ namespace JukeBoxApi.Models
 
 
         public DateTime DateOfBirth { get; set; }
-        public short FK_IdentityTypeID { get; set; }
+        public short? FK_IdentityTypeID { get; set; }
 
 
         public string IdentityTypeValue { get; set; }
         public decimal BalanceAvailable { get; set; }
 
-        public short FK_CompanyID { get; set; }
+        public short? FK_CompanyID { get; set; }
 
         public string ClientPassword { get; set; }
         public string CellPhone { get; set; }
         public string Email { get; set; }
-        public short FK_CountryID { get; set; }
+        public short? FK_CountryID { get; set; }
         public string Gender { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
 
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
     }
 }

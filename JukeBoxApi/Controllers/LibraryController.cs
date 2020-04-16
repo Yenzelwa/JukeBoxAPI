@@ -128,6 +128,7 @@ namespace JukeBoxApi.Controllers
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
             request.CreatedBy = 1;
+            request.LibraryCoverFilePath = "http://www.apigagasimedia.co.za/JukeBoxStore/Album/" + request.LibraryCoverFilePath;
             var retVal = await (new JukeBox.BLL.Library()).CreateLibrary(request.LibraryID, request.FK_ClientID, request.FK_LibraryTypeID,
                 request.LibraryName, request.LibraryDescription, request.LibraryCoverFilePath, request.Price, request.CreatedBy); ;
 
@@ -158,7 +159,7 @@ namespace JukeBoxApi.Controllers
                         
                         if (httpPostedFile != null)
                         {
-                            var filePath = fileFolderName == null ? Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Songs") :
+                            var filePath = fileFolderName == null ? Path.Combine(@"C:/inetpub/wwwroot/drex/Documents") :
                                                               Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Album");
                             string savePath = "";
                             if (!System.IO.File.Exists(filePath))
@@ -200,6 +201,7 @@ namespace JukeBoxApi.Controllers
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
             request.CreatedBy = 1;
             request.FK_LibraryStatusID = 1;
+            request.FilePath =   "http://www.apigagasimedia.co.za/JukeBoxStore/Songs/" + request.FilePath;
 
             var retVal = await (new JukeBox.BLL.Library()).CreateLibraryDetail(request.LibraryDetailID, request.FK_LibraryID, request.FK_LibraryStatusID,
                 request.LibraryDetailName, request.FilePath, request.Price, request.CreatedBy);
@@ -298,9 +300,9 @@ namespace JukeBoxApi.Controllers
         {
             var apiResp = new ApiLibraryDetailResponse { ResponseType = -1, ResponseMessage = "Failed" };
             var createdBy = 1;
-            var deleted = await (new JukeBox.BLL.Library()).DeleteLibraryDetail(id, createdBy);
-            if(deleted) {
-                var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(id,0);
+            var libaryId = await (new JukeBox.BLL.Library()).DeleteLibraryDetail(id, createdBy);
+            if(libaryId > 1) {
+                var retVal = await (new JukeBox.BLL.Library()).GetLibraryDetail(libaryId, 0);
 
                 if (retVal.Count > 0)
                 {

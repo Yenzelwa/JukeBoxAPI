@@ -281,6 +281,37 @@ namespace JukeBoxApi.Controllers
         }
 
 
+        [AllowAnonymous]
+        [Route("delete/client/{id}")]
+        [HttpGet]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public ApiClientResponse DeleteClient(int id)
+        {
+            var apiClents = new ApiClientResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var deleted = (new JukeBox.BLL.Account()).DeleteClient(id,1);
+            if (deleted)
+            {
+                var retVal = (new JukeBox.BLL.Account()).GetAllClient();
+
+                if (retVal != null)
+                {
+                    apiClents.ResponseObject = new List<apiClient>();
+                    foreach (var item in retVal)
+                    {
+                        var client = new apiClient();
+                        client.Bind(item);
+                        apiClents.ResponseObject.Add(client);
+                    }
+
+                    apiClents.ResponseType = 1;
+                    apiClents.ResponseMessage = "Success";
+
+
+                }
+            }
+            return apiClents;
+        }
 
 
 

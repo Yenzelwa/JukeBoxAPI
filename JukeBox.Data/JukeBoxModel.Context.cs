@@ -27,7 +27,6 @@ namespace JukeBox.Data
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<ClientContactDetail> ClientContactDetails { get; set; }
         public virtual DbSet<ClientContactType> ClientContactTypes { get; set; }
         public virtual DbSet<ClientStatu> ClientStatus { get; set; }
@@ -48,6 +47,7 @@ namespace JukeBox.Data
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Library> Libraries { get; set; }
         public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
     
         public virtual int sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete)
         {

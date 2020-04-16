@@ -32,10 +32,10 @@ namespace JukeBox.Data
         public int CreatedBy { get; set; }
         public Nullable<bool> Enabled { get; set; }
     
-        public virtual Client Client { get; set; }
         public virtual LibraryType LibraryType { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LibraryDetail> LibraryDetails { get; set; }
+        public virtual Client Client { get; set; }
     }
 }

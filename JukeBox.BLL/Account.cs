@@ -35,6 +35,28 @@ namespace JukeBox.BLL
                 return db.Customers.Where(x => x.Email == username  || x.CellPhone == username && x.ClientPassword == password).FirstOrDefault();
             }
         }
+        public bool DeleteClient(int clientId, int userId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+                try
+                {
+                    var client = db.Clients.Where(x => x.ClientID == clientId).FirstOrDefault();
+                    client.Enabled = false;
+                    client.CreatedBy = userId;
+                    db.SaveChanges();
+
+                    return true;
+                    
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+
+            }
+        }
         public Customer GetCustomerById(int customerId)
         {
             using (var db = new JukeBoxEntities())
@@ -46,7 +68,7 @@ namespace JukeBox.BLL
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Clients.ToList();
+                return db.Clients.Where(x=>x.Enabled == true).ToList();
             }
         }
         public Client  GetClientById(long id)
@@ -190,7 +212,7 @@ namespace JukeBox.BLL
                 {
                     if (client.ClientID > 0)
                     {
-                        var clientToUpdate = db.Clients.Find(client.ClientID);
+                        var clientToUpdate = db.Clients.Where(x=>x.ClientID == client.ClientID).FirstOrDefault();
                         clientToUpdate.Initials = client.Initials;
                         clientToUpdate.FirstName = client.FirstName;
                         clientToUpdate.LastName = client.LastName;
@@ -226,7 +248,9 @@ namespace JukeBox.BLL
                             CellPhone = client.CellPhone,
                             DateCreated = DateTime.Now,
                             Email = client.Email,
-                            BalanceAvailable = 0
+                            BalanceAvailable = 0,
+                            Enabled=true
+                            
 
                         };
                         db.Clients.Add(_client);

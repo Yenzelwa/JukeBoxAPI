@@ -28,6 +28,7 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreditAmount" Type="decimal" Precision="18" Scale="7" />
+          <Property Name="Enabled" Type="bit" />
         </EntityType>
         <EntityType Name="ClientContactDetail">
           <Key>
@@ -142,7 +143,7 @@
           <Property Name="FK_LibraryID" Type="bigint" Nullable="false" />
           <Property Name="FK_LibraryStatusID" Type="smallint" Nullable="false" />
           <Property Name="LibraryDetailName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="200" />
+          <Property Name="FilePath" Type="nvarchar(max)" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="7" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
@@ -430,7 +431,7 @@
           <Parameter Name="FK_ClientId" Type="int" Mode="In" />
           <Parameter Name="LibraryTypeId" Type="smallint" Mode="In" />
           <Parameter Name="LibraryName" Type="varchar" Mode="In" />
-          <Parameter Name="LibraryCoverFilePath" Type="nvarchar" Mode="In" />
+          <Parameter Name="LibraryCoverFilePath" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="LibraryDescription" Type="varchar" Mode="In" />
           <Parameter Name="Price" Type="decimal" Mode="In" />
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
@@ -440,7 +441,7 @@
           <Parameter Name="FK_LibraryId" Type="int" Mode="In" />
           <Parameter Name="FK_LibraryStatusId" Type="smallint" Mode="In" />
           <Parameter Name="LibraryDetailName" Type="varchar" Mode="In" />
-          <Parameter Name="FilePath" Type="nvarchar" Mode="In" />
+          <Parameter Name="FilePath" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Price" Type="decimal" Mode="In" />
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
         </Function>
@@ -570,32 +571,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="JukeBoxModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Client">
-          <Key>
-            <PropertyRef Name="ClientID" />
-          </Key>
-          <Property Name="ClientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FK_ClientStatusID" Type="Int16" Nullable="false" />
-          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Initials" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ClientTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FK_IdentityTypeID" Type="Int16" Nullable="false" />
-          <Property Name="IdentityTypeValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BalanceAvailable" Type="Decimal" Precision="18" Scale="7" Nullable="false" />
-          <Property Name="FK_CompanyID" Type="Int16" Nullable="false" />
-          <Property Name="ClientPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CellPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FK_CountryID" Type="Int16" />
-          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ClientContactDetails" Relationship="Self.FK_ClientContactDetails_Client" FromRole="Client" ToRole="ClientContactDetail" />
-          <Property Name="CreditAmount" Type="Decimal" Precision="18" Scale="7" />
-          <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Client" ToRole="Library" />
-        </EntityType>
         <EntityType Name="ClientContactDetail">
           <Key>
             <PropertyRef Name="ClientContactDetailID" />
@@ -610,8 +585,8 @@
           <Property Name="FK_RegionID" Type="Int32" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Client" Relationship="Self.FK_ClientContactDetails_Client" FromRole="ClientContactDetail" ToRole="Client" />
           <NavigationProperty Name="ClientContactType" Relationship="Self.FK_ClientContactDetails_ClientContactType" FromRole="ClientContactDetail" ToRole="ClientContactType" />
+          <NavigationProperty Name="Client" Relationship="JukeBoxModel.FK_ClientContactDetails_Client" FromRole="ClientContactDetail" ToRole="Client" />
         </EntityType>
         <EntityType Name="ClientContactType">
           <Key>
@@ -777,18 +752,6 @@
           <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_User" FromRole="User" ToRole="Library" />
           <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_User" FromRole="User" ToRole="LibraryDetail" />
         </EntityType>
-        <Association Name="FK_ClientContactDetails_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="ClientContactDetail">
-              <PropertyRef Name="FK_ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ClientContactDetails_ClientContactType">
           <End Role="ClientContactType" Type="Self.ClientContactType" Multiplicity="1" />
           <End Role="ClientContactDetail" Type="Self.ClientContactDetail" Multiplicity="*" />
@@ -874,7 +837,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="JukeBoxEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Clients" EntityType="Self.Client" />
           <EntitySet Name="ClientContactDetails" EntityType="Self.ClientContactDetail" />
           <EntitySet Name="ClientContactTypes" EntityType="Self.ClientContactType" />
           <EntitySet Name="ClientStatus" EntityType="Self.ClientStatu" />
@@ -892,10 +854,6 @@
           <EntitySet Name="RoleUserMaps" EntityType="Self.RoleUserMap" />
           <EntitySet Name="Titles" EntityType="Self.Title" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_ClientContactDetails_Client" Association="Self.FK_ClientContactDetails_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="ClientContactDetail" EntitySet="ClientContactDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_ClientContactDetails_ClientContactType" Association="Self.FK_ClientContactDetails_ClientContactType">
             <End Role="ClientContactType" EntitySet="ClientContactTypes" />
             <End Role="ClientContactDetail" EntitySet="ClientContactDetails" />
@@ -993,10 +951,6 @@
           </FunctionImport>
           <EntitySet Name="Libraries" EntityType="JukeBoxModel.Library" />
           <EntitySet Name="LibraryDetails" EntityType="JukeBoxModel.LibraryDetail" />
-          <AssociationSet Name="FK_Library_Client" Association="JukeBoxModel.FK_Library_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Library" EntitySet="Libraries" />
-          </AssociationSet>
           <AssociationSet Name="FK_Library_LibraryType" Association="JukeBoxModel.FK_Library_LibraryType">
             <End Role="LibraryType" EntitySet="LibraryTypes" />
             <End Role="Library" EntitySet="Libraries" />
@@ -1016,6 +970,15 @@
           <AssociationSet Name="FK_LibraryDetail_User" Association="JukeBoxModel.FK_LibraryDetail_User">
             <End Role="User" EntitySet="Users" />
             <End Role="LibraryDetail" EntitySet="LibraryDetails" />
+          </AssociationSet>
+          <EntitySet Name="Clients" EntityType="JukeBoxModel.Client" />
+          <AssociationSet Name="FK_ClientContactDetails_Client" Association="JukeBoxModel.FK_ClientContactDetails_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientContactDetail" EntitySet="ClientContactDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Library_Client" Association="JukeBoxModel.FK_Library_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Library" EntitySet="Libraries" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp__Purchase_Result">
@@ -1132,10 +1095,10 @@
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="Enabled" Type="Boolean" />
-          <NavigationProperty Name="Client" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Library" ToRole="Client" />
           <NavigationProperty Name="LibraryType" Relationship="JukeBoxModel.FK_Library_LibraryType" FromRole="Library" ToRole="LibraryType" />
           <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_Library_User" FromRole="Library" ToRole="User" />
           <NavigationProperty Name="LibraryDetails" Relationship="JukeBoxModel.FK_LibraryDetail_Library" FromRole="Library" ToRole="LibraryDetail" />
+          <NavigationProperty Name="Client" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Library" ToRole="Client" />
         </EntityType>
         <EntityType Name="LibraryDetail">
           <Key>
@@ -1145,7 +1108,7 @@
           <Property Name="FK_LibraryID" Type="Int64" Nullable="false" />
           <Property Name="FK_LibraryStatusID" Type="Int16" Nullable="false" />
           <Property Name="LibraryDetailName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="7" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
@@ -1154,18 +1117,6 @@
           <NavigationProperty Name="LibraryStatu" Relationship="JukeBoxModel.FK_LibraryDetail_LibraryStatus" FromRole="LibraryDetail" ToRole="LibraryStatu" />
           <NavigationProperty Name="User" Relationship="JukeBoxModel.FK_LibraryDetail_User" FromRole="LibraryDetail" ToRole="User" />
         </EntityType>
-        <Association Name="FK_Library_Client">
-          <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
-          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="Library">
-              <PropertyRef Name="FK_ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Library_LibraryType">
           <End Type="JukeBoxModel.LibraryType" Role="LibraryType" Multiplicity="1" />
           <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
@@ -1226,37 +1177,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientID" />
+          </Key>
+          <Property Name="ClientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ClientStatusID" Type="Int16" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Initials" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ClientTitle" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FK_IdentityTypeID" Type="Int16" Nullable="false" />
+          <Property Name="IdentityTypeValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BalanceAvailable" Type="Decimal" Nullable="false" Precision="18" Scale="7" />
+          <Property Name="FK_CompanyID" Type="Int16" Nullable="false" />
+          <Property Name="ClientPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CellPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_CountryID" Type="Int16" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreditAmount" Type="Decimal" Precision="18" Scale="7" />
+          <Property Name="Enabled" Type="Boolean" />
+          <NavigationProperty Name="ClientContactDetails" Relationship="JukeBoxModel.FK_ClientContactDetails_Client" FromRole="Client" ToRole="ClientContactDetail" />
+          <NavigationProperty Name="Libraries" Relationship="JukeBoxModel.FK_Library_Client" FromRole="Client" ToRole="Library" />
+        </EntityType>
+        <Association Name="FK_ClientContactDetails_Client">
+          <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="JukeBoxModel.ClientContactDetail" Role="ClientContactDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="ClientContactDetail">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Library_Client">
+          <End Type="JukeBoxModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="JukeBoxModel.Library" Role="Library" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="Library">
+              <PropertyRef Name="FK_ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="JukeBoxModelStoreContainer" CdmEntityContainer="JukeBoxEntities">
-          <EntitySetMapping Name="Clients">
-            <EntityTypeMapping TypeName="JukeBoxModel.Client">
-              <MappingFragment StoreEntitySet="Client">
-                <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="FK_ClientStatusID" ColumnName="FK_ClientStatusID" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Initials" ColumnName="Initials" />
-                <ScalarProperty Name="ClientTitle" ColumnName="ClientTitle" />
-                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-                <ScalarProperty Name="FK_IdentityTypeID" ColumnName="FK_IdentityTypeID" />
-                <ScalarProperty Name="IdentityTypeValue" ColumnName="IdentityTypeValue" />
-                <ScalarProperty Name="BalanceAvailable" ColumnName="BalanceAvailable" />
-                <ScalarProperty Name="FK_CompanyID" ColumnName="FK_CompanyID" />
-                <ScalarProperty Name="ClientPassword" ColumnName="ClientPassword" />
-                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FK_CountryID" ColumnName="FK_CountryID" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ClientContactDetails">
             <EntityTypeMapping TypeName="JukeBoxModel.ClientContactDetail">
               <MappingFragment StoreEntitySet="ClientContactDetail">
@@ -1550,6 +1527,32 @@
                 <ScalarProperty Name="FK_LibraryStatusID" ColumnName="FK_LibraryStatusID" />
                 <ScalarProperty Name="FK_LibraryID" ColumnName="FK_LibraryID" />
                 <ScalarProperty Name="LibraryDetailID" ColumnName="LibraryDetailID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="JukeBoxModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="CreditAmount" ColumnName="CreditAmount" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="FK_CountryID" ColumnName="FK_CountryID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="ClientPassword" ColumnName="ClientPassword" />
+                <ScalarProperty Name="FK_CompanyID" ColumnName="FK_CompanyID" />
+                <ScalarProperty Name="BalanceAvailable" ColumnName="BalanceAvailable" />
+                <ScalarProperty Name="IdentityTypeValue" ColumnName="IdentityTypeValue" />
+                <ScalarProperty Name="FK_IdentityTypeID" ColumnName="FK_IdentityTypeID" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="ClientTitle" ColumnName="ClientTitle" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="FK_ClientStatusID" ColumnName="FK_ClientStatusID" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

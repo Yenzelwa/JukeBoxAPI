@@ -113,7 +113,7 @@ namespace JukeBox.BLL
 
             }
         }
-        public async Task<bool> DeleteLibraryDetail(long libraryDetailId, int userId)
+        public async Task<long> DeleteLibraryDetail(long libraryDetailId, int userId)
         {
             using (var db = new JukeBoxEntities())
             {
@@ -123,12 +123,19 @@ namespace JukeBox.BLL
                     libraryDetail.Enabled = false;
                     libraryDetail.CreatedBy = userId;
                     db.SaveChanges();
-                    return true;
+                    if (libraryDetail != null)
+                    {
+                        return libraryDetail.FK_LibraryID;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 }
                 catch (Exception)
                 {
 
-                    return false;
+                    return -1;
                 }
                
             }

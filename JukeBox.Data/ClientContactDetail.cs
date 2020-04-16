@@ -25,7 +25,7 @@ namespace JukeBox.Data
         public System.DateTime DateCreated { get; set; }
         public int CreatedBy { get; set; }
     
-        public virtual Client Client { get; set; }
         public virtual ClientContactType ClientContactType { get; set; }
+        public virtual Client Client { get; set; }
     }
 }

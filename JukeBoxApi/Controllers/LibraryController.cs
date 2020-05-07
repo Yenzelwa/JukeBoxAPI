@@ -159,7 +159,7 @@ namespace JukeBoxApi.Controllers
                         
                         if (httpPostedFile != null)
                         {
-                            var filePath = fileFolderName == null ? Path.Combine(@"C:/inetpub/wwwroot/drex/Documents") :
+                            var filePath = fileFolderName == null ? Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Songs") :
                                                               Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Album");
                             string savePath = "";
                             if (!System.IO.File.Exists(filePath))

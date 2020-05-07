@@ -23,7 +23,7 @@ namespace BETInternalWebServices.Filters
 
             var request = context.Request;
             int roleId = Convert.ToInt32(HttpContext.Current.Application["SyxRoleId"]);
-            if (roleId == Config.ExternalSyxUserId)
+            if (roleId == Config.CacheDurationHours)
             {
                 context.ErrorResult = new AuthenticationFailureResult("Access Denied!!!", request);
                 return;

@@ -79,8 +79,10 @@
     <Compile Include="Request\ApiClientDevice.cs" />
     <Compile Include="Request\ApiClientOneVoucherRedeemFilter.cs" />
     <Compile Include="Request\ApiClientUser.cs" />
+    <Compile Include="Request\TokenSession.cs" />
     <Compile Include="Response\ApiClientOneVoucherRedeemResponse.cs" />
     <Compile Include="Response\ApiResponse.cs" />
+    <Compile Include="Response\FlashTokenResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JukeBox.Data\JukeBox.Data.csproj">

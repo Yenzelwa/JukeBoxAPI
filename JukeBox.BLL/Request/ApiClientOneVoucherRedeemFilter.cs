@@ -13,7 +13,6 @@ namespace JukeBox.BLL.Request
         [JsonProperty("user")]
         public ApiClientUser user { get; set; }
 
-        public string accountNumber { get; set; }
 
         public long sequenceNumber { get; set; }
 
@@ -22,13 +21,9 @@ namespace JukeBox.BLL.Request
         [JsonProperty("acquirer")]
         public ApiClientAcquirer acquirer { get; set; }
 
-        public string password { get; set; }
+        public long amountRequested { get; set; }
 
-        public string reference { get; set; }
+        public string currency { get; set; }
 
-        [JsonProperty("device")]
-        public ApiClientDevice device { get; set; }
-
-        public string transactionGuid { get; set; }
     }
 }

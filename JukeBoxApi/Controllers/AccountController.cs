@@ -22,6 +22,7 @@ using JukeBoxApi.Filters.JwtAuthFilters;
 using JukeBox.Data;
 using User = JukeBoxApi.Models.User;
 using System.Web.Http.Cors;
+using JukeBox.BLL.Response;
 
 namespace JukeBoxApi.Controllers
 {
@@ -230,7 +231,8 @@ namespace JukeBoxApi.Controllers
         [HttpPost]
         public JukeBox.BLL.Response.ApiResponse RedeemVoucher(VoucherRequest request)
         {
-            var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
+            
+            var apiResp = new JukeBox.BLL.Response.ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
             var retVal = (new JukeBox.BLL.Account()).FlashRedeem(request.VoucherPin, request.CustomerId);
 
@@ -265,7 +267,7 @@ namespace JukeBoxApi.Controllers
         [HttpGet]
         public Response ResetPassword(string password , string code)
         {
-            var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
+            var apiLoginClient = new Response { IsSuccess = false, Message = "Incorrect Code" };
 
             var retVal = (new JukeBox.BLL.Account()).ResetPasword(password, code);
 
@@ -278,6 +280,32 @@ namespace JukeBoxApi.Controllers
 
             }
             return apiLoginClient;
+        }
+        [AllowAnonymous]
+        [Route("flash/token")]
+        [HttpPost]
+        public FlashTokenResponse GetToken()
+        {
+            var apiLoginClient = new Response { IsSuccess = false, Message = "Incorrect Code" };
+
+            var retVal = JukeBox.BLL.ExternalApi.Voucher.GetTokenAsync();
+
+            if (!String.IsNullOrEmpty(retVal.access_token))
+            {
+                apiLoginClient.IsSuccess = true;
+                apiLoginClient.Message = retVal.access_token;
+
+                return new FlashTokenResponse
+                {
+                    access_token = retVal.access_token,
+                     expires_in=retVal.expires_in
+                     
+            };
+
+            }
+              return new FlashTokenResponse
+            {
+            }; 
         }
 
 

@@ -2,6 +2,7 @@
 using JukeBox.BLL.Request;
 using JukeBox.BLL.Response;
 using JukeBox.Data;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,6 +14,9 @@ using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Caching;
+using System.Web.SessionState;
 
 namespace JukeBox.BLL
 {
@@ -323,13 +327,12 @@ namespace JukeBox.BLL
             Random random = new Random();
             long sequenceNumber = Convert.ToInt64(DateTime.Now.ToString("yyyyMMddHHmmssf")) + random.Next(1, 99999);
 
-            var guid = Guid.NewGuid();
-            string transactionGuid = guid.ToString();
 
             ApiClientUser User = new ApiClientUser
             {
                 authUserName = authUserName,
-                authPassWord = authPassWord
+                authPassWord = authPassWord,
+                purseAccountNumber = accountNumber
             };
 
             ApiClientAcquirer Acquirer = new ApiClientAcquirer
@@ -337,15 +340,6 @@ namespace JukeBox.BLL
                 id = id,
                 password = password,
                 reference = ClientID
-            };
-
-            ApiClientDevice Device = new ApiClientDevice
-            {
-                msisdn = msisdn,
-                channelId = channelId,
-                platform = platform,
-                platformVersion = platformVersion,
-                appType = appType,
             };
 
             try
@@ -360,8 +354,8 @@ namespace JukeBox.BLL
                 else
                 {
                     TrackVoucher(string.Format("Tracking Id: {2} - {1} Start redeeming Flash Pin: {0}", voucherpin, clientId, trackingId));
-                    var flash =  GetOneVoucher(User, accountNumber, sequenceNumber, voucherpin, Acquirer, Device, transactionGuid);
-                    var flashRandValue = Convert.ToDecimal(flash.amountAuthorised.value) / 100;
+                    var flash =  GetOneVoucher(User, sequenceNumber, voucherpin, Acquirer);
+                    var flashRandValue = Convert.ToDecimal(flash.amountAuthorised) / 100;
                     if (flash.actionCode == "0000") //Activated/Success
                     {
                        TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
@@ -404,24 +398,69 @@ namespace JukeBox.BLL
 
             return response;
         }
-        public static ApiClientOneVoucherRedeemResponse GetOneVoucher(ApiClientUser user, string accountNumber, long sequenceNumber, string voucherPin, ApiClientAcquirer acquirer, ApiClientDevice device, string transactionGuid)
+        public static ApiClientOneVoucherRedeemResponse GetOneVoucher(ApiClientUser user, long sequenceNumber, string voucherPin, ApiClientAcquirer acquirer)
         {
             try
             {
+                var accessToken = "";
+                var refreshToken = "";
+                var token = HttpContext.Current.Application["TokenSession"] as TokenSession;
+                if (token !=null)
+                {
+                    accessToken = token.accessToken;
+                       if (Convert.ToDateTime(token.ExpDate) <= DateTime.Now)
+                            {
+                        var refreshTokenFlash = JukeBox.BLL.ExternalApi.Voucher.RefreshTokenAsync(token.accessToken);
+                        accessToken = refreshTokenFlash.access_token;
+                        refreshToken = refreshTokenFlash.refresh_token;
+                        var date = DateTime.Now.AddMinutes(55);
+                        HttpContext.Current.Application.Remove("TokenSession");
+                        var tokenSession = new TokenSession
+                        {
+                            accessToken = accessToken,
+                            refreshToken = refreshToken,
+                            ExpDate = date
+                        };
+                        HttpContext.Current.Application["TokenSession"] = tokenSession;
+
+                    }
+    
+                        
+                    
+                }
+                else
+                {
+                 
+                     var tokenFlash = JukeBox.BLL.ExternalApi.Voucher.GetTokenAsync();
+                     accessToken = tokenFlash.access_token;
+                    refreshToken = tokenFlash.refresh_token;
+                    var date = DateTime.Now.AddMinutes(55);
+                    var tokenSession = new TokenSession
+                    {
+                        accessToken = accessToken,
+                        refreshToken = refreshToken,
+                        ExpDate = date
+                    };
+                    HttpContext.Current.Application["TokenSession"] = tokenSession;
+                   
+
+
+
+                }
+
                 var data = JukeBox.BLL.ExternalApi.Voucher.GetApiClientOneVoucher(new ApiClientOneVoucherRedeemFilter()
                 {
 
                     user = user,
-                    accountNumber = accountNumber,
                     sequenceNumber = sequenceNumber,
                     voucherPin = voucherPin,
                     acquirer = acquirer,
-                    device = device,
-                    transactionGuid = transactionGuid
+                    amountRequested = 0,
+                    currency = "ZAR"
 
-                });
-
+                } , accessToken);
                 return data;
+          
             }
             catch (Exception e)
             {

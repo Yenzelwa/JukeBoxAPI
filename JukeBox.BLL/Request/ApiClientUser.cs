@@ -14,5 +14,7 @@ namespace JukeBox.BLL.Request
 
         [Required]
         public string authPassWord { get; set; }
+        [Required]
+        public string purseAccountNumber { get; set; }
     }
 }

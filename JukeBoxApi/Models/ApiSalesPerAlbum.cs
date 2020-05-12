@@ -22,7 +22,7 @@ namespace JukeBoxApi.Models
             LibraryId = cr.LibraryID;
             ItemName = cr.ItemName;
             Artist = cr.Artist;
-            CreditAmount = cr.CreditAmount;
+            CreditAmount = Math.Round(cr.CreditAmount ?? 0, 2);
             Price = cr.Amount;
             NoOfItemSold = cr.NoOfItemSold;
             DateCreated = cr.DateCreated;

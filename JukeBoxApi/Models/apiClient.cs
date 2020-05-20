@@ -14,7 +14,7 @@ namespace JukeBoxApi.Models
         public string Initials { get; set; }
         public string ClientTitle { get; set; }
         public System.DateTime DateOfBirth { get; set; }
-        public decimal? BalanceAvailable { get; set; }
+        public string BalanceAvailable { get; set; }
         public string ClientPassword { get; set; }
         public string CellPhone { get; set; }
         public string Email { get; set; }
@@ -31,7 +31,7 @@ namespace JukeBoxApi.Models
             Initials = cr.Initials;
             ClientTitle = cr.ClientTitle;
             DateOfBirth = cr.DateOfBirth;
-            BalanceAvailable = Math.Round(cr.CreditAmount ?? 0, 2);
+            BalanceAvailable = (cr.CreditAmount??0).ToString("0.00");
             ClientPassword = cr.ClientPassword;
             CellPhone = cr.CellPhone;
             Email = cr.Email;

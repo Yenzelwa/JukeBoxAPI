@@ -13,7 +13,7 @@ namespace JukeBoxApi.Models
 
         public string Artist { get; set; }
 
-        public decimal? CreditAmount { get; set; }
+        public string CreditAmount { get; set; }
         public decimal? Price { get; set; }
         public DateTime DateCreated { get; set; }
         public int? NoOfItemSold { get; set; }
@@ -22,7 +22,7 @@ namespace JukeBoxApi.Models
             LibraryId = cr.LibraryID;
             ItemName = cr.ItemName;
             Artist = cr.Artist;
-            CreditAmount = Math.Round(cr.CreditAmount ?? 0, 2);
+            CreditAmount = (cr.CreditAmount ?? 0).ToString("0.00");
             Price = cr.Amount;
             NoOfItemSold = cr.NoOfItemSold;
             DateCreated = cr.DateCreated;

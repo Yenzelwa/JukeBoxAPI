@@ -410,7 +410,7 @@ namespace JukeBox.BLL
                     accessToken = token.accessToken;
                        if (Convert.ToDateTime(token.ExpDate) <= DateTime.Now)
                             {
-                        var refreshTokenFlash = JukeBox.BLL.ExternalApi.Voucher.RefreshTokenAsync(token.accessToken);
+                        var refreshTokenFlash = JukeBox.BLL.ExternalApi.Voucher.GetTokenAsync();
                         accessToken = refreshTokenFlash.access_token;
                         refreshToken = refreshTokenFlash.refresh_token;
                         var date = DateTime.Now.AddMinutes(55);

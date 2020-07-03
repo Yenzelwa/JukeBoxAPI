@@ -49,47 +49,6 @@ namespace JukeBox.Data
         public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
     
-        public virtual int sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete)
-        {
-            var clientIdParameter = clientId.HasValue ?
-                new ObjectParameter("clientId", clientId) :
-                new ObjectParameter("clientId", typeof(long));
-    
-            var voucherPinParameter = voucherPin != null ?
-                new ObjectParameter("voucherPin", voucherPin) :
-                new ObjectParameter("voucherPin", typeof(string));
-    
-            var voucherTypeIdParameter = voucherTypeId.HasValue ?
-                new ObjectParameter("voucherTypeId", voucherTypeId) :
-                new ObjectParameter("voucherTypeId", typeof(long));
-    
-            var voucherTransactionTypeIdParameter = voucherTransactionTypeId.HasValue ?
-                new ObjectParameter("voucherTransactionTypeId", voucherTransactionTypeId) :
-                new ObjectParameter("voucherTransactionTypeId", typeof(long));
-    
-            var voucherStatusIdParameter = voucherStatusId.HasValue ?
-                new ObjectParameter("voucherStatusId", voucherStatusId) :
-                new ObjectParameter("voucherStatusId", typeof(short));
-    
-            var redeemDateTimeParameter = redeemDateTime.HasValue ?
-                new ObjectParameter("redeemDateTime", redeemDateTime) :
-                new ObjectParameter("redeemDateTime", typeof(System.DateTime));
-    
-            var voucherReferenceIdParameter = voucherReferenceId.HasValue ?
-                new ObjectParameter("voucherReferenceId", voucherReferenceId) :
-                new ObjectParameter("voucherReferenceId", typeof(long));
-    
-            var amountParameter = amount.HasValue ?
-                new ObjectParameter("amount", amount) :
-                new ObjectParameter("amount", typeof(decimal));
-    
-            var isTxCompleteParameter = isTxComplete.HasValue ?
-                new ObjectParameter("isTxComplete", isTxComplete) :
-                new ObjectParameter("isTxComplete", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp__VoucherRedeemProcedure", clientIdParameter, voucherPinParameter, voucherTypeIdParameter, voucherTransactionTypeIdParameter, voucherStatusIdParameter, redeemDateTimeParameter, voucherReferenceIdParameter, amountParameter, isTxCompleteParameter);
-        }
-    
         public virtual ObjectResult<sp__Purchase_Result> sp__Purchase(Nullable<long> libraryId, Nullable<long> libraryDetailId, Nullable<int> clientId, Nullable<int> userId)
         {
             var libraryIdParameter = libraryId.HasValue ?
@@ -236,6 +195,51 @@ namespace JukeBox.Data
                 new ObjectParameter("SaleTypeId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("sp_Sales_Report", saleTypeIdParameter);
+        }
+    
+        public virtual ObjectResult<sp__VoucherRedeemProcedure_Result> sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete, string referenceComment)
+        {
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("clientId", clientId) :
+                new ObjectParameter("clientId", typeof(long));
+    
+            var voucherPinParameter = voucherPin != null ?
+                new ObjectParameter("voucherPin", voucherPin) :
+                new ObjectParameter("voucherPin", typeof(string));
+    
+            var voucherTypeIdParameter = voucherTypeId.HasValue ?
+                new ObjectParameter("voucherTypeId", voucherTypeId) :
+                new ObjectParameter("voucherTypeId", typeof(long));
+    
+            var voucherTransactionTypeIdParameter = voucherTransactionTypeId.HasValue ?
+                new ObjectParameter("voucherTransactionTypeId", voucherTransactionTypeId) :
+                new ObjectParameter("voucherTransactionTypeId", typeof(long));
+    
+            var voucherStatusIdParameter = voucherStatusId.HasValue ?
+                new ObjectParameter("voucherStatusId", voucherStatusId) :
+                new ObjectParameter("voucherStatusId", typeof(short));
+    
+            var redeemDateTimeParameter = redeemDateTime.HasValue ?
+                new ObjectParameter("redeemDateTime", redeemDateTime) :
+                new ObjectParameter("redeemDateTime", typeof(System.DateTime));
+    
+            var voucherReferenceIdParameter = voucherReferenceId.HasValue ?
+                new ObjectParameter("voucherReferenceId", voucherReferenceId) :
+                new ObjectParameter("voucherReferenceId", typeof(long));
+    
+            var amountParameter = amount.HasValue ?
+                new ObjectParameter("amount", amount) :
+                new ObjectParameter("amount", typeof(decimal));
+    
+            var isTxCompleteParameter = isTxComplete.HasValue ?
+                new ObjectParameter("isTxComplete", isTxComplete) :
+                new ObjectParameter("isTxComplete", typeof(bool));
+    
+            var referenceCommentParameter = referenceComment != null ?
+                new ObjectParameter("ReferenceComment", referenceComment) :
+                new ObjectParameter("ReferenceComment", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__VoucherRedeemProcedure_Result>("sp__VoucherRedeemProcedure", clientIdParameter, voucherPinParameter, voucherTypeIdParameter, voucherTransactionTypeIdParameter, voucherStatusIdParameter, redeemDateTimeParameter, voucherReferenceIdParameter, amountParameter, isTxCompleteParameter, referenceCommentParameter);
         }
     }
 }

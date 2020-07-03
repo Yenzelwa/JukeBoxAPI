@@ -158,6 +158,9 @@
     <Compile Include="sp__Purchase_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp__VoucherRedeemProcedure_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Title.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>

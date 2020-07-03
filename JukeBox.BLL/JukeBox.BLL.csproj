@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="Dashboard.cs" />
+    <Compile Include="ExternalApi\OTT\RestOTT.cs" />
+    <Compile Include="ExternalApi\OTT\VoucherOTT.cs" />
     <Compile Include="ExternalApi\RestFlash.cs" />
     <Compile Include="ExternalApi\SqlTools.cs" />
     <Compile Include="ExternalApi\Voucher.cs" />
@@ -79,10 +81,14 @@
     <Compile Include="Request\ApiClientDevice.cs" />
     <Compile Include="Request\ApiClientOneVoucherRedeemFilter.cs" />
     <Compile Include="Request\ApiClientUser.cs" />
+    <Compile Include="Request\OttCheckStatusVoucherRequest.cs" />
+    <Compile Include="Request\OttVoucherRequest.cs" />
     <Compile Include="Request\TokenSession.cs" />
     <Compile Include="Response\ApiClientOneVoucherRedeemResponse.cs" />
     <Compile Include="Response\ApiResponse.cs" />
     <Compile Include="Response\FlashTokenResponse.cs" />
+    <Compile Include="Response\OttVoucherResponse.cs" />
+    <Compile Include="Response\OttVoucherStatusResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JukeBox.Data\JukeBox.Data.csproj">

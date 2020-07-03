@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
 using System.Web.SessionState;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace JukeBox.BLL
 {
@@ -289,7 +291,19 @@ namespace JukeBox.BLL
             return BitConverter.ToString(encodedBytes);
         }
 
-        public ApiResponse FlashRedeem(string voucherpin , long clientId)
+        public ApiResponse RedeemVoucher(string voucherpin , long clientId)
+        {
+
+            var ott = redeemOTTVoucher(voucherpin, clientId);
+            if(ott.ResponseMessage != "Success")
+            {
+             var flash =  FlashVoucherRedeem(voucherpin, clientId);
+                return flash;
+            }
+            return ott;
+        }
+
+        private ApiResponse FlashVoucherRedeem(string voucherpin, long clientId)
         {
             var response = new ApiResponse
             {
@@ -314,7 +328,7 @@ namespace JukeBox.BLL
             //Device Class
             System.Web.HttpBrowserCapabilities browserInformation = new System.Web.HttpBrowserCapabilities
             {
-                  
+
             };
 
             string channelId = Convert.ToString(ConfigurationManager.AppSettings["ChannelId"]);
@@ -344,7 +358,7 @@ namespace JukeBox.BLL
 
             try
             {
-
+                var reference = "Flash - Voucher";
                 if (string.IsNullOrEmpty(voucherpin))
                 {
                     string errorMessage = "Please enter a valid voucher code.";
@@ -354,13 +368,14 @@ namespace JukeBox.BLL
                 else
                 {
                     TrackVoucher(string.Format("Tracking Id: {2} - {1} Start redeeming Flash Pin: {0}", voucherpin, clientId, trackingId));
-                    var flash =  GetOneVoucher(User, sequenceNumber, voucherpin, Acquirer);
+                    var flash = GetOneVoucher(User, sequenceNumber, voucherpin, Acquirer);
                     var flashRandValue = Convert.ToDecimal(flash.amountAuthorised) / 100;
                     if (flash.actionCode == "0000") //Activated/Success
                     {
-                       TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
-                       var updateBalance =  verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 1, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false);
-                        if(updateBalance == -1)
+
+                        TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
+                        var updateBalance = verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 1, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false, reference);
+                        if (updateBalance == null)
                         {
                             response.ResponseMessage = "Successfull";
                             response.ResponseType = 1;
@@ -370,14 +385,14 @@ namespace JukeBox.BLL
                             string errorMessage = "An error has occurred. Please try again.";
                             response.ResponseMessage = errorMessage;
                             TrackVoucher(string.Format("Tracking Id: {3} - {2} Error redeeming Flash Pin: {0}, Reason: {1}", voucherpin, "API returned failed response", clientId, trackingId));
-                            verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 2, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false);
+                            var voucher = verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 2, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false, reference);
                         }
 
                     }
                     else if (flash.actionCode == "1824")
                     {
                         string errorMessage = "Voucher has already been used.";
-                        response.ResponseMessage = errorMessage;  
+                        response.ResponseMessage = errorMessage;
                         TrackVoucher($"Tracking Id: {trackingId} - Flash API response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
                     }
                     else
@@ -385,7 +400,7 @@ namespace JukeBox.BLL
                         string errorMessage = "Invalid 1voucher code";
                         response.ResponseMessage = errorMessage;
                         TrackVoucher($"Tracking Id: {trackingId} - Flash API response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
-                        verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 2, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false);
+                      //  verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 2, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false, reference);
                     }
                 }
             }
@@ -397,6 +412,21 @@ namespace JukeBox.BLL
             }
 
             return response;
+        }
+
+        public static OttVoucherResponse GetOTTVoucher(OttVoucherRequest  ottVoucherRequest)
+        {
+            try
+            {
+               
+                var data = JukeBox.BLL.ExternalApi.OTT.VoucherOTT.RedeemOTT(ottVoucherRequest);
+                return data;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
         public static ApiClientOneVoucherRedeemResponse GetOneVoucher(ApiClientUser user, long sequenceNumber, string voucherPin, ApiClientAcquirer acquirer)
         {
@@ -471,12 +501,199 @@ namespace JukeBox.BLL
         {
          //   SystemLog.Log("Vouchers.Redeem", "Redeem Voucher", details, string.Empty);
         }
-        private int verifyVoucher(int ClientID, string voucherpin, int voucherTypeId, int voucherTransactionTypeId, short voucherStatusId, DateTime redeemDateTime, long voucherReferenceId, decimal flashRandValue, bool isTxComplete)
+        private sp__VoucherRedeemProcedure_Result verifyVoucher(int ClientID, string voucherpin, int voucherTypeId, int voucherTransactionTypeId, short voucherStatusId, DateTime redeemDateTime, long voucherReferenceId, decimal flashRandValue, bool isTxComplete , string ReferenceComment)
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.sp__VoucherRedeemProcedure(ClientID,voucherpin,voucherTypeId,voucherTransactionTypeId,voucherStatusId,redeemDateTime,voucherReferenceId,flashRandValue,isTxComplete);
+                return db.sp__VoucherRedeemProcedure(ClientID,voucherpin,voucherTypeId,voucherTransactionTypeId,voucherStatusId,redeemDateTime,voucherReferenceId,flashRandValue,isTxComplete, ReferenceComment).FirstOrDefault();
             }
         }
+        public ApiResponse redeemOTTVoucher(string voucherpin, long clientId)
+        {
+            var response = new ApiResponse
+            {
+                ResponseMessage = "Failed",
+                ResponseType = -1
+
+            };
+            string trackingId = Guid.NewGuid().ToString();
+            string userName = Convert.ToString(ConfigurationManager.AppSettings["OTTUserName"]);
+            string passWord = Convert.ToString(ConfigurationManager.AppSettings["OTTPassWord"]);
+            int vendorId = Convert.ToInt32(ConfigurationManager.AppSettings["OTTVendorId"]);
+            try
+            {
+                var xmlDoc = new XDocument( new XElement("RedeemVoucher",
+            new XElement("userName", userName),
+            new XElement("password", passWord),
+            new XElement("unique_reference", trackingId.ToString()),
+            new XElement("VendorID",vendorId ),
+            new XElement("pinCode", ""),
+            new XElement("accountCode", clientId.ToString()),
+            new XElement("clientID", "1234"),
+            new XElement("msisdn", "")));
+                var ottVoucherRequest = new OttVoucherRequest
+                {
+                     body =  new OttVoucherRequest.Body
+                     {
+                          redeemVoucher =  new OttVoucherRequest.RedeemVoucher
+                          {
+                              UserName = userName,
+                              Password = passWord,
+                              VendorId = vendorId,
+                              ClientId = clientId.ToString(),
+                              AccountCode = "",
+                              msisdn = "",
+                              PinCode = "1234",
+                              UniqueReference = trackingId.ToString()
+                          }
+                     }
+
+                };
+                var reference = "OTT - Voucher";
+                TrackVoucher(string.Format("Tracking Id: {2} - {1} Start redeeming Flash Pin: {0}", voucherpin, clientId, trackingId));
+                var ott = GetOTTVoucher(ottVoucherRequest);
+
+                if (ott.body.voucherResponse.redeemVoucherResult.Message == "Success") //Activated/Success
+                {
+                    
+                    TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {ott.body.voucherResponse.redeemVoucherResult.Message} for voucher pin: {voucherpin} and Client ID: {clientId}");
+                    var updateBalance = verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 1, DateTime.Now, Convert.ToInt64(ott.body.voucherResponse.redeemVoucherResult.Reference), ott.body.voucherResponse.redeemVoucherResult.Amount, false, reference);
+                    if (updateBalance == null)
+                    {
+                        response.ResponseMessage = "Successfull";
+                        response.ResponseType = 1;
+                    }
+                    else
+                    {
+                        string errorMessage = "An error has occurred. Please try again.";
+                        response.ResponseMessage = errorMessage;
+                        TrackVoucher(string.Format("Tracking Id: {3} - {2} Error redeeming Flash Pin: {0}, Reason: {1}", voucherpin, "API returned failed response", clientId, trackingId));
+                        var voucher = verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 2, DateTime.Now, Convert.ToInt64(ott.body.voucherResponse.redeemVoucherResult.Reference), ott.body.voucherResponse.redeemVoucherResult.Amount, false, reference);
+                    }
+
+                }
+                else if (ott.body.voucherResponse.redeemVoucherResult.ErrorCode == "1824")
+                {
+                    string errorMessage = "Voucher has already been used.";
+                    response.ResponseMessage = errorMessage;
+                    TrackVoucher($"Tracking Id: {trackingId} - OTT API response code: {ott.body.voucherResponse.redeemVoucherResult.ErrorCode} for voucher pin: {voucherpin} and Client ID: {clientId}");
+                }
+                else
+                {
+                    string errorMessage = "Invalid 1voucher code";
+                    response.ResponseMessage = errorMessage;
+                    TrackVoucher($"Tracking Id: {trackingId} - OTT API response code: {ott.body.voucherResponse.redeemVoucherResult.ErrorCode} for voucher pin: {voucherpin} and Client ID: {clientId}");
+                    //verifyVoucher(Convert.ToInt32(clientId), voucherpin, 2, 1, 2, DateTime.Now, Convert.ToInt64(ott.body.voucherResponse.redeemVoucherResult.Reference), ott.body.voucherResponse.redeemVoucherResult.Amount, false, reference);
+                }
+                return response;
+            }
+
+            catch (Exception ex)
+            {
+                TrackVoucher(string.Format("Tracking Id: {0} - {2} Exception, Reason: {1}", trackingId, ex.Message, clientId));
+                TrackVoucher(string.Format("Tracking Id: {1} - {2} End redeeming Flash Pin: {0}", voucherpin, trackingId, clientId));
+
+                return response;
+            }
+
+
+            }
+        public OttVoucherResponse CheckOTTVoucherStatus(string uniqueReference , long clientId)
+        {
+            var response = new OttVoucherResponse
+            {
+                 body = new OttVoucherResponse.Body
+                 {
+                      voucherResponse = new OttVoucherResponse.Body.VoucherResponse
+                      {
+                          redeemVoucherResult = new OttVoucherResponse.RedeemVoucherResult
+                          {
+                              Message = "Failed",
+                              Amount = 0,
+                              ErrorCode = "4",
+
+                          }
+                      }
+                 }
+            };
+            string trackingId = Guid.NewGuid().ToString();
+            string userName = Convert.ToString(ConfigurationManager.AppSettings["OTTUserName"]);
+            string passWord = Convert.ToString(ConfigurationManager.AppSettings["OTTPassWord"]);
+            int vendorId = Convert.ToInt32(ConfigurationManager.AppSettings["OTTVendorId"]);
+            try
+            {
+                var xmlDoc = new XDocument(new XElement("RedeemVoucher",
+            new XElement("userName", userName),
+            new XElement("password", passWord),
+            new XElement("unique_reference", trackingId.ToString()),
+            new XElement("VendorID", vendorId),
+            new XElement("pinCode", ""),
+            new XElement("accountCode", clientId.ToString()),
+            new XElement("clientID", "1234"),
+            new XElement("msisdn", "")));
+                var ottVoucherRequest = new OttCheckStatusVoucherRequest
+                {
+                    body = new OttCheckStatusVoucherRequest.Body
+                    {
+                        getStatus = new OttCheckStatusVoucherRequest.GetStatus
+                        {
+                            UserName = userName,
+                            Password = passWord,
+                            UniqueReference = uniqueReference
+                        }
+                    }
+
+                };
+                var reference = "OTT - Voucher";
+                TrackVoucher(string.Format("Tracking Id: {2} - {1} Start redeeming Flash Pin: {0}", uniqueReference, clientId, uniqueReference));
+                var ott = JukeBox.BLL.ExternalApi.OTT.VoucherOTT.CheckVoucherStatusOTT(ottVoucherRequest);
+
+                if (ott.body.voucherStatusResponse.statusResult.Message == "Success") //Activated/Success
+                {
+
+                    TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {ott.body.voucherStatusResponse.statusResult.Message} for voucher pin: {uniqueReference} and Client ID: {clientId}");
+                    var updateBalance = verifyVoucher(Convert.ToInt32(clientId), uniqueReference, 1, 1, 1, DateTime.Now, Convert.ToInt64(ott.body.voucherStatusResponse.statusResult.Reference), ott.body.voucherStatusResponse.statusResult.Amount, false, reference);
+                    if (updateBalance == null)
+                    {
+                        response.body.voucherResponse.redeemVoucherResult.Message = "Successfull";
+                        response.body.voucherResponse.redeemVoucherResult.ErrorCode = "0";
+                        response.body.voucherResponse.redeemVoucherResult.Amount = updateBalance.Amount;
+                    }
+                    else
+                    {
+                        string errorMessage = "An error has occurred. Please try again.";
+                        response.body.voucherResponse.redeemVoucherResult.Message = errorMessage;
+                        TrackVoucher(string.Format("Tracking Id: {3} - {2} Error redeeming Flash Pin: {0}, Reason: {1}", uniqueReference, "API returned failed response", clientId, trackingId));
+                        var voucher = verifyVoucher(Convert.ToInt32(clientId), uniqueReference, 1, 1, 2, DateTime.Now, Convert.ToInt64(ott.body.voucherStatusResponse.statusResult.Reference), ott.body.voucherStatusResponse.statusResult.Amount, false, reference);
+                    }
+
+                }
+                else if (ott.body.voucherStatusResponse.statusResult.ErrorCode == "1824")
+                {
+                    string errorMessage = "Voucher has already been used.";
+                    response.body.voucherResponse.redeemVoucherResult.Message = errorMessage;
+                    TrackVoucher($"Tracking Id: {trackingId} - OTT API response code: {ott.body.voucherStatusResponse.statusResult.ErrorCode} for voucher pin: {uniqueReference} and Client ID: {clientId}");
+                }
+                else
+                {
+                    string errorMessage = "Invalid";
+                    response.body.voucherResponse.redeemVoucherResult.Message = errorMessage;
+                    TrackVoucher($"Tracking Id: {trackingId} - OTT API response code: {ott.body.voucherStatusResponse.statusResult.ErrorCode} for voucher pin: {uniqueReference} and Client ID: {clientId}");
+                   // verifyVoucher(Convert.ToInt32(clientId), uniqueReference, 2, 1, 2, DateTime.Now, Convert.ToInt64(ott.body.voucherStatusResponse.statusResult.Reference), ott.body.voucherStatusResponse.statusResult.Amount, false, reference);
+                }
+                return response;
+            }
+
+            catch (Exception ex)
+            {
+                TrackVoucher(string.Format("Tracking Id: {0} - {2} Exception, Reason: {1}", trackingId, ex.Message, clientId));
+                TrackVoucher(string.Format("Tracking Id: {1} - {2} End redeeming Flash Pin: {0}", uniqueReference, trackingId, clientId));
+
+                return response;
+            }
+
+
+        }
+
     }
 }

@@ -23,6 +23,7 @@ using JukeBox.Data;
 using User = JukeBoxApi.Models.User;
 using System.Web.Http.Cors;
 using JukeBox.BLL.Response;
+using JukeBox.BLL.Request;
 
 namespace JukeBoxApi.Controllers
 {
@@ -234,11 +235,22 @@ namespace JukeBoxApi.Controllers
             
             var apiResp = new JukeBox.BLL.Response.ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = (new JukeBox.BLL.Account()).FlashRedeem(request.VoucherPin, request.CustomerId);
+            var retVal = (new JukeBox.BLL.Account()).RedeemVoucher(request.VoucherPin, request.CustomerId);
 
        
             return retVal;
         }
+        [AllowAnonymous]
+        [Route("customer/checkottvoucher")]
+        [HttpPost]
+        public OttVoucherResponse ChechOTTVoucherStatus(OttVoucherStatusRequest request)
+        {
+       
+            var retVal = (new JukeBox.BLL.Account()).CheckOTTVoucherStatus(request.UniqueReference, request.CustomerId);
+
+            return retVal;
+        }
+
 
         [AllowAnonymous]
         [Route("forgotpassword")]

@@ -57,7 +57,7 @@ namespace JukeBox.BLL.ExternalApi
 
         public static ApiClientOneVoucherRedeemResponse GetApiClientOneVoucher(ApiClientOneVoucherRedeemFilter data ,  string token)
         {
-            IRestRequest request = new RestRequest("partner/1voucher-redemption/1.0.0/voucher/redeem", Method.POST);
+            IRestRequest request = new RestRequest("api/account/user/login", Method.POST);
             request.AddHeader("Accept", "application/json");
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddJsonBody(data);

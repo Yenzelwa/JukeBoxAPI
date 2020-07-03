@@ -469,6 +469,7 @@
           <Parameter Name="voucherReferenceId" Type="bigint" Mode="In" />
           <Parameter Name="amount" Type="decimal" Mode="In" />
           <Parameter Name="isTxComplete" Type="bit" Mode="In" />
+          <Parameter Name="ReferenceComment" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_NumberOfMembers_Report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MemberTypeId" Type="int" Mode="In" />
@@ -882,17 +883,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="RoleUserMap" EntitySet="RoleUserMaps" />
           </AssociationSet>
-          <FunctionImport Name="sp__VoucherRedeemProcedure">
-            <Parameter Name="clientId" Mode="In" Type="Int64" />
-            <Parameter Name="voucherPin" Mode="In" Type="String" />
-            <Parameter Name="voucherTypeId" Mode="In" Type="Int64" />
-            <Parameter Name="voucherTransactionTypeId" Mode="In" Type="Int64" />
-            <Parameter Name="voucherStatusId" Mode="In" Type="Int16" />
-            <Parameter Name="redeemDateTime" Mode="In" Type="DateTime" />
-            <Parameter Name="voucherReferenceId" Mode="In" Type="Int64" />
-            <Parameter Name="amount" Mode="In" Type="Decimal" />
-            <Parameter Name="isTxComplete" Mode="In" Type="Boolean" />
-          </FunctionImport>
           <FunctionImport Name="sp__Purchase" ReturnType="Collection(JukeBoxModel.sp__Purchase_Result)">
             <Parameter Name="libraryId" Mode="In" Type="Int64" />
             <Parameter Name="libraryDetailId" Mode="In" Type="Int64" />
@@ -980,6 +970,18 @@
             <End Role="Client" EntitySet="Clients" />
             <End Role="Library" EntitySet="Libraries" />
           </AssociationSet>
+          <FunctionImport Name="sp__VoucherRedeemProcedure" ReturnType="Collection(JukeBoxModel.sp__VoucherRedeemProcedure_Result)">
+            <Parameter Name="clientId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherPin" Mode="In" Type="String" />
+            <Parameter Name="voucherTypeId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherTransactionTypeId" Mode="In" Type="Int64" />
+            <Parameter Name="voucherStatusId" Mode="In" Type="Int16" />
+            <Parameter Name="redeemDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="voucherReferenceId" Mode="In" Type="Int64" />
+            <Parameter Name="amount" Mode="In" Type="Decimal" />
+            <Parameter Name="isTxComplete" Mode="In" Type="Boolean" />
+            <Parameter Name="ReferenceComment" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp__Purchase_Result">
           <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
@@ -1228,6 +1230,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="sp__VoucherRedeemProcedure_Result">
+          <Property Type="Int64" Name="VoucherID" Nullable="false" />
+          <Property Type="Int64" Name="ClientID" Nullable="false" />
+          <Property Type="DateTime" Name="RedeemDateTime" Nullable="true" Precision="23" />
+          <Property Type="Int16" Name="FK_VoucherTypeID" Nullable="true" />
+          <Property Type="String" Name="VoucherPin" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Int64" Name="VoucherReferenceID" Nullable="true" />
+          <Property Type="Int16" Name="FK_VoucherStatusID" Nullable="false" />
+          <Property Type="Int32" Name="FK_VoucherTransactionTypeID" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1410,7 +1423,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp__VoucherRedeemProcedure" FunctionName="JukeBoxModel.Store.sp__VoucherRedeemProcedure" />
           <FunctionImportMapping FunctionImportName="sp__Purchase" FunctionName="JukeBoxModel.Store.sp__Purchase">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.sp__Purchase_Result">
@@ -1556,6 +1568,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp__VoucherRedeemProcedure" FunctionName="JukeBoxModel.Store.sp__VoucherRedeemProcedure">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.sp__VoucherRedeemProcedure_Result">
+                <ScalarProperty Name="VoucherID" ColumnName="VoucherID" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="RedeemDateTime" ColumnName="RedeemDateTime" />
+                <ScalarProperty Name="FK_VoucherTypeID" ColumnName="FK_VoucherTypeID" />
+                <ScalarProperty Name="VoucherPin" ColumnName="VoucherPin" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="VoucherReferenceID" ColumnName="VoucherReferenceID" />
+                <ScalarProperty Name="FK_VoucherStatusID" ColumnName="FK_VoucherStatusID" />
+                <ScalarProperty Name="FK_VoucherTransactionTypeID" ColumnName="FK_VoucherTransactionTypeID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

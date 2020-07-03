@@ -322,6 +322,7 @@
     <Compile Include="Models\ForgotPasswordRequest.cs" />
     <Compile Include="Models\LibraryDetailRequest.cs" />
     <Compile Include="Models\LibraryRequest.cs" />
+    <Compile Include="Models\OttVoucherStatusRequest.cs" />
     <Compile Include="Models\PurchaseOrderRequest.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\TokenResponse.cs" />

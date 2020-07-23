@@ -142,4 +142,26 @@ namespace JukeBoxApi.Models
         public DashBoardReport ResponseObject { get; set; }
 
     }
+    public class ApiPromotionTypeResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<PromotionType> ResponseObject { get; set; }
+
+    }
+    public class ApiPromotionResultResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<PromotionResult> ResponseObject { get; set; }
+
+    }
 }

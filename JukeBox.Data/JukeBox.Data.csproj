@@ -103,10 +103,19 @@
     <Compile Include="CustomerTransactionType.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetAllPromotionType_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetLibraryDetail_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GetLibrary_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetPromotionResultByType_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InsertVote_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="JukeBoxModel.Context.cs">

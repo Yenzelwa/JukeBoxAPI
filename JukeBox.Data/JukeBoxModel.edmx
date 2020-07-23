@@ -445,6 +445,7 @@
           <Parameter Name="Price" Type="decimal" Mode="In" />
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetAllPromotionType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="filterType" Type="int" Mode="In" />
           <Parameter Name="clientId" Type="int" Mode="In" />
@@ -452,6 +453,14 @@
         <Function Name="GetLibraryDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LibraryId" Type="bigint" Mode="In" />
           <Parameter Name="clientId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetPromotionResultByType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PromotionTypeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InsertVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PromotionTypeId" Type="int" Mode="In" />
+          <Parameter Name="ClientId" Type="int" Mode="In" />
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
         </Function>
         <Function Name="sp__Purchase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="sp_ Purchase">
           <Parameter Name="libraryId" Type="bigint" Mode="In" />
@@ -982,6 +991,15 @@
             <Parameter Name="isTxComplete" Mode="In" Type="Boolean" />
             <Parameter Name="ReferenceComment" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="GetAllPromotionType" ReturnType="Collection(JukeBoxModel.GetAllPromotionType_Result)" />
+          <FunctionImport Name="InsertVote" ReturnType="Collection(JukeBoxModel.InsertVote_Result)">
+            <Parameter Name="PromotionTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="ClientId" Mode="In" Type="Int32" />
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetPromotionResultByType" ReturnType="Collection(JukeBoxModel.GetPromotionResultByType_Result)">
+            <Parameter Name="PromotionTypeId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp__Purchase_Result">
           <Property Type="String" Name="Message" Nullable="false" MaxLength="6" />
@@ -1240,6 +1258,21 @@
           <Property Type="Int64" Name="VoucherReferenceID" Nullable="true" />
           <Property Type="Int16" Name="FK_VoucherStatusID" Nullable="false" />
           <Property Type="Int32" Name="FK_VoucherTransactionTypeID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetAllPromotionType_Result">
+          <Property Type="Int32" Name="PromotionTypeId" Nullable="false" />
+          <Property Type="String" Name="PromotionTypeName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PromotionImage" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="InsertVote_Result">
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="19" />
+          <Property Type="Boolean" Name="Success" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetPromotionResultByType_Result">
+          <Property Type="Int32" Name="FK_PromotionTypeId" Nullable="false" />
+          <Property Type="String" Name="ArtistName" Nullable="false" MaxLength="201" />
+          <Property Type="String" Name="ArtistImage" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="NumberOfVotes" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1580,6 +1613,33 @@
                 <ScalarProperty Name="VoucherReferenceID" ColumnName="VoucherReferenceID" />
                 <ScalarProperty Name="FK_VoucherStatusID" ColumnName="FK_VoucherStatusID" />
                 <ScalarProperty Name="FK_VoucherTransactionTypeID" ColumnName="FK_VoucherTransactionTypeID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllPromotionType" FunctionName="JukeBoxModel.Store.GetAllPromotionType">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetAllPromotionType_Result">
+                <ScalarProperty Name="PromotionTypeId" ColumnName="PromotionTypeId" />
+                <ScalarProperty Name="PromotionTypeName" ColumnName="PromotionTypeName" />
+                <ScalarProperty Name="PromotionImage" ColumnName="PromotionImage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InsertVote" FunctionName="JukeBoxModel.Store.InsertVote">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.InsertVote_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPromotionResultByType" FunctionName="JukeBoxModel.Store.GetPromotionResultByType">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetPromotionResultByType_Result">
+                <ScalarProperty Name="FK_PromotionTypeId" ColumnName="FK_PromotionTypeId" />
+                <ScalarProperty Name="ArtistName" ColumnName="ArtistName" />
+                <ScalarProperty Name="ArtistImage" ColumnName="ArtistImage" />
+                <ScalarProperty Name="NumberOfVotes" ColumnName="NumberOfVotes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

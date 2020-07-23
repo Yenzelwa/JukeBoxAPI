@@ -59,5 +59,29 @@ namespace JukeBoxApi.Models
         /// </value>
         public string password { get; set; }
     }
+    public class PromotionResultRequest
+    {
+        /// <summary>
+        /// Gets or sets the client account number.
+        /// </summary>
+        /// <value>
+        /// The client account number.
+        /// </value>
+        public int PromotionTypeId { get; set; }
+        /// <summary>
+        /// Gets or sets the client pin.
+        /// </summary>
+        /// <value>
+        /// The client pin.
+        /// </value>
+        public int ClientId { get; set; }
+        /// <summary>
+        /// Gets or sets the client pin.
+        /// </summary>
+        /// <value>
+        /// The client pin.
+        /// </value>
+        public int Customer { get; set; }
+    }
     #endregion
 }

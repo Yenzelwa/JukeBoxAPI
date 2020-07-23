@@ -302,6 +302,7 @@
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LibraryController.cs" />
+    <Compile Include="Controllers\PromotionController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filters\ExceptionLoggerFilterAttribute.cs" />
     <Compile Include="Filters\JwtAuthFilters\AddAuthorizationHeaderParameterOperationFilter.cs" />
@@ -323,6 +324,8 @@
     <Compile Include="Models\LibraryDetailRequest.cs" />
     <Compile Include="Models\LibraryRequest.cs" />
     <Compile Include="Models\OttVoucherStatusRequest.cs" />
+    <Compile Include="Models\PromotionResult.cs" />
+    <Compile Include="Models\PromotionType.cs" />
     <Compile Include="Models\PurchaseOrderRequest.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\TokenResponse.cs" />

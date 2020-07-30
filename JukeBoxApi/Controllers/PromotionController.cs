@@ -51,13 +51,17 @@ namespace JukeBoxApi.Controllers
             if (retVal.Count > 0)
             {
                 apiResp.ResponseObject = new List<PromotionResult>();
+                int count = 1;
                 foreach (var _promo in retVal)
                 {
                     var promotion = new PromotionResult();
                     promotion.Bind(_promo);
+                    promotion.PromoNumber = count;
                     apiResp.ResponseObject.Add(promotion);
+                    count++;
 
                 }
+                apiResp.ResponseObject.OrderByDescending(x => x.NumberOfVotes);
                 apiResp.ResponseType = 1;
                 apiResp.ResponseMessage = "Success";
             }

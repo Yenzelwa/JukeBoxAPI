@@ -16,5 +16,6 @@ namespace JukeBox.Data
         public int PromotionTypeId { get; set; }
         public string PromotionTypeName { get; set; }
         public string PromotionImage { get; set; }
+        public Nullable<decimal> PromotionAmount { get; set; }
     }
 }

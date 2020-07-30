@@ -38,7 +38,7 @@ namespace JukeBox.BLL
         {
             using (var db = new JukeBoxEntities())
             {
-                return db.Customers.Where(x => x.Email == username  || x.CellPhone == username && x.ClientPassword == password).FirstOrDefault();
+                return db.Customers.Where(x => (x.Email == username  && x.ClientPassword == password )|| ( x.CellPhone == username && x.ClientPassword == password)).FirstOrDefault();
             }
         }
         public bool DeleteClient(int clientId, int userId)
@@ -162,28 +162,31 @@ namespace JukeBox.BLL
            mailclient.Send(mail);
             return true;
         }
-        public int  SaveCustomer(Customer client)
+        public string  SaveCustomer(Customer client)
         {
             using (var db = new JukeBoxEntities())
             {
                 try
                 {
                     if (client.CustomerID > 0) {
-
+                        
                         var customerToUpdate = db.Customers.Find(client.CustomerID);
                         customerToUpdate.FirstName = client.FirstName;
                         customerToUpdate.LastName = client.LastName;
-                        customerToUpdate.CellPhone = client.CellPhone;
-                        customerToUpdate.Email = client.Email;
+                        customerToUpdate.CellPhone = client.CellPhone.Trim();
+                        customerToUpdate.Email = client.Email.ToLower().Trim();
                         customerToUpdate.ImageFilePath = client.ImageFilePath;
                         db.SaveChanges();
-                        return 1;
+                        return "Success";
 
 
                     }
                     else
                     {
-
+                        var customerEmail = db.Customers.Where(x => x.Email == client.Email).FirstOrDefault();
+                        if (customerEmail != null) return "Email Already Exists";
+                        var customerPhone = db.Customers.Where(x => x.CellPhone == client.CellPhone).FirstOrDefault();
+                        if (customerPhone != null) return "CellPhone Already Exists";
                         var _customer = new Customer
                         {
                             FirstName = client.FirstName,
@@ -199,13 +202,13 @@ namespace JukeBox.BLL
                         };
                         db.Customers.Add(_customer);
                         db.SaveChanges();
-                        return 1;
+                        return "Success";
                     }
                 }
                 catch(Exception e)
                 {
                     // TO DO'
-                    return -1;
+                    return "Failed";
                 }
             }
           

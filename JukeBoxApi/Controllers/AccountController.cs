@@ -92,14 +92,16 @@ namespace JukeBoxApi.Controllers
 
                 });
 
-            if (retVal > 0)
+            if (retVal == "Sucess")
             {
                 apiLoginClient.IsSuccess = true;
-                apiLoginClient.Message = "Sucess";
+                apiLoginClient.Message = retVal;
                 
                 return apiLoginClient;
 
             }
+            apiLoginClient.IsSuccess = false;
+            apiLoginClient.Message = retVal;
             return apiLoginClient;
             
         }

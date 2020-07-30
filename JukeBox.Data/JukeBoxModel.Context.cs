@@ -242,11 +242,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__VoucherRedeemProcedure_Result>("sp__VoucherRedeemProcedure", clientIdParameter, voucherPinParameter, voucherTypeIdParameter, voucherTransactionTypeIdParameter, voucherStatusIdParameter, redeemDateTimeParameter, voucherReferenceIdParameter, amountParameter, isTxCompleteParameter, referenceCommentParameter);
         }
     
-        public virtual ObjectResult<GetAllPromotionType_Result> GetAllPromotionType()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllPromotionType_Result>("GetAllPromotionType");
-        }
-    
         public virtual ObjectResult<InsertVote_Result> InsertVote(Nullable<int> promotionTypeId, Nullable<int> clientId, Nullable<int> customerId)
         {
             var promotionTypeIdParameter = promotionTypeId.HasValue ?
@@ -271,6 +266,11 @@ namespace JukeBox.Data
                 new ObjectParameter("PromotionTypeId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromotionResultByType_Result>("GetPromotionResultByType", promotionTypeIdParameter);
+        }
+    
+        public virtual ObjectResult<GetAllPromotionType_Result> GetAllPromotionType()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllPromotionType_Result>("GetAllPromotionType");
         }
     }
 }

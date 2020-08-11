@@ -67,6 +67,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Add_ClientPromotion_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Client.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
@@ -91,6 +94,12 @@
     <Compile Include="Create_Library_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Create_PromotionCategory_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Create_PromotionType_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Customer.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
@@ -112,7 +121,13 @@
     <Compile Include="GetLibrary_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetPromotionCategoryByPromoTypeId_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetPromotionResultByType_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Get_ClientPromotion_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="InsertVote_Result.cs">
@@ -143,6 +158,15 @@
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="LibraryType.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PromotionCategory.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PromotionCategoryMap.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PromotionType.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

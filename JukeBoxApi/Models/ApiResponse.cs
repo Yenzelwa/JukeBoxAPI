@@ -153,6 +153,17 @@ namespace JukeBoxApi.Models
         public List<PromotionType> ResponseObject { get; set; }
 
     }
+    public class ApiPromotionCategoryResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<PromotionCategory> ResponseObject { get; set; }
+
+    }
     public class ApiPromotionResultResponse : ApiResponse
     {
         /// <summary>
@@ -162,6 +173,17 @@ namespace JukeBoxApi.Models
         /// The response object.
         /// </value>
         public List<PromotionResult> ResponseObject { get; set; }
+
+    }
+    public class ApiClientPromotionResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<ClientPromotion> ResponseObject { get; set; }
 
     }
 }

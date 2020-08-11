@@ -11,14 +11,9 @@ namespace JukeBox.Data
 {
     using System;
     
-    public partial class GetPromotionResultByType_Result
+    public partial class Create_PromotionType_Result
     {
-        public Nullable<int> FK_PromotionTypeId { get; set; }
-        public int ClientID { get; set; }
-        public int PromotionCategoryMapId { get; set; }
-        public string ArtistName { get; set; }
-        public string ArtistImage { get; set; }
-        public Nullable<int> NumberOfVotes { get; set; }
-        public Nullable<int> Duration { get; set; }
+        public string Message { get; set; }
+        public Nullable<bool> Success { get; set; }
     }
 }

@@ -68,6 +68,7 @@ namespace JukeBoxApi.Models
         /// The client account number.
         /// </value>
         public int PromotionTypeId { get; set; }
+        public int? PromotionMapId { get; set; }
         /// <summary>
         /// Gets or sets the client pin.
         /// </summary>

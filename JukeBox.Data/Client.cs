@@ -41,6 +41,7 @@ namespace JukeBox.Data
         public int CreatedBy { get; set; }
         public Nullable<decimal> CreditAmount { get; set; }
         public Nullable<bool> Enabled { get; set; }
+        public string ArtistImage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientContactDetail> ClientContactDetails { get; set; }

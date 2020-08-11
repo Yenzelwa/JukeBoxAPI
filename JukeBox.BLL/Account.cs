@@ -297,13 +297,13 @@ namespace JukeBox.BLL
         public ApiResponse RedeemVoucher(string voucherpin , long clientId)
         {
 
-            var ott = redeemOTTVoucher(voucherpin, clientId);
-            if(ott.ResponseMessage != "Success")
-            {
+        //    var ott = redeemOTTVoucher(voucherpin, clientId);
+        //    if(ott.ResponseMessage != "Success")
+        //    {
              var flash =  FlashVoucherRedeem(voucherpin, clientId);
-                return flash;
-            }
-            return ott;
+             return flash;
+         //   }
+         //   return ott;
         }
 
         private ApiResponse FlashVoucherRedeem(string voucherpin, long clientId)
@@ -378,7 +378,7 @@ namespace JukeBox.BLL
 
                         TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {flash.actionCode} for voucher pin: {voucherpin} and Client ID: {ClientID}");
                         var updateBalance = verifyVoucher(Convert.ToInt32(clientId), voucherpin, 1, 1, 1, DateTime.Now, Convert.ToInt64(flash.transactionReference), flashRandValue, false, reference);
-                        if (updateBalance == null)
+                        if (updateBalance != null)
                         {
                             response.ResponseMessage = "Successfull";
                             response.ResponseType = 1;
@@ -509,6 +509,7 @@ namespace JukeBox.BLL
             using (var db = new JukeBoxEntities())
             {
                 return db.sp__VoucherRedeemProcedure(ClientID,voucherpin,voucherTypeId,voucherTransactionTypeId,voucherStatusId,redeemDateTime,voucherReferenceId,flashRandValue,isTxComplete, ReferenceComment).FirstOrDefault();
+              
             }
         }
         public ApiResponse redeemOTTVoucher(string voucherpin, long clientId)
@@ -656,11 +657,10 @@ namespace JukeBox.BLL
 
                     TrackVoucher($"Tracking Id: {trackingId} - Flash API Success response code: {ott.body.voucherStatusResponse.statusResult.Message} for voucher pin: {uniqueReference} and Client ID: {clientId}");
                     var updateBalance = verifyVoucher(Convert.ToInt32(clientId), uniqueReference, 1, 1, 1, DateTime.Now, Convert.ToInt64(ott.body.voucherStatusResponse.statusResult.Reference), ott.body.voucherStatusResponse.statusResult.Amount, false, reference);
-                    if (updateBalance == null)
+                    if (updateBalance != null)
                     {
                         response.body.voucherResponse.redeemVoucherResult.Message = "Successfull";
                         response.body.voucherResponse.redeemVoucherResult.ErrorCode = "0";
-                        response.body.voucherResponse.redeemVoucherResult.Amount = updateBalance.Amount;
                     }
                     else
                     {

@@ -159,8 +159,7 @@ namespace JukeBoxApi.Controllers
                         
                         if (httpPostedFile != null)
                         {
-                            var filePath = fileFolderName == null ? Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Songs") :
-                                                              Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Album");
+                            var filePath = getFolderName(fileFolderName);
                             string savePath = "";
                             if (!System.IO.File.Exists(filePath))
                             {
@@ -190,6 +189,20 @@ namespace JukeBoxApi.Controllers
             {
                 var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
               //  return apiResp;
+            }
+        }
+        private string getFolderName(string fileType)
+        {
+            switch (fileType)
+            {
+                case "promotion-type":
+                    return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/PromoType");
+                case "promotion-category":
+                    return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/PromoCategory");
+                case "album":
+                    return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Album");
+                default:
+                    return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Songs");
             }
         }
 

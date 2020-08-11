@@ -9,6 +9,7 @@ namespace JukeBoxApi.Models
     {
         public int PromoNumber { get; set; }
         public int? PromotionTypeId { get; set; }
+        public int PromoMapId { get; set; }
         public int ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistImage { get; set; }
@@ -17,6 +18,7 @@ namespace JukeBoxApi.Models
         public void Bind(JukeBox.Data.GetPromotionResultByType_Result cr)
         {
             PromotionTypeId = cr.FK_PromotionTypeId;
+            PromoMapId = cr.PromotionCategoryMapId;
             ArtistId = cr.ClientID;
             ArtistName = cr.ArtistName;
             ArtistImage = cr.ArtistImage;

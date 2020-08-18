@@ -7,15 +7,15 @@ namespace JukeBoxApi.Models
 {
     public class ClientPromotion
     {
-        public int PromotionCategoryMapId { get; set; }
+        public int PromotionMapId { get; set; }
         public string ArtistName { get; set; }
-        public string PromotionCategoryName { get; set; }
+        public string NameType { get; set; }
         public void Bind(JukeBox.Data.Get_ClientPromotion_Result cr)
             
         {
-            PromotionCategoryMapId = cr.PromotionCategoryMapId;
+            PromotionMapId = cr.PromotionMapId;
             ArtistName = cr.ArtistName;
-            PromotionCategoryName = cr.PromotionCategoryName;
+            NameType = cr.NameType;
         }
 
     }

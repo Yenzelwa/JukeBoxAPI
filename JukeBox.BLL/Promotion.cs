@@ -25,12 +25,12 @@ namespace JukeBox.BLL
                 return db.GetPromotionCategoryByPromoTypeId(PromoTypeId).ToList();
             }
         }
-        public async Task<List<JukeBox.Data.Get_ClientPromotion_Result>> GetClientPromotion(int promoCategoryId)
+        public async Task<List<JukeBox.Data.Get_ClientPromotion_Result>> GetClientPromotion( int? promoTypeId, int? promoCategoryId )
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.Get_ClientPromotion(promoCategoryId).ToList();
+                return db.Get_ClientPromotion(promoCategoryId,promoTypeId).ToList();
             }
         }
         public async Task<List<JukeBox.Data.GetPromotionResultByType_Result>> GetPromotionTypeResult(int? promotionTypeId,int? promotionCategoryId )
@@ -39,6 +39,14 @@ namespace JukeBox.BLL
             {
 
                 return db.GetPromotionResultByType(promotionTypeId,promotionCategoryId).ToList();
+            }
+        }
+        public async Task<List<JukeBox.Data.GetPromoionClientMap_Result>> GetPromotionClientMap(int? promotionTypeId, int? promotionCategoryId)
+        {
+            using (var db = new JukeBoxEntities())
+            {
+
+                return db.GetPromoionClientMap(promotionTypeId, promotionCategoryId).ToList();
             }
         }
         public async Task<JukeBox.Data.InsertVote_Result> Vote(int? promotionTypeId , int? promoMapId, int clientId, int customerId)
@@ -50,29 +58,29 @@ namespace JukeBox.BLL
             }
         }
         public async Task<Create_PromotionType_Result> CreatePromotionType(int? promotionTypeId, string promotionTypeName,
-                              decimal? amount, string promotionImage, DateTime? promotionDateEnd, bool? hasCategory, bool? enabled)
+                              decimal? amount, string promotionImage, DateTime? promotionDateStart, DateTime? promotionDateEnd, bool? hasCategory, bool? enabled , bool? allArtist)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.Create_PromotionType(promotionTypeId, promotionTypeName, amount, promotionImage, promotionDateEnd, hasCategory, enabled).FirstOrDefault();
+                return db.Create_PromotionType(promotionTypeId, promotionTypeName, amount, promotionImage, promotionDateEnd, promotionDateStart, hasCategory, enabled,allArtist).FirstOrDefault();
             }
         }
         public async Task<Create_PromotionCategory_Result> CreatePromotionCategory(int? promotionCategoryId, int? promotionTypeId ,string promotionCategoryName,
-                                                                                       string promotionImage, bool? enabled)
+                                                                                       string promotionImage, bool? enabled, bool? allArtist)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.Create_PromotionCategory(promotionCategoryId, promotionTypeId, promotionCategoryName, promotionImage,  enabled).FirstOrDefault();
+                return db.Create_PromotionCategory(promotionCategoryId, promotionTypeId, promotionCategoryName, promotionImage,  enabled ,allArtist).FirstOrDefault();
             }
         }
-        public async Task<Add_ClientPromotion_Result> AddClientPromotion(int? promotionCategoryMapId, int? promotionCategoryId, int? clientId, bool? enabled)
+        public async Task<Add_ClientPromotion_Result> AddClientPromotion(int? promotionCategoryMapId, int? promotionCategoryId,int? promotionTypeId, int? clientId, bool? enabled)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return db.Add_ClientPromotion(promotionCategoryMapId, promotionCategoryId, clientId, enabled).FirstOrDefault();
+                return db.Add_ClientPromotion(promotionCategoryMapId, promotionCategoryId,promotionTypeId, clientId, enabled).FirstOrDefault();
             }
         }
         public async Task<bool> DeletePromtionType(int promotionTypeId)
@@ -119,7 +127,7 @@ namespace JukeBox.BLL
             {
                 try
                 {
-                    var library = db.PromotionCategoryMaps.Where(x => x.PromotionCategoryMapId == promotionCategoryMapId).FirstOrDefault();
+                    var library = db.PromotionMaps.Where(x => x.PromotionMapId == promotionCategoryMapId).FirstOrDefault();
                     library.Enabled = false;
                     db.SaveChanges();
                     return true;

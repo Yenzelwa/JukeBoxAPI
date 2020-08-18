@@ -19,5 +19,6 @@ namespace JukeBox.Data
         public string PromotionCategoryName { get; set; }
         public bool Enabled { get; set; }
         public string CategoryImage { get; set; }
+        public bool AllArtistSelected { get; set; }
     }
 }

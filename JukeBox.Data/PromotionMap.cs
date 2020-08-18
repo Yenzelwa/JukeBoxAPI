@@ -10,13 +10,14 @@
 namespace JukeBox.Data
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class GetPromotionCategoryByPromoTypeId_Result
+    public partial class PromotionMap
     {
-        public int PromotionCategoryId { get; set; }
-        public int FK_PromotionTypeId { get; set; }
-        public string PromotionCategoryName { get; set; }
-        public string CategoryImage { get; set; }
-        public bool AllArtistSelected { get; set; }
+        public int PromotionMapId { get; set; }
+        public int FK_ClientID { get; set; }
+        public Nullable<int> FK_PromotionTypeId { get; set; }
+        public Nullable<int> FK_PromotionCategoryId { get; set; }
+        public bool Enabled { get; set; }
     }
 }

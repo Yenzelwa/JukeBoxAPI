@@ -121,6 +121,9 @@
     <Compile Include="GetLibrary_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetPromoionClientMap_Result.cs">
+      <DependentUpon>JukeBoxModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetPromotionCategoryByPromoTypeId_Result.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
@@ -163,7 +166,7 @@
     <Compile Include="PromotionCategory.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="PromotionCategoryMap.cs">
+    <Compile Include="PromotionMap.cs">
       <DependentUpon>JukeBoxModel.tt</DependentUpon>
     </Compile>
     <Compile Include="PromotionType.cs">

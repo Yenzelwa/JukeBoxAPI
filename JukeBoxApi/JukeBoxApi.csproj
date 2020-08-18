@@ -326,6 +326,7 @@
     <Compile Include="Models\LibraryDetailRequest.cs" />
     <Compile Include="Models\LibraryRequest.cs" />
     <Compile Include="Models\OttVoucherStatusRequest.cs" />
+    <Compile Include="Models\PromotionClientMap.cs" />
     <Compile Include="Models\PromotionCategory.cs" />
     <Compile Include="Models\PromotionCategoryRequest.cs" />
     <Compile Include="Models\PromotionResult.cs" />

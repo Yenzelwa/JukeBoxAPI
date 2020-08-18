@@ -186,4 +186,15 @@ namespace JukeBoxApi.Models
         public List<ClientPromotion> ResponseObject { get; set; }
 
     }
+    public class ApiPromotionClientMapResponse : ApiResponse
+    {
+        /// <summary>
+        /// Gets or sets the response object.
+        /// </summary>
+        /// <value>
+        /// The response object.
+        /// </value>
+        public List<PromotionClientMap> ResponseObject { get; set; }
+
+    }
 }

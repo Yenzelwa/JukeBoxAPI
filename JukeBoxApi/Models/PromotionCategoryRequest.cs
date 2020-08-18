@@ -12,5 +12,6 @@ namespace JukeBoxApi.Models
         public string CategoryName { get; set; }
         public string CategoryImage { get; set; }
         public bool? Enabled { get; set; }
+        public bool? AllArtist { get; set; }
     }
 }

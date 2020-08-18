@@ -49,8 +49,8 @@ namespace JukeBox.Data
         public virtual DbSet<LibraryDetail> LibraryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<PromotionCategory> PromotionCategories { get; set; }
-        public virtual DbSet<PromotionCategoryMap> PromotionCategoryMaps { get; set; }
         public virtual DbSet<PromotionType> PromotionTypes { get; set; }
+        public virtual DbSet<PromotionMap> PromotionMaps { get; set; }
     
         public virtual ObjectResult<sp__Purchase_Result> sp__Purchase(Nullable<long> libraryId, Nullable<long> libraryDetailId, Nullable<int> clientId, Nullable<int> userId)
         {
@@ -200,15 +200,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("sp_Sales_Report", saleTypeIdParameter);
         }
     
-        public virtual ObjectResult<GetPromotionCategoryByPromoTypeId_Result> GetPromotionCategoryByPromoTypeId(Nullable<int> promotionTypeId)
-        {
-            var promotionTypeIdParameter = promotionTypeId.HasValue ?
-                new ObjectParameter("PromotionTypeId", promotionTypeId) :
-                new ObjectParameter("PromotionTypeId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromotionCategoryByPromoTypeId_Result>("GetPromotionCategoryByPromoTypeId", promotionTypeIdParameter);
-        }
-    
         public virtual ObjectResult<InsertVote_Result> InsertVote(Nullable<int> promotionTypeId, Nullable<int> promotionMapId, Nullable<int> clientId, Nullable<int> customerId)
         {
             var promotionTypeIdParameter = promotionTypeId.HasValue ?
@@ -241,94 +232,6 @@ namespace JukeBox.Data
                 new ObjectParameter("PromotionCategoryId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromotionResultByType_Result>("GetPromotionResultByType", promotionTypeIdParameter, promotionCategoryIdParameter);
-        }
-    
-        public virtual ObjectResult<Add_ClientPromotion_Result> Add_ClientPromotion(Nullable<int> promotionCategoryMapId, Nullable<int> fK_PromotionCategoryId, Nullable<int> fK_ClientID, Nullable<bool> enabled)
-        {
-            var promotionCategoryMapIdParameter = promotionCategoryMapId.HasValue ?
-                new ObjectParameter("PromotionCategoryMapId", promotionCategoryMapId) :
-                new ObjectParameter("PromotionCategoryMapId", typeof(int));
-    
-            var fK_PromotionCategoryIdParameter = fK_PromotionCategoryId.HasValue ?
-                new ObjectParameter("FK_PromotionCategoryId", fK_PromotionCategoryId) :
-                new ObjectParameter("FK_PromotionCategoryId", typeof(int));
-    
-            var fK_ClientIDParameter = fK_ClientID.HasValue ?
-                new ObjectParameter("FK_ClientID", fK_ClientID) :
-                new ObjectParameter("FK_ClientID", typeof(int));
-    
-            var enabledParameter = enabled.HasValue ?
-                new ObjectParameter("Enabled", enabled) :
-                new ObjectParameter("Enabled", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Add_ClientPromotion_Result>("Add_ClientPromotion", promotionCategoryMapIdParameter, fK_PromotionCategoryIdParameter, fK_ClientIDParameter, enabledParameter);
-        }
-    
-        public virtual ObjectResult<Create_PromotionCategory_Result> Create_PromotionCategory(Nullable<int> promotionCategoryId, Nullable<int> fK_PromotionTypeId, string promotionCategoryName, string categoryImage, Nullable<bool> enabled)
-        {
-            var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
-                new ObjectParameter("PromotionCategoryId", promotionCategoryId) :
-                new ObjectParameter("PromotionCategoryId", typeof(int));
-    
-            var fK_PromotionTypeIdParameter = fK_PromotionTypeId.HasValue ?
-                new ObjectParameter("FK_PromotionTypeId", fK_PromotionTypeId) :
-                new ObjectParameter("FK_PromotionTypeId", typeof(int));
-    
-            var promotionCategoryNameParameter = promotionCategoryName != null ?
-                new ObjectParameter("PromotionCategoryName", promotionCategoryName) :
-                new ObjectParameter("PromotionCategoryName", typeof(string));
-    
-            var categoryImageParameter = categoryImage != null ?
-                new ObjectParameter("CategoryImage", categoryImage) :
-                new ObjectParameter("CategoryImage", typeof(string));
-    
-            var enabledParameter = enabled.HasValue ?
-                new ObjectParameter("Enabled", enabled) :
-                new ObjectParameter("Enabled", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_PromotionCategory_Result>("Create_PromotionCategory", promotionCategoryIdParameter, fK_PromotionTypeIdParameter, promotionCategoryNameParameter, categoryImageParameter, enabledParameter);
-        }
-    
-        public virtual ObjectResult<Create_PromotionType_Result> Create_PromotionType(Nullable<int> promotionTypeId, string promotionTypeName, Nullable<decimal> promotionAmount, string promotionImage, Nullable<System.DateTime> promotionEndDate, Nullable<bool> hasCategory, Nullable<bool> enabled)
-        {
-            var promotionTypeIdParameter = promotionTypeId.HasValue ?
-                new ObjectParameter("PromotionTypeId", promotionTypeId) :
-                new ObjectParameter("PromotionTypeId", typeof(int));
-    
-            var promotionTypeNameParameter = promotionTypeName != null ?
-                new ObjectParameter("PromotionTypeName", promotionTypeName) :
-                new ObjectParameter("PromotionTypeName", typeof(string));
-    
-            var promotionAmountParameter = promotionAmount.HasValue ?
-                new ObjectParameter("PromotionAmount", promotionAmount) :
-                new ObjectParameter("PromotionAmount", typeof(decimal));
-    
-            var promotionImageParameter = promotionImage != null ?
-                new ObjectParameter("PromotionImage", promotionImage) :
-                new ObjectParameter("PromotionImage", typeof(string));
-    
-            var promotionEndDateParameter = promotionEndDate.HasValue ?
-                new ObjectParameter("PromotionEndDate", promotionEndDate) :
-                new ObjectParameter("PromotionEndDate", typeof(System.DateTime));
-    
-            var hasCategoryParameter = hasCategory.HasValue ?
-                new ObjectParameter("HasCategory", hasCategory) :
-                new ObjectParameter("HasCategory", typeof(bool));
-    
-            var enabledParameter = enabled.HasValue ?
-                new ObjectParameter("Enabled", enabled) :
-                new ObjectParameter("Enabled", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_PromotionType_Result>("Create_PromotionType", promotionTypeIdParameter, promotionTypeNameParameter, promotionAmountParameter, promotionImageParameter, promotionEndDateParameter, hasCategoryParameter, enabledParameter);
-        }
-    
-        public virtual ObjectResult<Get_ClientPromotion_Result> Get_ClientPromotion(Nullable<int> promotionCategoryId)
-        {
-            var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
-                new ObjectParameter("PromotionCategoryId", promotionCategoryId) :
-                new ObjectParameter("PromotionCategoryId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Get_ClientPromotion_Result>("Get_ClientPromotion", promotionCategoryIdParameter);
         }
     
         public virtual ObjectResult<sp__VoucherRedeemProcedure_Result> sp__VoucherRedeemProcedure(Nullable<long> clientId, string voucherPin, Nullable<long> voucherTypeId, Nullable<long> voucherTransactionTypeId, Nullable<short> voucherStatusId, Nullable<System.DateTime> redeemDateTime, Nullable<long> voucherReferenceId, Nullable<decimal> amount, Nullable<bool> isTxComplete, string referenceComment)
@@ -376,9 +279,139 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp__VoucherRedeemProcedure_Result>("sp__VoucherRedeemProcedure", clientIdParameter, voucherPinParameter, voucherTypeIdParameter, voucherTransactionTypeIdParameter, voucherStatusIdParameter, redeemDateTimeParameter, voucherReferenceIdParameter, amountParameter, isTxCompleteParameter, referenceCommentParameter);
         }
     
+        public virtual ObjectResult<Create_PromotionCategory_Result> Create_PromotionCategory(Nullable<int> promotionCategoryId, Nullable<int> fK_PromotionTypeId, string promotionCategoryName, string categoryImage, Nullable<bool> enabled, Nullable<bool> allArtistSelected)
+        {
+            var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
+                new ObjectParameter("PromotionCategoryId", promotionCategoryId) :
+                new ObjectParameter("PromotionCategoryId", typeof(int));
+    
+            var fK_PromotionTypeIdParameter = fK_PromotionTypeId.HasValue ?
+                new ObjectParameter("FK_PromotionTypeId", fK_PromotionTypeId) :
+                new ObjectParameter("FK_PromotionTypeId", typeof(int));
+    
+            var promotionCategoryNameParameter = promotionCategoryName != null ?
+                new ObjectParameter("PromotionCategoryName", promotionCategoryName) :
+                new ObjectParameter("PromotionCategoryName", typeof(string));
+    
+            var categoryImageParameter = categoryImage != null ?
+                new ObjectParameter("CategoryImage", categoryImage) :
+                new ObjectParameter("CategoryImage", typeof(string));
+    
+            var enabledParameter = enabled.HasValue ?
+                new ObjectParameter("Enabled", enabled) :
+                new ObjectParameter("Enabled", typeof(bool));
+    
+            var allArtistSelectedParameter = allArtistSelected.HasValue ?
+                new ObjectParameter("AllArtistSelected", allArtistSelected) :
+                new ObjectParameter("AllArtistSelected", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_PromotionCategory_Result>("Create_PromotionCategory", promotionCategoryIdParameter, fK_PromotionTypeIdParameter, promotionCategoryNameParameter, categoryImageParameter, enabledParameter, allArtistSelectedParameter);
+        }
+    
+        public virtual ObjectResult<GetPromotionCategoryByPromoTypeId_Result> GetPromotionCategoryByPromoTypeId(Nullable<int> promotionTypeId)
+        {
+            var promotionTypeIdParameter = promotionTypeId.HasValue ?
+                new ObjectParameter("PromotionTypeId", promotionTypeId) :
+                new ObjectParameter("PromotionTypeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromotionCategoryByPromoTypeId_Result>("GetPromotionCategoryByPromoTypeId", promotionTypeIdParameter);
+        }
+    
+        public virtual ObjectResult<Create_PromotionType_Result> Create_PromotionType(Nullable<int> promotionTypeId, string promotionTypeName, Nullable<decimal> promotionAmount, string promotionImage, Nullable<System.DateTime> promotionEndDate, Nullable<System.DateTime> promotionStartDate, Nullable<bool> hasCategory, Nullable<bool> enabled, Nullable<bool> allArtistSelected)
+        {
+            var promotionTypeIdParameter = promotionTypeId.HasValue ?
+                new ObjectParameter("PromotionTypeId", promotionTypeId) :
+                new ObjectParameter("PromotionTypeId", typeof(int));
+    
+            var promotionTypeNameParameter = promotionTypeName != null ?
+                new ObjectParameter("PromotionTypeName", promotionTypeName) :
+                new ObjectParameter("PromotionTypeName", typeof(string));
+    
+            var promotionAmountParameter = promotionAmount.HasValue ?
+                new ObjectParameter("PromotionAmount", promotionAmount) :
+                new ObjectParameter("PromotionAmount", typeof(decimal));
+    
+            var promotionImageParameter = promotionImage != null ?
+                new ObjectParameter("PromotionImage", promotionImage) :
+                new ObjectParameter("PromotionImage", typeof(string));
+    
+            var promotionEndDateParameter = promotionEndDate.HasValue ?
+                new ObjectParameter("PromotionEndDate", promotionEndDate) :
+                new ObjectParameter("PromotionEndDate", typeof(System.DateTime));
+    
+            var promotionStartDateParameter = promotionStartDate.HasValue ?
+                new ObjectParameter("PromotionStartDate", promotionStartDate) :
+                new ObjectParameter("PromotionStartDate", typeof(System.DateTime));
+    
+            var hasCategoryParameter = hasCategory.HasValue ?
+                new ObjectParameter("HasCategory", hasCategory) :
+                new ObjectParameter("HasCategory", typeof(bool));
+    
+            var enabledParameter = enabled.HasValue ?
+                new ObjectParameter("Enabled", enabled) :
+                new ObjectParameter("Enabled", typeof(bool));
+    
+            var allArtistSelectedParameter = allArtistSelected.HasValue ?
+                new ObjectParameter("AllArtistSelected", allArtistSelected) :
+                new ObjectParameter("AllArtistSelected", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_PromotionType_Result>("Create_PromotionType", promotionTypeIdParameter, promotionTypeNameParameter, promotionAmountParameter, promotionImageParameter, promotionEndDateParameter, promotionStartDateParameter, hasCategoryParameter, enabledParameter, allArtistSelectedParameter);
+        }
+    
         public virtual ObjectResult<GetAllPromotionType_Result> GetAllPromotionType()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllPromotionType_Result>("GetAllPromotionType");
+        }
+    
+        public virtual ObjectResult<Get_ClientPromotion_Result> Get_ClientPromotion(Nullable<int> promotionCategoryId, Nullable<int> promotionTypeId)
+        {
+            var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
+                new ObjectParameter("PromotionCategoryId", promotionCategoryId) :
+                new ObjectParameter("PromotionCategoryId", typeof(int));
+    
+            var promotionTypeIdParameter = promotionTypeId.HasValue ?
+                new ObjectParameter("PromotionTypeId", promotionTypeId) :
+                new ObjectParameter("PromotionTypeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Get_ClientPromotion_Result>("Get_ClientPromotion", promotionCategoryIdParameter, promotionTypeIdParameter);
+        }
+    
+        public virtual ObjectResult<Add_ClientPromotion_Result> Add_ClientPromotion(Nullable<int> promotionCategoryMapId, Nullable<int> fK_PromotionCategoryId, Nullable<int> fK_PromotionTypeId, Nullable<int> fK_ClientID, Nullable<bool> enabled)
+        {
+            var promotionCategoryMapIdParameter = promotionCategoryMapId.HasValue ?
+                new ObjectParameter("PromotionCategoryMapId", promotionCategoryMapId) :
+                new ObjectParameter("PromotionCategoryMapId", typeof(int));
+    
+            var fK_PromotionCategoryIdParameter = fK_PromotionCategoryId.HasValue ?
+                new ObjectParameter("FK_PromotionCategoryId", fK_PromotionCategoryId) :
+                new ObjectParameter("FK_PromotionCategoryId", typeof(int));
+    
+            var fK_PromotionTypeIdParameter = fK_PromotionTypeId.HasValue ?
+                new ObjectParameter("FK_PromotionTypeId", fK_PromotionTypeId) :
+                new ObjectParameter("FK_PromotionTypeId", typeof(int));
+    
+            var fK_ClientIDParameter = fK_ClientID.HasValue ?
+                new ObjectParameter("FK_ClientID", fK_ClientID) :
+                new ObjectParameter("FK_ClientID", typeof(int));
+    
+            var enabledParameter = enabled.HasValue ?
+                new ObjectParameter("Enabled", enabled) :
+                new ObjectParameter("Enabled", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Add_ClientPromotion_Result>("Add_ClientPromotion", promotionCategoryMapIdParameter, fK_PromotionCategoryIdParameter, fK_PromotionTypeIdParameter, fK_ClientIDParameter, enabledParameter);
+        }
+    
+        public virtual ObjectResult<GetPromoionClientMap_Result> GetPromoionClientMap(Nullable<int> promotionTypeId, Nullable<int> promotionCategoryId)
+        {
+            var promotionTypeIdParameter = promotionTypeId.HasValue ?
+                new ObjectParameter("PromotionTypeId", promotionTypeId) :
+                new ObjectParameter("PromotionTypeId", typeof(int));
+    
+            var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
+                new ObjectParameter("PromotionCategoryId", promotionCategoryId) :
+                new ObjectParameter("PromotionCategoryId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromoionClientMap_Result>("GetPromoionClientMap", promotionTypeIdParameter, promotionCategoryIdParameter);
         }
     }
 }

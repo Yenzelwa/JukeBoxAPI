@@ -18,6 +18,8 @@ namespace JukeBox.Data
         public string PromotionImage { get; set; }
         public Nullable<decimal> PromotionAmount { get; set; }
         public Nullable<System.DateTime> PromotionEndDate { get; set; }
+        public Nullable<System.DateTime> PromotionStartDate { get; set; }
         public bool HasCategory { get; set; }
+        public Nullable<bool> AllArtistSelected { get; set; }
     }
 }

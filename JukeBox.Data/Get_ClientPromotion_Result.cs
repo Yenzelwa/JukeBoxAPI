@@ -13,8 +13,8 @@ namespace JukeBox.Data
     
     public partial class Get_ClientPromotion_Result
     {
-        public int PromotionCategoryMapId { get; set; }
+        public int PromotionMapId { get; set; }
         public string ArtistName { get; set; }
-        public string PromotionCategoryName { get; set; }
+        public string NameType { get; set; }
     }
 }

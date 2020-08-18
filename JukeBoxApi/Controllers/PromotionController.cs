@@ -72,7 +72,7 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
-        [Route("result/{promotionTypeId}")]
+        [Route("result")]
         [HttpGet]
         public async Task<ApiPromotionResultResponse> GetPromotionResult([FromUri]int promotionTypeId,int? promotionCategoryId = null)
         {
@@ -100,13 +100,13 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
-        [Route("client/promotion/{promotionCategoryId}")]
+        [Route("client/promotion/{promotionCategoryId}/{promoTypeId}")]
         [HttpGet]
-        public async Task<ApiClientPromotionResponse> GetClientPromotion(int promotionCategoryId)
+        public async Task<ApiClientPromotionResponse> GetClientPromotion(int promotionCategoryId , int? promoTypeId)
         {
             var apiResp = new ApiClientPromotionResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await _promotion.GetClientPromotion(promotionCategoryId);
+            var retVal = await _promotion.GetClientPromotion(promoTypeId ,promotionCategoryId);
 
             if (retVal.Count > 0)
             {
@@ -121,6 +121,33 @@ namespace JukeBoxApi.Controllers
 
                 }
                 
+                apiResp.ResponseType = 1;
+                apiResp.ResponseMessage = "Success";
+            }
+            return apiResp;
+        }
+        [AllowAnonymous]
+        [Route("client/promotionmap/{promotionTypeId}/{promotionCategoryId}")]
+        [HttpGet]
+        public async Task<ApiPromotionClientMapResponse> GetClientPromotion(int? promotionTypeId ,int? promotionCategoryId)
+        {
+            var apiResp = new ApiPromotionClientMapResponse { ResponseType = -1, ResponseMessage = "Failed" };
+
+            var retVal = await _promotion.GetPromotionClientMap(promotionTypeId, promotionCategoryId);
+
+            if (retVal.Count > 0)
+            {
+                apiResp.ResponseObject = new List<PromotionClientMap>();
+
+                foreach (var _promo in retVal)
+                {
+                    var promotion = new PromotionClientMap();
+                    promotion.Bind(_promo);
+                    apiResp.ResponseObject.Add(promotion);
+
+
+                }
+
                 apiResp.ResponseType = 1;
                 apiResp.ResponseMessage = "Success";
             }
@@ -152,7 +179,7 @@ namespace JukeBoxApi.Controllers
             request.Enabled = true;
             request.PromotionImage = "http://www.apigagasimedia.co.za/JukeBoxStore/PromoType/" + request.PromotionImage;
             var retVal = await _promotion.CreatePromotionType(request.PromotionTypeId,request.PromotionTypeName,request.Amount,
-                                                              request.PromotionImage,request.EndDate,request.HasCategory,request.Enabled);
+                                                              request.PromotionImage, request.StartDate, request.EndDate,request.HasCategory,request.Enabled, request.AllArtist);
             if (retVal.Success.HasValue)
             {
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
@@ -169,7 +196,7 @@ namespace JukeBoxApi.Controllers
             request.CategoryImage = "http://www.apigagasimedia.co.za/JukeBoxStore/PromoCategory/" + request.CategoryImage;
             request.Enabled = true;
             var retVal = await _promotion.CreatePromotionCategory(request.PromotionCategoryId, request.PromotionTypeId, request.CategoryName,
-                                                              request.CategoryImage, request.Enabled);
+                                                              request.CategoryImage, request.Enabled , request.AllArtist);
             if (retVal.Success.HasValue)
             {
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
@@ -183,7 +210,7 @@ namespace JukeBoxApi.Controllers
         public async Task<ApiResponse> AddClientPromotion([FromBody]ClientPromotionRequest request)
         {
             var apiResp = new ApiResponse { ResponseType = -1, ResponseMessage = "Failed" };
-            var retVal = await _promotion.AddClientPromotion(request.PromotionCategoryMapId, request.PromotionCategoryId, request.ClientId, request.Enabled);
+            var retVal = await _promotion.AddClientPromotion(request.PromotionMapId, request.PromotionCategoryId, request.PromotionTypeId,  request.ClientId, request.Enabled);
             if (retVal.Success.HasValue)
             {
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
@@ -248,15 +275,15 @@ namespace JukeBoxApi.Controllers
             return apiResp;
         }
         [AllowAnonymous]
-        [Route("client/promotion/delete/{id}")]
+        [Route("client/promotion/delete/{id}/{typeId}/{categoryId}")]
         [HttpGet]
-        public async Task<ApiClientPromotionResponse> DeleteClientPromotion(int id)
+        public async Task<ApiClientPromotionResponse> DeleteClientPromotion(int id, int? typeId ,int?  categoryId)
         {
             var apiResp = new ApiClientPromotionResponse { ResponseType = -1, ResponseMessage = "Failed" };
             var promotionTypeId = await _promotion.DeleteClientPromotion(id);
             if (promotionTypeId)
             {
-                var retVal = await _promotion.GetClientPromotion(id);
+                var retVal = await _promotion.GetClientPromotion(typeId,categoryId);
 
                 if (retVal.Count > 0)
                 {

@@ -11,12 +11,14 @@ namespace JukeBoxApi.Models
         public int PromotionTypeId { get; set; }
         public string CategoryName { get; set; }
         public string CategoryImage { get; set; }
+        public bool? AllArtist { get; set; }
         public void Bind(JukeBox.Data.GetPromotionCategoryByPromoTypeId_Result cr)
         {
             PromotionCategoryId = cr.PromotionCategoryId;
             PromotionTypeId = cr.FK_PromotionTypeId;
             CategoryName = cr.PromotionCategoryName;
             CategoryImage = cr.CategoryImage;
+            AllArtist = cr.AllArtistSelected;
         }
     }
 }

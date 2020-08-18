@@ -21,6 +21,7 @@ namespace JukeBoxApi.Models
         public string Gender { get; set; }
 
         public string FullName {get; set; }
+        public string ArtistImage { get; set; }
         public void Bind(JukeBox.Data.Client cr)
         {
 
@@ -36,6 +37,7 @@ namespace JukeBoxApi.Models
             CellPhone = cr.CellPhone;
             Email = cr.Email;
             Gender = cr.Gender;
+            ArtistImage = cr.ArtistImage;
             FullName = string.Format("{0} {1}", cr.FirstName, cr.LastName);
 
 

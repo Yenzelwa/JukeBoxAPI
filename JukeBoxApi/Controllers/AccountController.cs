@@ -132,6 +132,7 @@ namespace JukeBoxApi.Controllers
         public Response saveClient([FromBody]JukeBoxApi.Models.Client user)
         {
             var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
+            user.ArtistImage = user.ArtistImage !=null ? "http://www.apigagasimedia.co.za/JukeBoxStore/Artist/" + user.ArtistImage:null;
             var retVal = (new JukeBox.BLL.Account()).SaveClient(
                    new JukeBox.Data.Client
                    {
@@ -151,6 +152,7 @@ namespace JukeBoxApi.Controllers
                        FK_IdentityTypeID =1,
                        Initials = user.Initials,
                        Gender = user.Gender,
+                       ArtistImage = user.ArtistImage,
                        IdentityTypeValue = user.IdentityTypeValue,
                        CreatedBy = 1
                    });

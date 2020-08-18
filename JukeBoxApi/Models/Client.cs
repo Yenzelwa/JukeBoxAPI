@@ -37,6 +37,7 @@ namespace JukeBoxApi.Models
         public string Email { get; set; }
         public short? FK_CountryID { get; set; }
         public string Gender { get; set; }
+        public string ArtistImage { get; set; }
         public DateTime? DateCreated { get; set; }
 
         public int? CreatedBy { get; set; }

@@ -233,6 +233,7 @@ namespace JukeBox.BLL
                         clientToUpdate.BalanceAvailable = client.BalanceAvailable;
                         clientToUpdate.ClientPassword = client.ClientPassword;
                         clientToUpdate.ClientTitle = client.ClientTitle;
+                        clientToUpdate.ArtistImage = client.ArtistImage;
                         db.SaveChanges();
                         return 1;
 
@@ -241,16 +242,16 @@ namespace JukeBox.BLL
                     {
 
                         var _client = new Client
-                        {   ClientTitle = client.ClientTitle,
+                        { ClientTitle = client.ClientTitle,
                             FK_ClientStatusID = client.FK_ClientStatusID,
                             FK_CompanyID = client.FK_CompanyID,
                             FK_CountryID = client.FK_CountryID,
-                             DateOfBirth = client.DateOfBirth,
-                             FK_IdentityTypeID = client.FK_IdentityTypeID,
-                             Initials= client.Initials,
-                             Gender = client.Gender,
-                             IdentityTypeValue = client.IdentityTypeValue,
-                              CreatedBy = client.CreatedBy,
+                            DateOfBirth = client.DateOfBirth,
+                            FK_IdentityTypeID = client.FK_IdentityTypeID,
+                            Initials = client.Initials,
+                            Gender = client.Gender,
+                            IdentityTypeValue = client.IdentityTypeValue,
+                            CreatedBy = client.CreatedBy,
                             FirstName = client.FirstName,
                             LastName = client.LastName,
                             ClientPassword = client.ClientPassword,
@@ -258,6 +259,7 @@ namespace JukeBox.BLL
                             DateCreated = DateTime.Now,
                             Email = client.Email,
                             BalanceAvailable = 0,
+                            ArtistImage = client.ArtistImage,
                             Enabled=true
                             
 

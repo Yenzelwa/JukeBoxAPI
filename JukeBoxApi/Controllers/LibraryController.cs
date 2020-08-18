@@ -201,6 +201,8 @@ namespace JukeBoxApi.Controllers
                     return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/PromoCategory");
                 case "album":
                     return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Album");
+                case "artist":
+                    return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Artist");
                 default:
                     return Path.Combine(@"C:/inetpub/wwwroot/JukeBoxApi/JukeBoxStore/Songs");
             }

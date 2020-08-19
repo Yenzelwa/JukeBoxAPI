@@ -358,11 +358,6 @@ namespace JukeBox.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Create_PromotionType_Result>("Create_PromotionType", promotionTypeIdParameter, promotionTypeNameParameter, promotionAmountParameter, promotionImageParameter, promotionEndDateParameter, promotionStartDateParameter, hasCategoryParameter, enabledParameter, allArtistSelectedParameter);
         }
     
-        public virtual ObjectResult<GetAllPromotionType_Result> GetAllPromotionType()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllPromotionType_Result>("GetAllPromotionType");
-        }
-    
         public virtual ObjectResult<Get_ClientPromotion_Result> Get_ClientPromotion(Nullable<int> promotionCategoryId, Nullable<int> promotionTypeId)
         {
             var promotionCategoryIdParameter = promotionCategoryId.HasValue ?
@@ -412,6 +407,15 @@ namespace JukeBox.Data
                 new ObjectParameter("PromotionCategoryId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPromoionClientMap_Result>("GetPromoionClientMap", promotionTypeIdParameter, promotionCategoryIdParameter);
+        }
+    
+        public virtual ObjectResult<GetAllPromotionType_Result> GetAllPromotionType(Nullable<int> platform)
+        {
+            var platformParameter = platform.HasValue ?
+                new ObjectParameter("Platform", platform) :
+                new ObjectParameter("Platform", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllPromotionType_Result>("GetAllPromotionType", platformParameter);
         }
     }
 }

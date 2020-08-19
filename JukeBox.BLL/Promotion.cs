@@ -9,12 +9,12 @@ namespace JukeBox.BLL
 {
   public  class Promotion
     {
-        public async Task<List<JukeBox.Data.GetAllPromotionType_Result>> GetAllPromotion()
+        public async Task<List<JukeBox.Data.GetAllPromotionType_Result>> GetAllPromotion(int? platform)
         {
             using (var db = new JukeBoxEntities())
             {
 
-                return  db.GetAllPromotionType().ToList();
+                return  db.GetAllPromotionType(platform).ToList();
             }
         }
         public async Task<List<JukeBox.Data.GetPromotionCategoryByPromoTypeId_Result>> GetPromotionCategory(int? PromoTypeId)

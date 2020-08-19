@@ -26,11 +26,11 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("type")]
         [HttpGet]
-        public async Task<ApiPromotionTypeResponse> GetPromotionType()
+        public async Task<ApiPromotionTypeResponse> GetPromotionType(int? platform=null)
         {
             var apiResp = new ApiPromotionTypeResponse { ResponseType = -1, ResponseMessage = "Failed" };
 
-            var retVal = await _promotion.GetAllPromotion();
+            var retVal = await _promotion.GetAllPromotion(platform);
 
             if (retVal.Count > 0)
             {
@@ -179,7 +179,7 @@ namespace JukeBoxApi.Controllers
             request.Enabled = true;
             request.PromotionImage = "http://www.apigagasimedia.co.za/JukeBoxStore/PromoType/" + request.PromotionImage;
             var retVal = await _promotion.CreatePromotionType(request.PromotionTypeId,request.PromotionTypeName,request.Amount,
-                                                              request.PromotionImage, request.StartDate, request.EndDate,request.HasCategory,request.Enabled, request.AllArtist);
+                                                              request.PromotionImage, request.PromotionStartDate, request.PromotionEndDate,request.HasCategory,request.Enabled, request.AllArtist);
             if (retVal.Success.HasValue)
             {
                 apiResp.ResponseType = Convert.ToInt16(retVal.Success);
@@ -227,7 +227,7 @@ namespace JukeBoxApi.Controllers
             var promotionTypeId = await _promotion.DeletePromtionType(id);
             if (promotionTypeId)
             {
-                var retVal = await _promotion.GetAllPromotion();
+                var retVal = await _promotion.GetAllPromotion(1);
 
                 if (retVal.Count > 0)
                 {

@@ -511,7 +511,9 @@
           <Parameter Name="PromotionCategoryId" Type="int" Mode="In" />
           <Parameter Name="PromotionTypeId" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetAllPromotionType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllPromotionType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Platform" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetLibrary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="filterType" Type="int" Mode="In" />
           <Parameter Name="clientId" Type="int" Mode="In" />
@@ -1103,7 +1105,6 @@
             <Parameter Name="Enabled" Mode="In" Type="Boolean" />
             <Parameter Name="AllArtistSelected" Mode="In" Type="Boolean" />
           </FunctionImport>
-          <FunctionImport Name="GetAllPromotionType" ReturnType="Collection(JukeBoxModel.GetAllPromotionType_Result)" />
           <FunctionImport Name="Get_ClientPromotion" ReturnType="Collection(JukeBoxModel.Get_ClientPromotion_Result)">
             <Parameter Name="PromotionCategoryId" Mode="In" Type="Int32" />
             <Parameter Name="PromotionTypeId" Mode="In" Type="Int32" />
@@ -1119,6 +1120,9 @@
           <FunctionImport Name="GetPromoionClientMap" ReturnType="Collection(JukeBoxModel.GetPromoionClientMap_Result)">
             <Parameter Name="PromotionTypeId" Mode="In" Type="Int32" />
             <Parameter Name="PromotionCategoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllPromotionType" ReturnType="Collection(JukeBoxModel.GetAllPromotionType_Result)">
+            <Parameter Name="Platform" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp__Purchase_Result">
@@ -1433,16 +1437,6 @@
           <Property Type="String" Name="Message" Nullable="false" MaxLength="18" />
           <Property Type="Boolean" Name="Success" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="GetAllPromotionType_Result">
-          <Property Type="Int32" Name="PromotionTypeId" Nullable="false" />
-          <Property Type="String" Name="PromotionTypeName" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="PromotionImage" Nullable="true" MaxLength="500" />
-          <Property Type="Decimal" Name="PromotionAmount" Nullable="true" Precision="18" Scale="5" />
-          <Property Type="DateTime" Name="PromotionEndDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="PromotionStartDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="HasCategory" Nullable="false" />
-          <Property Type="Boolean" Name="AllArtistSelected" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="Get_ClientPromotion_Result">
           <Property Type="Int32" Name="PromotionMapId" Nullable="false" />
           <Property Type="String" Name="ArtistName" Nullable="false" MaxLength="201" />
@@ -1468,6 +1462,16 @@
           <Property Type="String" Name="LastName" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="PromotionMapId" Nullable="true" />
           <Property Type="Boolean" Name="RemoveEnabled" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllPromotionType_Result">
+          <Property Type="Int32" Name="PromotionTypeId" Nullable="false" />
+          <Property Type="String" Name="PromotionTypeName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PromotionImage" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="PromotionAmount" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="DateTime" Name="PromotionEndDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="PromotionStartDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="HasCategory" Nullable="false" />
+          <Property Type="Boolean" Name="AllArtistSelected" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1887,20 +1891,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetAllPromotionType" FunctionName="JukeBoxModel.Store.GetAllPromotionType">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="JukeBoxModel.GetAllPromotionType_Result">
-                <ScalarProperty Name="PromotionTypeId" ColumnName="PromotionTypeId" />
-                <ScalarProperty Name="PromotionTypeName" ColumnName="PromotionTypeName" />
-                <ScalarProperty Name="PromotionImage" ColumnName="PromotionImage" />
-                <ScalarProperty Name="PromotionAmount" ColumnName="PromotionAmount" />
-                <ScalarProperty Name="PromotionEndDate" ColumnName="PromotionEndDate" />
-                <ScalarProperty Name="PromotionStartDate" ColumnName="PromotionStartDate" />
-                <ScalarProperty Name="HasCategory" ColumnName="HasCategory" />
-                <ScalarProperty Name="AllArtistSelected" ColumnName="AllArtistSelected" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Get_ClientPromotion" FunctionName="JukeBoxModel.Store.Get_ClientPromotion">
             <ResultMapping>
               <ComplexTypeMapping TypeName="JukeBoxModel.Get_ClientPromotion_Result">
@@ -1937,6 +1927,20 @@
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="PromotionMapId" ColumnName="PromotionMapId" />
                 <ScalarProperty Name="RemoveEnabled" ColumnName="RemoveEnabled" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllPromotionType" FunctionName="JukeBoxModel.Store.GetAllPromotionType">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JukeBoxModel.GetAllPromotionType_Result">
+                <ScalarProperty Name="PromotionTypeId" ColumnName="PromotionTypeId" />
+                <ScalarProperty Name="PromotionTypeName" ColumnName="PromotionTypeName" />
+                <ScalarProperty Name="PromotionImage" ColumnName="PromotionImage" />
+                <ScalarProperty Name="PromotionAmount" ColumnName="PromotionAmount" />
+                <ScalarProperty Name="PromotionEndDate" ColumnName="PromotionEndDate" />
+                <ScalarProperty Name="PromotionStartDate" ColumnName="PromotionStartDate" />
+                <ScalarProperty Name="HasCategory" ColumnName="HasCategory" />
+                <ScalarProperty Name="AllArtistSelected" ColumnName="AllArtistSelected" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

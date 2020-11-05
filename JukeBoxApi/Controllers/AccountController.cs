@@ -44,7 +44,7 @@ namespace JukeBoxApi.Controllers
 
             var retVal = (new JukeBox.BLL.Account()).LoginUser(uf.username, uf.password);
 
-            string incomingHash = (new JukeBox.BLL.Account()).HashAndObfuscate(uf.password);
+           // string incomingHash = (new JukeBox.BLL.Account()).HashAndObfuscate(uf.password);
 
             if (retVal ==null)
             {
@@ -52,13 +52,19 @@ namespace JukeBoxApi.Controllers
                 apiResp.ResponseObject = null;
                 return apiResp;
             }
-            //check to see if the password is valid
-            if (String.CompareOrdinal(incomingHash, retVal.Password) != 0)
+            if(!retVal.Password.Equals(uf.password))
             {
-                apiResp.ResponseMessage = "Password invalid";
+                apiResp.ResponseMessage = "Invalid Password";
                 apiResp.ResponseObject = null;
                 return apiResp;
             }
+            //check to see if the password is valid
+            //if (String.CompareOrdinal(incomingHash, retVal.Password) != 0)
+            //{
+            //    apiResp.ResponseMessage = "Password invalid";
+            //    apiResp.ResponseObject = null;
+            //    return apiResp;
+            //}
 
             if (retVal != null)
             {
@@ -129,31 +135,31 @@ namespace JukeBoxApi.Controllers
         [AllowAnonymous]
         [Route("client")]
         [HttpPost]
-        public Response saveClient([FromBody]JukeBoxApi.Models.Client user)
+        public Response saveClient([FromBody]JukeBoxApi.Models.Client client)
         {
             var apiLoginClient = new Response { IsSuccess = false, Message = "Failed" };
-            user.ArtistImage = user.ArtistImage !=null ? "http://www.apigagasimedia.co.za/JukeBoxStore/Artist/" + user.ArtistImage:null;
+            client.ArtistImage = client.ArtistImage !=null ? "http://www.apigagasimedia.co.za/JukeBoxStore/Artist/" + client.ArtistImage:null;
             var retVal = (new JukeBox.BLL.Account()).SaveClient(
                    new JukeBox.Data.Client
                    {
-                       ClientID =  user.ClientID,
-                       FirstName = user.FirstName,
-                       LastName = user.LastName,
-                       ClientPassword = user.ClientPassword,
-                       CellPhone = user.CellPhone,
-                       FK_ClientStatusID = user.FK_ClientStatusID,
+                       ClientID =  client.ClientID,
+                       FirstName = client.FirstName,
+                       LastName = client.LastName,
+                       ClientPassword = client.ClientPassword,
+                       CellPhone = client.CellPhone,
+                       FK_ClientStatusID = client.FK_ClientStatusID,
                        DateCreated = DateTime.Now,
-                       Email = user.Email,
-                       BalanceAvailable =user.BalanceAvailable,
-                       ClientTitle = user.ClientTitle,
+                       Email = client.Email,
+                       BalanceAvailable =client.BalanceAvailable,
+                       ClientTitle = client.ClientTitle,
                        FK_CompanyID = 1,
                        FK_CountryID = 1,
-                       DateOfBirth = user.DateOfBirth,
+                       DateOfBirth = client.DateOfBirth,
                        FK_IdentityTypeID =1,
-                       Initials = user.Initials,
-                       Gender = user.Gender,
-                       ArtistImage = user.ArtistImage,
-                       IdentityTypeValue = user.IdentityTypeValue,
+                       Initials = client.Initials,
+                       Gender = client.Gender,
+                       ArtistImage = client.ArtistImage,
+                       IdentityTypeValue = client.IdentityTypeValue,
                        CreatedBy = 1
                    });
 
